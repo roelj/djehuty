@@ -3288,7 +3288,7 @@ class SparqlInterface:
     def update_view_and_download_counts (self):
         """Procedure that recalculate views and downloads statistics."""
         query = self.__query_from_template ("update_view_and_download_counts")
-        return self.__run_query (query)
+        return self.__run_logged_query (query)
 
     def insert_session (self, account_uuid, name=None, token=None, editable=False,
                         override_mfa=False):
