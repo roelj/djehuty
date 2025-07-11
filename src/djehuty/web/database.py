@@ -3266,6 +3266,25 @@ class SparqlInterface:
 
             self.log.info ("Created account for %s.", email)
 
+    def transfer_account_resources (self, from_account_uuid, to_account_uuid):
+        """Procedure to transfer datasets and collections from one account to another."""
+
+        query = self.__query_from_template ("transfer_account_resources", {
+            "from_account_uuid": from_account_uuid,
+            "to_account_uuid": to_account_uuid
+        })
+
+        result = self.__run_logged_query (query)
+        if result:
+            self.cache.invalidate_by_prefix (f"{from_account_uuid}_storage")
+            self.cache.invalidate_by_prefix (f"datasets_{from_account_uuid}")
+            self.cache.invalidate_by_prefix (f"{to_account_uuid}_storage")
+            self.cache.invalidate_by_prefix (f"datasets_{to_account_uuid}")
+            self.cache.invalidate_by_prefix (f"collections_{from_account_uuid}")
+            self.cache.invalidate_by_prefix (f"collections_{to_account_uuid}")
+
+        return result
+
     def update_view_and_download_counts (self):
         """Procedure that recalculate views and downloads statistics."""
         query = self.__query_from_template ("update_view_and_download_counts")

@@ -331,6 +331,7 @@ class WebServer:
             ## ----------------------------------------------------------------
             R("/v3/admin/files-integrity-statistics",                            self.api_v3_admin_files_integrity_statistics),
             R("/v3/admin/accounts/clear-cache",                                  self.api_v3_admin_accounts_clear_cache),
+            R("/v3/admin/accounts/transfer-resources",                           self.api_v3_admin_accounts_transfer_resources),
             R("/v3/admin/reviews/clear-cache",                                   self.api_v3_admin_reviews_clear_cache),
 
             ## ----------------------------------------------------------------
@@ -8425,6 +8426,40 @@ class WebServer:
         }
 
         return self.response (json.dumps(output))
+
+    def api_v3_admin_accounts_transfer_resources (self, request):
+        """Implements /v3/admin/accounts/transfer-resources."""
+
+        handler = self.default_authenticated_error_handling (request, "POST", "application/json",
+                                                             self.db.may_administer)
+        if isinstance (handler, Response):
+            return handler
+
+        record = request.get_json()
+        from_uuid = value_or_none (record, "from")
+        to_uuid = value_or_none (record, "to")
+        if not (validator.is_valid_uuid (from_uuid) and
+                validator.is_valid_uuid (to_uuid)):
+            return self.error_400 (request, "Both the 'to' and 'from' parameters need to be UUIDs.",
+                                   "InvalidUUID")
+
+        from_account = self.db.account_by_uuid (from_uuid)
+        if from_account is None:
+            return self.error_400 (request, f"No account found for '{from_account}'.",
+                                   "InvalidAccountUUID")
+
+        to_account = self.db.account_by_uuid (to_uuid)
+        if to_account is None:
+            return self.error_400 (request, f"No account found for '{to_account}'.",
+                                   "InvalidAccountUUID")
+
+        if self.db.transfer_account_resources (from_uuid, to_uuid):
+            self.log.info ("Moved resources from <account:%s> (%s) to <account:%s> (%s)",
+                           from_uuid, from_account["email"],
+                           to_uuid, to_account["email"])
+            return self.respond_204 ()
+
+        return self.error_500 (f"Failed to move resources from '{from_uuid}' to '{to_uuid}'.")
 
     def __git_create_repository (self, git_uuid):
         git_directory = os.path.join(config.storage, f"{git_uuid}.git")
