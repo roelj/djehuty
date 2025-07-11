@@ -92,12 +92,22 @@ configuration file, for which an example is available at
 
   The \t{djehuty} program can keep an audit log of all database modifications
   made by itself from which a database state can be reconstructed.  Whether
-  \t{djehuty} keeps such an audit log can be configured with the following
-  option:
+  \t{djehuty} keeps such an audit log can be configured with the
+  \t{enable-query-audit-log} configuration option.
+
+  The database can receive a large amount of requests due to inserting log
+  entries to calculate views and downloads statistics from.  The configuration
+  option \t{delay-inserting-log-entries} can be used to prevent these queries
+  from being sent to the database server.  To maintain accurate statistics, these
+  log entry queries must be replayed in due time.
 
 \begin{tabularx}{\textwidth}{*{1}{!{\VRule[-1pt]}l}!{\VRule[-1pt]}X}
   \headrow
   \textbf{Option}            & \textbf{Description}\\
+  \t{delay-inserting-log-entries} & When set to 1, it writes the \code{INSERT}
+                               queries for log entries only to the audit log,
+                               rather than executing them on the SPARQL
+                               endpoint.\\
   \t{enable-query-audit-log} & When set to 1, it writes every SPARQL query that
                                modifies the database in the web logs.  This can
                                be replayed to reconstruct the database at a
@@ -120,10 +130,10 @@ configuration file, for which an example is available at
 djehuty web --config-file=config.xml --extract-transactions-from-log="YYYY-MM-DD HH:MM:SS"
 \end{lstlisting}
 
-This will create a file for each query in the folder specified in the
-\t{transactions-directory} attribute.
+  This will create a file for each query in the folder specified in the
+  \t{transactions-directory} attribute.
 
-  To replay the extracted transactions, use the \t{apply-transactions}
+  To replay the extracted transactions, use the \t{-{}-apply-transactions}
   command-line option:
 \begin{lstlisting}[language=bash]
 djehuty web --config-file=config.xml --apply-transactions
@@ -132,6 +142,11 @@ djehuty web --config-file=config.xml --apply-transactions
   When a query cannot be executed, the command stops, allowing to fix or
   remove the query to-be-replayed.  Invoking the \t{-{}-apply-transactions}
   command a second time will continue replaying where the previous run stopped.
+
+  If the \t{delay-inserting-log-entries} configuration option is set to 1,
+  use the \t{-{}-extract-delayed-transactions-from-log} command-line option to
+  write the log entries queries to the transactions-directory.  Then
+  re-run \t{-{}-apply-transactions} to apply the log entries queries.
 
 \section{Configuring storage}
 
