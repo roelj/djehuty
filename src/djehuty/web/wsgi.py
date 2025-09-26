@@ -1730,7 +1730,15 @@ class WebServer:
             self.error_404 (request)
 
         if self.accepts_html (request):
-            return self.__render_template (request, "maintenance.html")
+            return self.__render_template (request, "maintenance.html",
+                       primary_color            = config.colors['primary-color'],
+                       primary_color_hover      = config.colors['primary-color-hover'],
+                       primary_color_active     = config.colors['primary-color-active'],
+                       primary_foreground_color = config.colors['primary-foreground-color'],
+                       footer_background_color  = config.colors['footer-background-color'],
+                       privilege_button_color   = config.colors['privilege-button-color'],
+                       background_color         = config.colors["background-color"],
+                       sandbox_message_css      = config.sandbox_message_css)
 
         return self.response (json.dumps({ "status": "maintenance" }))
 
