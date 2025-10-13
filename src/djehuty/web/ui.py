@@ -762,11 +762,6 @@ def read_configuration_file (server, config_file, logger, config_files):
         config.delay_inserting_log_entries = read_boolean_value (xml_root, "delay-inserting-log-entries",
                                                                  config.delay_inserting_log_entries, logger)
 
-        ssi_psk = config_value (xml_root, "ssi-psk")
-        if ssi_psk is not None:
-            ssi_psk = ssi_psk.replace(" ", "").replace("\n", "").replace("\r", "").replace("\t", "")
-            config.ssi_psk = ssi_psk
-
         enable_query_audit_log = xml_root.find ("enable-query-audit-log")
         if enable_query_audit_log is not None:
             transactions_directory = enable_query_audit_log.attrib.get("transactions-directory")

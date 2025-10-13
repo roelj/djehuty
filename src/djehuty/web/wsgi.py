@@ -346,12 +346,6 @@ class WebServer:
             R("/v3/datasets/<git_uuid>.git/zip",                                 self.api_v3_dataset_git_zip),
 
             ## ----------------------------------------------------------------
-            ## SHARED SUBMIT INTERFACE API
-            ## ----------------------------------------------------------------
-            R("/v3/receive-from-ssi",                                            self.api_v3_receive_from_ssi),
-            R("/v3/redirect-from-ssi/<container_uuid>/<token>",                  self.api_v3_redirect_from_ssi),
-
-            ## ----------------------------------------------------------------
             ## INTERNATIONAL IMAGE INTEROPERABILITY FRAMEWORK
             ## ----------------------------------------------------------------
             R("/iiif/v3/<file_uuid>/<region>/<size>/<rotation>/<quality>.<image_format>", self.iiif_v3_image),
@@ -9174,67 +9168,6 @@ class WebServer:
             pass
 
         return self.error_404 (request)
-
-    def api_v3_redirect_from_ssi (self, request, container_uuid, token):
-        """Implements /v3/redirect-from-ssi/<container_uuid>/<token>."""
-
-        if request.method != "GET":
-            return self.error_405 ("GET")
-
-        if not validator.is_valid_uuid (container_uuid):
-            return self.error_403 (request)
-
-        response = redirect (f"/my/datasets/{container_uuid}/edit", code=302)
-        response.set_cookie (key=self.cookie_key, value=token, secure=config.in_production)
-        return response
-
-    def api_v3_receive_from_ssi (self, request):
-        """Implements /v3/receive-from-ssi."""
-        if config.ssi_psk is None:
-            return self.error_404 (request)
-
-        if request.method != "PUT":
-            return self.error_405 ("PUT")
-
-        if not self.accepts_json (request):
-            return self.error_406 ("application/json")
-
-        record = request.get_json()
-        if value_or_none (record, "psk") != config.ssi_psk:
-            return self.error_403 (request)
-
-        errors = []
-        title       = validator.string_value (record, "title", 0, 255, True, errors)
-        email       = validator.string_value (record, "email", 0, 255, True, errors)
-
-        if errors:
-            return self.error_400_list (request, errors)
-
-        # Gather account information.
-        account = self.db.account_by_email (email)
-        account_uuid = None
-        if account is None:
-            # Create an account.
-            account_uuid = self.db.insert_account (email=email)
-            if not account_uuid:
-                return self.error_500 (f"Failed to create account for SSI user {email}.")
-            self.log.access ("Account %s created via SSI.", account_uuid) #  pylint: disable=no-member
-        else:
-            account_uuid = account["uuid"]
-
-        token, _, session_uuid = self.db.insert_session (account_uuid, name="Login via SSI")
-        if session_uuid is None:
-            return self.error_500 (f"Failed to create a session for account {account_uuid}.")
-        self.log.access ("Created session %s for account %s.", session_uuid, account_uuid) #  pylint: disable=no-member
-
-        container_uuid, _ = self.db.insert_dataset (
-            title = title,
-            account_uuid = account_uuid)
-        if container_uuid is None:
-            return self.error_500 (f"Failed to create dataset for account {account_uuid}.")
-
-        response = redirect (f"{config.base_url}/v3/redirect-from-ssi/{container_uuid}/{token}", code=302)
-        return response
 
     ## ------------------------------------------------------------------------
     ## EXPORTS
