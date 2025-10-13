@@ -143,21 +143,19 @@ def read_storage_configuration (xml_root, logger):
     for location in storage:
         if location.tag != "location":
             continue
-        quirks = location.attrib.get("quirks") == "1"
-        config.storage_locations.append({ "path": location.text, "quirks": quirks })
+        config.storage_locations.append({ "path": location.text })
 
     for item in storage:
-        quirks = item.attrib.get("quirks") == "1"
         if item.tag == "location":
-            config.storage_locations.append({ "path": item.text, "quirks": quirks })
+            config.storage_locations.append({ "path": item.text })
 
         elif item.tag == "s3-bucket":
-            bucket = { "quirks-enabled": quirks }
-            bucket["name"] = config_value (item, "name")
-            bucket["key-id"] = config_value (item, "key-id")
-            bucket["secret-key"] = config_value (item, "secret-key")
-            bucket["endpoint"] = config_value (item, "endpoint")
-
+            bucket = {
+                "name":       config_value (item, "name"),
+                "key-id":     config_value (item, "key-id"),
+                "secret-key": config_value (item, "secret-key"),
+                "endpoint":   config_value (item, "endpoint")
+            }
             for key in ("name", "key-id", "secret-key", "endpoint"):
                 if convenience.value_or_none (bucket, key) is None:
                     logger.warning ("Missing '%s' for S3 bucket.", key)
@@ -835,15 +833,6 @@ def read_configuration_file (server, config_file, logger, config_files):
         secondary_storage = xml_root.find ("secondary-storage-root")
         if secondary_storage is not None:
             config.secondary_storage = secondary_storage.text
-            try:
-                quirks = secondary_storage.attrib.get("quirks")
-                config.secondary_storage_quirks = bool(int(quirks))
-            except ValueError:
-                logger.warning ("Invalid value for the 'quirks' attribute in 'secondary-storage-root'.")
-                logger.warning ("Quirks-mode is disabled; Use either '1' to enable, or '0' to disable.")
-                config.secondary_storage_quirks = False
-            except TypeError:
-                config.secondary_storage_quirks = False
 
         use_x_forwarded_for = bool(int(config_value (xml_root, "use-x-forwarded-for", None, 0)))
         if use_x_forwarded_for:

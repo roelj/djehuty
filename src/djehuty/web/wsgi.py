@@ -4067,14 +4067,6 @@ class WebServer:
 
         return dataset
 
-    def __quirky_filename (self, path, file_id, name):
-        """Returns the correct quirky file path for the parameters given."""
-        allowed_chars = ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-        name = "".join(char for char in name if char in allowed_chars)
-        if path is None:
-            path = ""
-        return os.path.join (path, str(file_id), name)
-
     def __filesystem_location (self, file_info):
         """Procedure to gather the filesystem location from file metadata."""
 
@@ -4087,28 +4079,15 @@ class WebServer:
         file_path = None
         if config.storage_locations:
             for location in config.storage_locations:
-                if "filename" in file_info:
-                    file_path = os.path.join (location['path'], file_info['filename'])
-                    if os.path.isfile (file_path):
-                        return file_path
-                elif "id" in file_info:
-                    ## Data stored before Djehuty went into production requires a few tweaks.
-                    ## Only apply these quirks when enabled.
-                    file_path = os.path.join(location["path"], str(file_info["id"]),
-                                             file_info["name"])
-                    if value_or (location, "quirks", False):
-                        file_path = self.__quirky_filename (location["path"],
-                                                            file_info["id"],
-                                                            file_info["name"])
-                    if os.path.isfile (file_path):
-                        return file_path
+                if "filename" not in file_info:
+                    continue
+                file_path = os.path.join (location['path'], file_info['filename'])
+                if os.path.isfile (file_path):
+                    return file_path
 
             file_path = None
             for _, bucket in config.s3_buckets.items():
                 filename = f"{file_info['container_uuid']}_{file_info['uuid']}"
-                if bucket["quirks-enabled"] and "id" in file_info:
-                    filename = self.__quirky_filename ("", file_info["id"], file_info["name"])
-
                 if s3.s3_file_exists (bucket["endpoint"], bucket["name"],
                                       bucket["key-id"], bucket["secret-key"],
                                       filename):
@@ -4124,23 +4103,8 @@ class WebServer:
 
         ## The filesystem_location property was introduced in Djehuty.
         ## It isn't set for files deposited before Djehuty went into production.
-        if "filesystem_location" in file_info:
-            if os.path.isfile (file_info["filesystem_location"]):
-                file_path = file_info["filesystem_location"]
-
-        ## Files deposited pre-Djehuty have a numeric identifier (id)
-        elif "id" in file_info:
-            ## Data stored before Djehuty went into production requires a few tweaks.
-            ## Only apply these quirks when enabled.
-            filename = os.path.join (config.secondary_storage,
-                                     str(file_info['id']),
-                                     file_info['name'])
-            if config.secondary_storage_quirks:
-                filename = self.__quirky_filename (config.secondary_storage,
-                                                   file_info["id"],
-                                                   file_info["name"])
-            if os.path.isfile (filename):
-                file_path = filename
+        if "filesystem_location" in file_info and os.path.isfile (file_info["filesystem_location"]):
+            file_path = file_info["filesystem_location"]
 
         return file_path
 

@@ -27,7 +27,6 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.storage_locations           = []
         self.storage                     = None
         self.secondary_storage           = None
-        self.secondary_storage_quirks    = False
         self.endpoint                    = "http://127.0.0.1:8890/sparql"
         self.update_endpoint             = None
         self.state_graph                 = "https://data.4tu.nl/portal/self-test"
