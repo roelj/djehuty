@@ -245,16 +245,8 @@ EXTRA_RESOURCES =                                                             \
     djehuty/web/resources/static/images/favicon.png                           \
     djehuty/web/resources/static/images/handle-logo.png                       \
     djehuty/web/resources/static/images/logo.png                              \
-    djehuty/web/resources/static/images/logo-delft.png                        \
-    djehuty/web/resources/static/images/logo-eindhoven.png                    \
     djehuty/web/resources/static/images/logo-gray.svg                         \
     djehuty/web/resources/static/images/logo-other.png                        \
-    djehuty/web/resources/static/images/logosleft-white-tudelft.png           \
-    djehuty/web/resources/static/images/logosleft-white-tueindhoven.png       \
-    djehuty/web/resources/static/images/logosleft-white-tutwente.png          \
-    djehuty/web/resources/static/images/logosleft-white-wageningen.png        \
-    djehuty/web/resources/static/images/logo-twente.png                       \
-    djehuty/web/resources/static/images/logo-wageningen.png                   \
     djehuty/web/resources/static/images/nikhef-black.svg                      \
     djehuty/web/resources/static/images/orcid.svg                             \
     djehuty/web/resources/static/images/portal/aerospace-engineering.jpg      \
