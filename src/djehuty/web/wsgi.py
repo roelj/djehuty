@@ -41,8 +41,7 @@ from djehuty.utils.convenience import value_or, value_or_none, deduplicate_list
 from djehuty.utils.convenience import self_or_value_or_none, parses_to_int
 from djehuty.utils.convenience import make_citation, is_opendap_url, landing_page_url
 from djehuty.utils.convenience import split_author_name, split_string, html_to_plaintext
-from djehuty.utils.constants import group_to_member, member_url_names, filetypes_by_extension
-from djehuty.utils.constants import iiif_supported_formats
+from djehuty.utils.constants import iiif_supported_formats, filetypes_by_extension
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
 from djehuty.web.config import config
 from djehuty.web import zipfly
@@ -3703,8 +3702,6 @@ class WebServer:
             statistics["downloads"] = value_or (dataset, "total_downloads", 0)
 
         statistics = {key:val for (key,val) in statistics.items() if val > 0}
-        member = value_or (group_to_member, value_or_none (dataset, "group_id"), 'other')
-        member_url_name = member_url_names[member]
         tags = { t['tag'] for t in tags }
         dataset["timeline_first_online"] = value_or_none (dataset, "timeline_first_online")
         dates = self.__pretty_print_dates_for_item (dataset)
@@ -3762,8 +3759,6 @@ class WebServer:
                                        collections=collections,
                                        dates=dates,
                                        coordinates=coordinates,
-                                       member=member,
-                                       member_url_name=member_url_name,
                                        id_version = id_version,
                                        opendap=opendap,
                                        statistics=statistics,
@@ -3888,8 +3883,6 @@ class WebServer:
                          'shares'   : value_or(collection, 'total_shares'   , 0),
                          'cites'    : value_or(collection, 'total_cites'    , 0)}
         statistics    = {key:val for (key,val) in statistics.items() if val > 0}
-        member = value_or(group_to_member, value_or_none (collection, "group_id"), 'other')
-        member_url_name = member_url_names[member]
         tags = { t['tag'] for t in tags }
         collection['timeline_first_online'] = value_or_none (collection, 'timeline_first_online')
         dates = self.__pretty_print_dates_for_item (collection)
@@ -3930,8 +3923,6 @@ class WebServer:
                                        references=references,
                                        dates=dates,
                                        coordinates=coordinates,
-                                       member=member,
-                                       member_url_name=member_url_name,
                                        datasets=datasets,
                                        statistics=statistics,
                                        private_view=private_view,
@@ -3952,8 +3943,6 @@ class WebServer:
             datasets    = [pi for pi in public_items if pi['is_dataset']]
             collections = [pi for pi in public_items if not pi['is_dataset']]
             associated_authors = self.db.associated_authors (author_uri)
-            member = value_or(group_to_member, value_or_none(profile, 'group_id'), 'other')
-            member_url_name = member_url_names[member]
             categories = None
             if 'categories' in profile:
                 account_uuid = profile['account'].split(':', 1)[1]
@@ -3966,8 +3955,6 @@ class WebServer:
                                            datasets=datasets,
                                            collections=collections,
                                            associated_authors=associated_authors,
-                                           member=member,
-                                           member_url_name=member_url_name,
                                            categories=categories,
                                            statistics=statistics,
                                            page_title=f"{value_or(profile, 'full_name', 'unknown')} (profile)")

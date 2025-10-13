@@ -66,11 +66,6 @@
     </div>
 
     <div id="right_column">
-{%- if member != "other" and not anonymize %}
-        <div id="member">
-            <a class="corporate-identity" href="/institutions/{{member_url_name}}"><img src="/static/images/logo-{{member}}.png" alt="{{member_url_name.replace('_',' ')}} logo" /></a>
-        </div>
-{%- endif %}
 {%- if statistics %}
         <div id="usage">
             <h3 class="label">Usage statistics</h3>

@@ -16,11 +16,6 @@
         <img src="/v3/profile/picture/{{profile.account_uuid}}" alt="Profile of {{profile.full_name}}" />
     </div>
 {%- endif %}
-{%- if member != "other" %}
-    <div id="member">
-        <a class="corporate-identity" href="/institutions/{{member_url_name}}"><img src="/static/images/logo-{{member}}.png" alt="{{member_url_name.replace('_',' ')}} logo" /></a>
-    </div>
-{%- endif %}
 {%- if statistics %}
     <div id="usage">
         <h3 class="label">Usage statistics</h3>
