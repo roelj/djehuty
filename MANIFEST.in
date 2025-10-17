@@ -3,5 +3,5 @@ include etc/djehuty/djehuty-example-config.xml
 include doc/*.tex doc/djehuty.sty doc/references.bib doc/figures/*.pdf
 include rpmbuild/SPECS/djehuty.spec
 recursive-include src *.py
-recursive-include src/djehuty/web/resources *.txt *.html *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.sparql *.jpg *.png *.ico
+recursive-include src/djehuty/web/resources *.txt *.html *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.sparql *.png *.ico
 recursive-include src/djehuty/backup/resources *.json

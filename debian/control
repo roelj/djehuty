@@ -17,7 +17,6 @@ Package: djehuty
 Architecture: any
 Depends: ${misc:Depends},
  ${python3:Depends},
- python3,
  python3-jinja2,
  python3-pygit2,
  python3-rdflib,

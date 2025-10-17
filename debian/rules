@@ -2,9 +2,7 @@
 %:
 	dh ${@} --buildsystem=autoconf --with=python3
 
-override_dh_usrlocal:
-
-override_dh_builddeb:
+override_dh_auto_install:
+	dh_auto_install ${@}
 	install -D debian/djehuty/usr/local/bin/djehuty debian/djehuty/usr/bin/djehuty
-	rm -r debian/djehuty/usr/local
-	dh_builddeb ${@}
+	rm -r debian/djehuty/usr/local/bin
