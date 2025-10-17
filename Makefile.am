@@ -15,6 +15,11 @@ EXTRA_DIST              =                   \
   README.md                                 \
   etc/djehuty.service                       \
   etc/djehuty/djehuty-example-config.xml    \
+  debian/changelog                          \
+  debian/control                            \
+  debian/rules                              \
+  debian/source/format                      \
+  debian/source/include-binaries            \
   docker/Dockerfile                         \
   docker/docker-compose.yaml                \
   requirements.txt                          \

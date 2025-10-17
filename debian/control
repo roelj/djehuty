@@ -1,0 +1,29 @@
+Source: djehuty
+Maintainer: Roel Janssen <rrejanssen@gmail.com>
+Homepage: https://djehuty.4tu.nl/
+Vcs-Git: https://codeberg.org/roelj/djehuty.git
+Section: misc
+Priority: optional
+Standards-Version: 4.7.0
+Build-Depends: debhelper-compat (= 13),
+ texlive,
+ texlive-latex-extra,
+ fonts-linuxlibertine,
+ cm-super,
+ python3,
+ python3-setuptools
+
+Package: djehuty
+Architecture: any
+Depends: ${misc:Depends},
+ ${python3:Depends},
+ python3,
+ python3-jinja2,
+ python3-pygit2,
+ python3-rdflib,
+ python3-requests,
+ python3-werkzeug,
+ python3-defusedxml,
+ python3-pil
+Description: Data repository system
+ Djehuty is the data repository system used by 4TU.ResearchData and Nikhef.
