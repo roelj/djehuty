@@ -249,31 +249,6 @@ EXTRA_RESOURCES =                                                             \
     djehuty/web/resources/static/images/logo-other.png                        \
     djehuty/web/resources/static/images/nikhef-black.svg                      \
     djehuty/web/resources/static/images/orcid.svg                             \
-    djehuty/web/resources/static/images/portal/aerospace-engineering.jpg      \
-    djehuty/web/resources/static/images/portal/agricultural-and-veterinary-sciences.jpg \
-    djehuty/web/resources/static/images/portal/atmospheric-sciences.jpg       \
-    djehuty/web/resources/static/images/portal/biology.jpg                    \
-    djehuty/web/resources/static/images/portal/built-environment-and-design.jpg \
-    djehuty/web/resources/static/images/portal/business-and-management.jpg    \
-    djehuty/web/resources/static/images/portal/chemistry.jpg                  \
-    djehuty/web/resources/static/images/portal/civil-engineering.jpg          \
-    djehuty/web/resources/static/images/portal/earth-sciences.jpg             \
-    djehuty/web/resources/static/images/portal/electrical-and-electronic-engineering.jpg \
-    djehuty/web/resources/static/images/portal/environmental-sciences.jpg     \
-    djehuty/web/resources/static/images/portal/geomatic-engineering.jpg       \
-    djehuty/web/resources/static/images/portal/information-and-computing-sciences.jpg \
-    djehuty/web/resources/static/images/portal/materials-engineering.jpg      \
-    djehuty/web/resources/static/images/portal/mathematics.jpg                \
-    djehuty/web/resources/static/images/portal/mechanical-engineering.jpg     \
-    djehuty/web/resources/static/images/portal/medical-and-health-sciences.jpg \
-    djehuty/web/resources/static/images/portal/nanotechnology.jpg             \
-    djehuty/web/resources/static/images/portal/other-institutions.jpg         \
-    djehuty/web/resources/static/images/portal/physical-geography-and-environmental-geoscience.jpg \
-    djehuty/web/resources/static/images/portal/physics.jpg                    \
-    djehuty/web/resources/static/images/portal/tudelft.jpg                    \
-    djehuty/web/resources/static/images/portal/tueindhoven.jpg                \
-    djehuty/web/resources/static/images/portal/utwente.jpg                    \
-    djehuty/web/resources/static/images/portal/wageningen.jpg                 \
     djehuty/web/resources/static/js/ace/ace.js                                \
     djehuty/web/resources/static/js/ace/ext-language_tools.js                 \
     djehuty/web/resources/static/js/ace/ext-searchbox.js                      \

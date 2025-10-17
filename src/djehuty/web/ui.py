@@ -736,12 +736,6 @@ def read_configuration_file (server, config_file, logger, config_files):
         config.show_portal_summary = read_boolean_value (xml_root, "show-portal-summary",
                                                          config.show_portal_summary, logger)
 
-        config.show_institutions = read_boolean_value (xml_root, "show-institutions",
-                                                       config.show_institutions, logger)
-
-        config.show_science_categories = read_boolean_value (xml_root, "show-science-categories",
-                                                             config.show_science_categories, logger)
-
         config.show_latest_datasets = read_boolean_value (xml_root, "show-latest-datasets",
                                                           config.show_latest_datasets, logger)
 

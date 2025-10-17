@@ -3530,8 +3530,6 @@ class WebServer:
                                        latest = latest,
                                        notice_message = config.notice_message,
                                        show_portal_summary = config.show_portal_summary,
-                                       show_institutions = config.show_institutions,
-                                       show_science_categories = config.show_science_categories,
                                        show_latest_datasets = config.show_latest_datasets)
 
     def ui_categories (self, request, category_id):
