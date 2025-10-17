@@ -15,6 +15,8 @@ EXTRA_DIST              =                   \
   README.md                                 \
   etc/djehuty.service                       \
   etc/djehuty/djehuty-example-config.xml    \
+  docker/Dockerfile                         \
+  docker/docker-compose.yaml                \
   requirements.txt                          \
   pyproject.toml                            \
   tests/admin_panel.py                      \
