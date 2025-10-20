@@ -9,12 +9,7 @@
 \usepackage{array}
 \usepackage[margin=1cm]{caption}
 
-\usepackage{fancyhdr}
 \setlength{\headheight}{30pt}
-\pagestyle{fancy}
-\fancyhead[RE]{\includegraphics[width=2cm]{figures/logo}}
-\fancyhead[LO]{\includegraphics[width=2cm]{figures/logo}}
-\fancypagestyle{plain}{\fancyhead{}}
 \addtolength{\topmargin}{-1cm}
 
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}

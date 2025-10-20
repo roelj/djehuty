@@ -48,7 +48,6 @@ EXTRA_DIST              = $(doc_TEX) $(doc_STYLE)                  \
                           figures/file.pdf                         \
                           figures/funding.pdf                      \
                           figures/privatelink.pdf                  \
-                          figures/logo.pdf                         \
                           figures/rdf-list-abbrev.pdf              \
                           figures/references-graph.pdf             \
                           figures/typed-literals-notation.pdf      \
@@ -66,6 +65,8 @@ $(doc_HTML): $(doc_PDF)
           -e 's#class="newline" />#class="newline">#g' \
           -e 's#<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  #<!DOCTYPE html>#g' \
           -e 's#  "http://www.w3.org/TR/html4/loose.dtd"> ##g' \
+          -e 's#<!--tex4ht:.*-->##g' \
+          -e 's#<!--l\..*-->##g' \
           -e 's#<br />#<br>#g' $(doc_NAME).html > index.html
 	@printf "Generated index.html.\n"
 
