@@ -28,7 +28,6 @@ EXTRA_DIST              =                   \
   tests/create_article.py                   \
   tests/create_collection.py                \
   tests/depositor_panel.py                  \
-  tests/run_backup.py                       \
   tests/ui_pages.py                         \
   tests/validators.py
 

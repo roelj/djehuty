@@ -8,8 +8,9 @@ import uuid
 import secrets
 import os.path
 import logging
+import json
 from datetime import datetime
-from rdflib import Dataset, Graph, Literal, RDF, XSD, URIRef
+from rdflib import Dataset, Graph, Literal, RDF, RDFS, XSD, URIRef
 from rdflib.plugins.stores import sparqlstore, memory
 from rdflib.store import CORRUPTED_STORE, NO_STORE
 from jinja2 import Environment, FileSystemLoader
@@ -97,6 +98,18 @@ class SparqlInterface:
     ## ------------------------------------------------------------------------
     ## Private methods
     ## ------------------------------------------------------------------------
+
+    def __load_resource_file (self, filename):
+        script_path = os.path.dirname(os.path.abspath(__file__))
+        data        = None
+        try:
+            with open(f"{script_path}/resources/{filename}", "r",
+                      encoding = "utf-8") as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            logging.error("Could not load resource '%s'.", filename)
+
+        return data
 
     def __log_query (self, query, prefix="Query"):
         self.log.info ("%s:\n---\n%s\n---", prefix, query)
@@ -3648,3 +3661,136 @@ class SparqlInterface:
             self.__export_rdf_to_file (query, export_directory, f"{record_type}.n3")
 
         return True
+
+    def insert_license (self, store, uri, record):
+        """Procedure to insert a license record."""
+
+        if not (record and conv.value_or (record, "url", False)):
+            return False
+
+        license_uri  = URIRef (record["url"])
+
+        ## Insert the license if it isn't in the graph.
+        if (license_uri, RDF.type, rdf.DJHT["License"]) not in store:
+            license_name = conv.value_or_none (record,"name")
+            license_type = conv.value_or_none (record,"type")
+            license_id   = conv.value_or_none (record,"value")
+            license_spdx = conv.value_or_none (record, "spdx")
+            rdf.add (store, license_uri, RDF.type, rdf.DJHT["License"], "url")
+            rdf.add (store, license_uri, rdf.DJHT["name"], license_name, XSD.string)
+            rdf.add (store, license_uri, rdf.DJHT["id"], license_id, XSD.integer)
+
+            if license_spdx is not None:
+                rdf.add (store, license_uri, rdf.DJHT["spdx"], license_spdx, "url")
+
+            license_type_uri = None
+            if license_type == "software":
+                license_type_uri = rdf.DJHT["SoftwareLicense"]
+            elif license_type == "hardware":
+                license_type_uri = rdf.DJHT["HardwareLicense"]
+            elif license_type == "data":
+                license_type_uri = rdf.DJHT["DataLicense"]
+            elif license_type == "legacy":
+                license_type_uri = rdf.DJHT["LegacyLicense"]
+
+            rdf.add (store, license_uri, rdf.DJHT["type"], license_type_uri, "url")
+            rdf.add (store, license_type_uri, RDFS.label,  license_type, XSD.string)
+
+        ## Insert the link between URI and the license.
+        if uri is not None:
+            rdf.add (store, uri, rdf.DJHT["license"], license_uri, "url")
+
+        return True
+
+    def __local_record_uri (self, store, record_type, identifier_name, identifier):
+        """
+        Returns the URI for a record identified with IDENTIFIER_NAME and by
+        IDENTIFIER or None if no such URI can be found.
+        """
+        if identifier is None:
+            return None
+
+        if isinstance(identifier, str):
+            identifier = f"\"{identifier}\"^^<{str(XSD.string)}>"
+
+        try:
+            query = ("SELECT ?uri WHERE { "
+                     f"?uri <{str(RDF.type)}> <{str(rdf.DJHT[record_type])}> ;"
+                     f" <{str(rdf.DJHT[identifier_name])}> {identifier} . }}")
+
+            results = store.query (query)
+            return results.bindings[0]["uri"]
+
+        except (KeyError, IndexError):
+            return None
+
+    def insert_category (self, store, record):
+        """Procedure to insert a category record."""
+
+        category_id = conv.value_or_none (record, "id")
+        uri = self.__local_record_uri (store, "Category", "id", category_id)
+        if uri is not None:
+            return uri
+
+        uri = rdf.unique_node ("category")
+        rdf.add (store, uri, RDF.type, rdf.DJHT["Category"], "url")
+        rdf.add (store, uri, rdf.DJHT["id"], category_id, XSD.integer)
+        rdf.add (store, uri, rdf.DJHT["title"],       conv.value_or (record, "title", None),       XSD.string)
+        rdf.add (store, uri, rdf.DJHT["parent_id"],   conv.value_or (record, "parent_id", None),   XSD.integer)
+        rdf.add (store, uri, rdf.DJHT["source_id"],   conv.value_or (record, "source_id", None),   XSD.integer)
+        rdf.add (store, uri, rdf.DJHT["taxonomy_id"], conv.value_or (record, "taxonomy_id", None), XSD.integer)
+        rdf.add (store, uri, rdf.DJHT["classification_code"], conv.value_or (record, "classification_code", None), XSD.string)
+
+        return uri
+
+    def insert_static_triplets (self):
+        """Procedure to insert triplets to augment the state graph."""
+
+        store = Graph()
+        rdf.add (store, rdf.DJHT["DatasetContainer"],    RDFS.subClassOf, rdf.DJHT["Container"], "url")
+        rdf.add (store, rdf.DJHT["CollectionContainer"], RDFS.subClassOf, rdf.DJHT["Container"], "url")
+
+        ## Review states from Figshare.
+        rdf.add (store, rdf.DJHT["ReviewApproved"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
+        rdf.add (store, rdf.DJHT["ReviewApproved"],      RDFS.label, "approved", XSD.string)
+        rdf.add (store, rdf.DJHT["ReviewRejected"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
+        rdf.add (store, rdf.DJHT["ReviewRejected"],      RDFS.label, "rejected", XSD.string)
+        rdf.add (store, rdf.DJHT["ReviewClosed"],        RDF.type,   rdf.DJHT["ReviewType"], "url")
+        rdf.add (store, rdf.DJHT["ReviewClosed"],        RDFS.label, "closed", XSD.string)
+
+        ## We split "pending" into "assigned" and "unassigned" in Djehuty.
+        rdf.add (store, rdf.DJHT["ReviewAssigned"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
+        rdf.add (store, rdf.DJHT["ReviewAssigned"],      RDFS.label, "assigned", XSD.string)
+        rdf.add (store, rdf.DJHT["ReviewUnassigned"],    RDF.type,   rdf.DJHT["ReviewType"], "url")
+        rdf.add (store, rdf.DJHT["ReviewUnassigned"],    RDFS.label, "unassigned", XSD.string)
+
+        ## Log event types.
+        rdf.add (store, rdf.DJHT["LogEntryCite"],        RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryCite"],        RDFS.label, "cite", XSD.string)
+        rdf.add (store, rdf.DJHT["LogEntryDownload"],    RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryDownload"],    RDFS.label, "download", XSD.string)
+        rdf.add (store, rdf.DJHT["LogEntryGitDownload"], RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryGitDownload"], RDFS.label, "git_download", XSD.string)
+        rdf.add (store, rdf.DJHT["LogEntryShare"],       RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryShare"],       RDFS.label, "share", XSD.string)
+        rdf.add (store, rdf.DJHT["LogEntryView"],        RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryView"],        RDFS.label, "view", XSD.string)
+        rdf.add (store, rdf.DJHT["LogEntryPrivateView"], RDF.type,   rdf.DJHT["LogEntryType"], "url")
+        rdf.add (store, rdf.DJHT["LogEntryPrivateView"], RDFS.label, "private_view", XSD.string)
+
+        languages = self.__load_resource_file("languages.json")
+        for language in languages:
+            uri = rdf.unique_node ("language")
+            rdf.add (store, uri, RDF.type, rdf.DJHT["Language"], "url")
+            rdf.add (store, uri, RDFS.label, language["name"], XSD.string)
+            rdf.add (store, uri, rdf.DJHT["shortcode"], language["shortcode"], XSD.string)
+
+        licenses = self.__load_resource_file ("licenses.json")
+        for license_record in licenses:
+            self.insert_license (store, None, license_record)
+
+        categories = self.__load_resource_file ("root_categories.json")
+        for category in categories:
+            self.insert_category(store, category)
+
+        return self.add_triples_from_graph (store)

@@ -3,10 +3,6 @@ AUTOMAKE_OPTIONS        = subdir-objects
 PYTHON_FILES =                                                                \
     djehuty/__init__.py                                                       \
     djehuty/ui.py                                                             \
-    djehuty/backup/database.py                                                \
-    djehuty/backup/figshare.py                                                \
-    djehuty/backup/database.py                                                \
-    djehuty/backup/ui.py                                                      \
     djehuty/utils/constants.py                                                \
     djehuty/utils/convenience.py                                              \
     djehuty/utils/rdf.py                                                      \
@@ -24,12 +20,6 @@ PYTHON_FILES =                                                                \
     djehuty/web/zipfly.py
 
 EXTRA_RESOURCES =                                                             \
-    djehuty/backup/resources/contributors_organizations.json                  \
-    djehuty/backup/resources/dois.json                                        \
-    djehuty/backup/resources/languages.json                                   \
-    djehuty/backup/resources/licenses.json                                    \
-    djehuty/backup/resources/public_collections.json                          \
-    djehuty/backup/resources/root_categories.json                             \
     djehuty/web/resources/html_templates/400.html                             \
     djehuty/web/resources/html_templates/403.html                             \
     djehuty/web/resources/html_templates/404.html                             \
@@ -107,7 +97,10 @@ EXTRA_RESOURCES =                                                             \
     djehuty/web/resources/metadata_templates/bibtex.bib                       \
     djehuty/web/resources/metadata_templates/endnote.enw                      \
     djehuty/web/resources/metadata_templates/refman.ris                       \
+    djehuty/web/resources/languages.json                                      \
+    djehuty/web/resources/licenses.json                                       \
     djehuty/web/resources/metadata_templates/citation.cff                     \
+    djehuty/web/resources/root_categories.json                                \
     djehuty/web/resources/sparql_templates/account_by_email.sparql            \
     djehuty/web/resources/sparql_templates/account_by_session_token.sparql    \
     djehuty/web/resources/sparql_templates/account_categories.sparql          \

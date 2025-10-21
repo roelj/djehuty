@@ -12,7 +12,6 @@ from werkzeug.serving import run_simple
 from rdflib.plugins.stores import berkeleydb
 from djehuty.web import wsgi
 from djehuty.utils import convenience
-import djehuty.backup.database as backup_database
 from djehuty.web.config import config
 
 # Even though we don't use these imports in 'ui', the state of
@@ -1282,16 +1281,13 @@ def main (config_file=None, run_internal_server=True, initialize=True,
                     logger.info ("Invalidating caches ...")
                     server.db.cache.invalidate_all ()
                     logger.info ("Initializing RDF store ...")
-                    rdf_store = backup_database.DatabaseInterface()
 
-                    if not rdf_store.insert_static_triplets ():
-                        logger.error ("Failed to gather static triplets")
-
-                    if server.db.add_triples_from_graph (rdf_store.store):
-                        logger.info ("Initialization completed.")
+                    if not server.db.insert_static_triplets ():
+                        return None
 
                     server.db.initialize_privileged_accounts ()
                     server.db.mark_state_graph_as_initialized ()
+                    logger.info ("Initialization completed.")
                     initialize = False
                 else:
                     logger.warning (("Skipping initialization of the database "

@@ -9,7 +9,6 @@ import logging
 import os
 import importlib.metadata
 
-import djehuty.backup.ui as backup_ui
 import djehuty.web.ui as web_ui
 
 def show_version ():
@@ -24,14 +23,6 @@ def show_help ():
 
     print("""This is djehuty.\n
 Available subcommands and options:
-
-  backup:
-    --help               -h Show a help message.
-    --stats-auth=ARG     -a Username/password for the statistics endpoint.
-    --token=ARG          -t The API token to use.
-    --account-id=ARG     -i The account ID to backup.
-    --api-url            -u The base URL for accessing the API. Defaults to
-                            'https://api.figshare.com'.
 
   web:
     --help               -h Show a help message.
@@ -82,19 +73,11 @@ def main_inner ():
     ## COMMAND-LINE ARGUMENTS
     ## ------------------------------------------------------------------------
     parser = argparse.ArgumentParser(
-        usage    = '\n  %(prog)s [backup|web] ...',
+        usage    = '\n  %(prog)s [web] ...',
         prog     = 'djehuty',
         add_help = False)
 
     subparsers = parser.add_subparsers(dest='command', help='sub-command help')
-
-    ### BACKUP SUBCOMMAND
-    ### -----------------------------------------------------------------------
-    backup_parser = subparsers.add_parser('backup', help="Options for the 'backup' subcommand.")
-    backup_parser.add_argument('--token',       '-t', type=str, default='')
-    backup_parser.add_argument('--stats-auth',  '-a', type=str, default='')
-    backup_parser.add_argument('--account-id',  '-i', type=str, default=None)
-    backup_parser.add_argument('--api-url',     '-u', type=str, default=None)
 
     ### WEB SUBCOMMAND
     ### -----------------------------------------------------------------------
@@ -130,15 +113,7 @@ def main_inner ():
     if args.version:
         show_version()
 
-    if args.command == "backup":
-        if "" in (args.token, args.stats_auth):
-            print ("The 'backup' command requires multiple arguments.")
-            print ("Try --help for usage options.")
-        else:
-            backup_ui.main (args.token, args.stats_auth, args.account_id,
-                            args.api_url)
-
-    elif args.command == "web":
+    if args.command == "web":
         web_ui.main (args.config_file, True, args.initialize,
                      args.extract_transactions_from_log,
                      args.extract_delayed_transactions_from_log,
