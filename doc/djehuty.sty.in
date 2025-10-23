@@ -183,6 +183,15 @@
   \label{fig:#1}
 \end{figure}}
 }
+\ifdefined\HCode
+\newcommand{\HTMLWrapping}[1]{%
+\IgnorePar\HCode{</div></div><div role="region" aria-label="#1" class="chapter narrow"><div class="chapwrap">}\IgnorePar
+}
+\newcommand{\HTMLWrappingEmptyParagraph}{\HCode{}}
+\else
+\newcommand{\HTMLWrapping}[1]{}
+\newcommand{\HTMLWrappingEmptyParagraph}{}
+\fi
 
 % Define the style for bibliography
 \IfFileExists{apacite.sty}{

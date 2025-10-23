@@ -66,7 +66,7 @@ $(doc_HTML): $(doc_PDF)
           -e 's#<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  #<!DOCTYPE html>#g' \
           -e 's#  "http://www.w3.org/TR/html4/loose.dtd"> ##g' \
           -e 's#<!--tex4ht:.*-->##g' \
-          -e 's#<!--l\..*-->##g' \
+          -e 's#<!--l\..[0-9]*-->##g' \
           -e 's#<br />#<br>#g' $(doc_NAME).html > index.html
 	@printf "Generated index.html.\n"
 
