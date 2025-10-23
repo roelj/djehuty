@@ -24,5 +24,6 @@ Depends: ${misc:Depends},
  python3-werkzeug,
  python3-defusedxml,
  python3-pil
+Suggests: python3-boto3
 Description: Data repository system
  Djehuty is the data repository system used by 4TU.ResearchData and Nikhef.

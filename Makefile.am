@@ -37,6 +37,13 @@ dist-rpm: dist
 	ln -s $(abs_top_srcdir)/djehuty-@VERSION@.tar.gz rpmbuild/SOURCES/djehuty-@VERSION@.tar.gz
 	rpmbuild --define "_topdir $(abs_top_srcdir)/rpmbuild" -ba $(abs_top_srcdir)/rpmbuild/SPECS/djehuty.spec
 
+dist-deb: dist
+	mkdir -p debbuild
+	rm -rf debbuild/*
+	ln -s $(abs_top_srcdir)/djehuty-@VERSION@.tar.gz debbuild/djehuty_@VERSION@.orig.tar.gz
+	cd debbuild && tar -zxf djehuty_@VERSION@.orig.tar.gz && \
+        cd djehuty-@VERSION@/ && debuild -us -uc
+
 if HAVE_DOCKER
 dist-docker: dist
 	@DOCKER@ image build --no-cache                         \
