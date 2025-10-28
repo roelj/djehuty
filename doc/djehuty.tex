@@ -52,7 +52,7 @@ body,html {
 .chapter.narrow { margin-left: auto; margin-right: auto; }
 .chapter.ultra-narrow { margin-left: auto; margin-right: auto; width: 720pt; }
 .chapwrap { padding: 0pt; background: none; border-radius: 4pt; }
-.chapwrap p.noindent span.ectt-1200 {
+.chapwrap p.noindent span.ectt-1200, .chapwrap p.ni span.e {
   display: inline-block;
   margin-right: .25em;
   padding: .2em;
@@ -60,6 +60,7 @@ body,html {
   border-radius: .25em;
   background: #f8f8f8;
 }
+h3 span.ectt-1200, h3 span.e { display: inline-block; margin-right: 0.25em; }
 .chapwrap p, .chapwrap .likesubsubsectionHead { padding: 0pt 10pt 0pt 10pt; }
 .chapwrap .sectionHead, .chapwrap .likesectionHead { padding: 5pt 10pt 5pt 10pt; background: #eee; }
 .chapwrap .subsectionHead, .chapwrap .likesubsectionHead { padding: 5pt 10pt 5pt 10pt; background: #f6f6f6; border-top: solid 1pt #eee; border-bottom: solid 1pt #eee; }
@@ -68,7 +69,7 @@ body,html {
 .lstlisting { font-family: 'FiraMono', monospace; font-size: 11pt; background: #f8f8f8; margin: 0pt 10pt 0pt 10pt; padding: 10pt; border-radius: 5pt; border: solid 1pt #ccc; }
 .center, .caption { text-align: center; }
 .ecbx-1200 { font-weight: bold; }
-.ectt-1200 { font-family: 'FiraMono', 'Lucida Console', Monaco, monospace; padding: 0pt; }
+.ectt-1200, .e { font-family: 'FiraMono', 'Lucida Console', Monaco, monospace; padding: 0pt; }
 .chapwrap h2.likechapterHead, .chapterHead { margin: 0pt; padding: 10pt; background: #222; color: #fff; border-radius: 4pt 4pt 0pt 0pt; border: solid 1pt #222; }
 table.ultra-narrow { max-width: 700pt; }
 table { margin: auto 10pt 10pt 10pt; width: 100%; max-width: 830pt; border-radius: 4pt; border-spacing: 0; border: solid 2pt #444; line-height: 1em; }
@@ -86,7 +87,7 @@ td { font-size: 11pt; padding-left: 10pt; }
 .subsectionToc { display: inline-block; width: 100%; padding-left: 20pt; font-size: 0.9em; }
 .subsectionToc a { color: #00007c; }
 .subsectionToc a:hover { color: #6666af; }
-.subsectionToc .ectt-1200 { font-size: 0.9em; }
+.subsectionToc .ectt-1200, .subsectionToc .e { font-size: 0.9em; }
 img { width: 60%; height: auto; }
 .figure img { width: 100%; height: auto; }
 dt.enumerate-enumitem { float:left; clear:left; margin: 0em 1em 0em 1em; }
@@ -95,8 +96,8 @@ h3 { font-size: 1.25em; }
 h4 { font-size: 1.10em; }
 #titlepage-logo { width: 200pt; }
 hr { border: none; }
-div.figure p.noindent { display: none; }
-div.figure div.center p.noindent { display: block; }
+div.figure p.noindent, div.figure p.ni { display: none; }
+div.figure div.center p.noindent, div.figure div.center p.ni { display: block; }
 div.table div.float span.ecrm-1095 { display: none; }
 div.table div.float div.caption span.content span.ecrm-1095 { font-size: 12pt; display: inline-block; }
 div.table div.float div.caption span.id { font-size: 12pt; }
@@ -107,6 +108,12 @@ a { color: #7c0000; }
 a:hover { color: #af6666; }
 div.section_subsections { display: none; }
 div.spacer { height: 1em; }
+.td11 { white-space:normal; text-align:left; }
+.tr11 { vertical-align:baseline; }
+.bl { color #000; }
+.rd { color: #BF0040; }
+.pr { color: #800080; }
+.gr { color: #666; }
 \EndCssFile
 \fi
 \ifdefined\HCode

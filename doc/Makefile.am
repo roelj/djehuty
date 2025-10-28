@@ -67,7 +67,26 @@ $(doc_HTML): $(doc_PDF)
           -e 's#  "http://www.w3.org/TR/html4/loose.dtd"> ##g' \
           -e 's#<!--tex4ht:.*-->##g' \
           -e 's#<!--l\..[0-9]*-->##g' \
-          -e 's#<br />#<br>#g' $(doc_NAME).html > index.html
+          -e 's#class="ectt-1200"#class="e"#g' \
+          -e 's#<p class="noindent" >#<p class="ni">#g' \
+          -e 's#<span style="color:\#000000"></span>##g' \
+          -e 's#style="color:\#000000"#class="bl"#g' \
+          -e 's#style="color:\#BF0040"#class="rd"#g' \
+          -e 's#style="color:\#800080"#class="pr"#g' \
+          -e 's#style="color:\#666666"#class="gr"#g' \
+          -e 's#style="white-space:normal; text-align:left;" id="TBL# id="TBL#g' \
+          -e 's#<span class="bl"> </span>#\&nbsp;#g' \
+          -e 's#style="vertical-align:baseline;" id="TBL#class="tr11" id="TBL#g' \
+          -e 's#style="white-space:nowrap; text-align:left;" id="TBL#style="white-space:nowrap;" id="TBL#g' \
+          -e 's# [[:space:]]*\&\#x00A0;\&\#x00A0;# \&\#x00A0;\&\#x00A0;#g' \
+          -e 's# [[:space:]]*</td># </td>#g' \
+          -e 's#<td [[:space:]]*#<td #g' \
+          -e 's# [[:space:]]*</span># </span>#g' \
+          -e '\#^[[:space:]]*$$#d' \
+          -e 's#<span class=".."> </span>#\&nbsp;#g' \
+          -e 's#\&nbsp;\&nbsp;#\&nbsp; #g' \
+          -e 's#</span>\&nbsp;<span#</span> <span#g' \
+          -e 's#<br />#<br>#g' ${srcdir}/$(doc_NAME).html > ${srcdir}/index.html
 	@printf "Generated index.html.\n"
 
 .PHONY: $(doc_NAME).css
