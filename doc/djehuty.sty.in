@@ -91,6 +91,9 @@
 %% Create a variable that holds the base URL for this instance of djehuty.
 \def \djehutybaseurl {@BASE_URL@}
 
+% Create a variable that holds the Git repository URL for this instance of djehuty.
+\def \djehutygiturl {@GIT_URL@}
+
 \newcommand\VRule[1][\arrayrulewidth]{\vrule width #1}
 \newcommand{\oddcell}{\cellcolor{OddRowColor}}
 \newcommand{\headrow}{\rowcolor{Gray}}
@@ -124,10 +127,10 @@
 \newcommand\bamrdf[1]{\texttt{bam2rdf:}#1}
 \newcommand\tablerdf[1]{\texttt{table2rdf:}#1}
 \newcommand{\dhref}[1]{\href{#1}{#1}}
-\newcommand{\commitLink}[1]{\href{https://github.com/4TUResearchData/djehuty/commit/#1}{\texttt{#1}}}
+\newcommand{\commitLink}[1]{\href{\djehutygiturl/commit/#1}{\texttt{#1}}}
 \IfFileExists{stringstrings.sty}{
   \usepackage{stringstrings}
-  \renewcommand{\commitLink}[1]{\href{https://github.com/4TUResearchData/djehuty/commit/##1}{\substring{##1}{1}{9}}}
+  \renewcommand{\commitLink}[1]{\href{\djehutygiturl/commit/##1}{\substring{##1}{1}{9}}}
 }{
   \PackageWarning{djehuty}{Missing stringstrings package: will render long Git commits.}
 }
