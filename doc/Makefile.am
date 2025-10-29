@@ -59,7 +59,7 @@ if HAVE_HTLATEX
 index.html: $(doc_HTML)
 
 $(doc_HTML): $(doc_PDF)
-	@ln -fs ${abs_top_srcdir}/src/djehuty/web/resources/static/fonts -T ${srcdir}/fonts
+	-@ln -fs ${abs_top_srcdir}/src/djehuty/web/resources/static/fonts -T ${srcdir}/fonts
 	@$(HTLATEX) $(doc_TEX) > /dev/null
 	@$(SED) -e 's#class="endfloat" />#class="endfloat">#g' \
           -e 's#class="newline" />#class="newline">#g' \
