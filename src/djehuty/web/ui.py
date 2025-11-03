@@ -24,7 +24,7 @@ try:
 except (ImportError, ModuleNotFoundError):
     SAML2_DEPENDENCY_LOADED = False
 
-PYVIPS_ERROR_MESSAGE = None
+PYVIPS_ERROR_MESSAGE = None  # pylint: disable=invalid-name
 try:
     import pyvips  # pylint: disable=unused-import
     PYVIPS_DEPENDENCY_LOADED = True
@@ -32,7 +32,7 @@ except (ImportError, ModuleNotFoundError):
     PYVIPS_DEPENDENCY_LOADED = False
 except OSError as pyvips_oserror_message:
     PYVIPS_DEPENDENCY_LOADED = False
-    PYVIPS_ERROR_MESSAGE = pyvips_oserror_message
+    PYVIPS_ERROR_MESSAGE = pyvips_oserror_message  # pylint: disable=invalid-name
 
 # The 'uwsgi' module only needs to be available when deploying using uwsgi.
 # To catch potential run-time problems early on in the situation that the
