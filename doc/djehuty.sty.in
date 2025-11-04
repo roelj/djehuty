@@ -21,6 +21,7 @@
 \else
 \IfFileExists{libertine.sty}{\usepackage{libertine}}{
   \PackageWarning{djehuty}{Rendering without Libertine font.}
+  \usepackage{lmodern}
 }
 \fi
 \usepackage[T1]{fontenc}
@@ -46,10 +47,18 @@
 
 % Pretty character placement.
 \usepackage{microtype}
-\usepackage{titlesec}
-\usepackage{enumitem}
-\setitemize{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt}
-\usepackage[titletoc,title]{appendix}
+\IfFileExists{titlesec.sty}{\usepackage{titlesec}}{
+  \PackageWarning{djehuty}{Rendering without titlesec.}
+}
+\IfFileExists{enumitem.sty}{
+  \usepackage{enumitem}
+  \setitemize{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt}
+}{
+  \PackageWarning{djehuty}{Rendering without enumitem.}
+}
+\IfFileExists{appendix.sty}{\usepackage[titletoc,title]{appendix}}{
+  \PackageWarning{djehuty}{Rendering without titlesec.}
+}
 
 % Change the teletype font back to the original.
 \renewcommand*\ttdefault{cmtt}
