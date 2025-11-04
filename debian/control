@@ -6,12 +6,17 @@ Section: misc
 Priority: optional
 Standards-Version: 4.7.0
 Build-Depends: debhelper-compat (= 13),
+ dh-python,
  texlive,
  texlive-latex-extra,
+ texlive-plain-generic,
  fonts-linuxlibertine,
  cm-super,
  python3,
- python3-setuptools
+ python3-build,
+ python3-pip,
+ python3-setuptools,
+ python3-venv
 
 Package: djehuty
 Architecture: any
