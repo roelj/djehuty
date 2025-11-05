@@ -41,6 +41,7 @@ from djehuty.utils.convenience import value_or, value_or_none, deduplicate_list
 from djehuty.utils.convenience import self_or_value_or_none, parses_to_int
 from djehuty.utils.convenience import make_citation, is_opendap_url, landing_page_url
 from djehuty.utils.convenience import split_author_name, split_string, html_to_plaintext
+from djehuty.utils.convenience import limit_memory_for_subprocess
 from djehuty.utils.constants import iiif_supported_formats, filetypes_by_extension
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
 from djehuty.web.config import config
@@ -7134,25 +7135,18 @@ class WebServer:
 
         return self.response (json.dumps(files))
 
-
-    def __git_files_for_zipfly (self, filesystem_path, tree, path=""):
+    def __files_for_zipfly (self, filesystem_path, tree, path=""):
         file_paths = []
         for entry in tree:
-            # Walk the directory tree
-            if isinstance (entry, pygit2.Tree):  # pylint: disable=no-member
-                file_paths += self.__git_files_for_zipfly (filesystem_path, list(entry),
-                                                           f"{path}{entry.name}/")
+            if entry.is_dir():
+                file_paths += self.__files_for_zipfly (filesystem_path,
+                                                       os.scandir (os.path.join (filesystem_path, path, entry.name)),
+                                                       os.path.join (path, entry.name))
                 continue
 
-            # Submodules are represented as commits.
-            if isinstance (entry, pygit2.Commit):  # pylint: disable=no-member
-                continue
-
-            relative_path = f"{path}{entry.name}"
-            # The path separator is under our own control, don't use os.path.join here.
-            absolute_path = f"{filesystem_path}/{relative_path}"
-            record = { "fs": absolute_path, "n": relative_path }
-            file_paths.append (record)
+            relative_path = os.path.join (path, entry.name)
+            absolute_path = os.path.join (filesystem_path, relative_path)
+            file_paths.append ({ "fs": absolute_path, "n": relative_path })
 
         return file_paths
 
@@ -7171,13 +7165,22 @@ class WebServer:
                                          prefix = "git-zip-",
                                          delete = False) as folder:
             git_directory  = os.path.join (config.storage, f"{git_uuid}.git")
-            git_cloned     = pygit2.clone_repository (git_directory, folder)
 
-            if not isinstance (git_cloned, pygit2.Repository):
-                return self.error_500 (f"Unable to clone {git_directory}.")
+            try:
+                with subprocess.Popen(["git", "clone", f"--branch={branch}",  # pylint: disable=subprocess-popen-preexec-fn
+                                       git_directory, folder],
+                                      env = os.environ,
+                                      preexec_fn = limit_memory_for_subprocess,
+                                      stdout = subprocess.PIPE,
+                                      stderr = subprocess.PIPE) as process:
+                    _, errors = process.communicate (timeout = 600)
+                    if process.returncode != 0:
+                        return self.error_500 (f"Unable to clone {git_directory}: '{errors}'.")
+            except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+                process.kill()
+                return self.error_500 (f"Unable to clone {git_directory}: '{error}'.")
 
-            tree = git_repository.revparse_single(branch).tree # pylint: disable=no-member
-            files  = self.__git_files_for_zipfly (folder, tree)
+            files  = self.__files_for_zipfly (folder, os.scandir(folder))
             writer = None
             try:
                 zipfly_object = zipfly.ZipFly(paths = files, reproducible_timestamps=True)

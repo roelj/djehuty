@@ -9,6 +9,13 @@ from html.parser import HTMLParser
 from html import escape, unescape
 from djehuty.utils.constants import allowed_html_tags
 
+RLIMIT_AVAILABLE = False  # pylint: disable=invalid-name
+try:
+    from resource import setrlimit, RLIMIT_AS, RLIM_INFINITY
+    RLIMIT_AVAILABLE = True  # pylint: disable=invalid-name
+except (ImportError, ModuleNotFoundError):
+    pass
+
 class HTMLStripper (HTMLParser):
     """Overriden HTMLParser to strip HTML tags inspired by Django's implementation."""
 
@@ -366,3 +373,16 @@ def normalize_orcid (orcid):
 def normalize_doi (doi):
     """Procedure to make storing DOIs consistent."""
     return normalize_identifier (normalize_identifier (doi, "https://doi.org/"), "doi.org/")
+
+def limit_memory_for_subprocess (limit_in_bytes = 4096000000):
+    """Procedure to attempt to limit the memory usage of a subprocess."""
+    if not RLIMIT_AVAILABLE:
+        logging.warning ("Because 'setrlimit' is not available, memory usage may rise unbounded.")
+        return None
+
+    try:
+        setrlimit (RLIMIT_AS, (limit_in_bytes, RLIM_INFINITY))
+    except ValueError:
+        logging.warning ("Call to 'setrlimit' failed.")
+
+    return None
