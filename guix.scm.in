@@ -52,7 +52,7 @@
           python-pygit2
           python-requests
           python-werkzeug))
-   (home-page "https://github.com/4TUResearchData/djehuty")
+   (home-page "@GIT_URL@")
    (synopsis "The 4TU.ResearchData and Nikhef data repository system.")
    (description "This packge contains the implementation of the data
 repository of 4TU.ResearchData and Nikhef.")

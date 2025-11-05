@@ -20,9 +20,9 @@ classifiers     = [
 ]
 
 [project.urls]
-"Homepage"      = "https://data.4tu.nl/"
-"Source Code"   = "https://github.com/4TUResearchData/djehuty"
-"Bug Tracker"   = "https://github.com/4TUResearchData/djehuty/issues"
+"Homepage"      = "@BASE_URL@/"
+"Source Code"   = "@GIT_URL@"
+"Bug Tracker"   = "@GIT_URL@/issues"
 
 [project.scripts]
 djehuty = "djehuty.ui:main"
