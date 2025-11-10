@@ -6,6 +6,7 @@ import os
 import socket
 import shutil
 import json
+from time import sleep
 from datetime import datetime
 from defusedxml import ElementTree
 from werkzeug.serving import run_simple
@@ -732,6 +733,13 @@ def read_configuration_file (server, config_file, logger, config_files):
         if update_endpoint:
             config.update_endpoint = update_endpoint
 
+        seconds_to_wait = config_value (xml_root, "rdf-store/seconds-to-wait-for-online")
+        if seconds_to_wait:
+            try:
+                config.sparql_wait_for_online = int(seconds_to_wait)
+            except ValueError:
+                logger.error ("The value for 'seconds-to-wait-for-online' must be an integer.")
+
         config.show_portal_summary = read_boolean_value (xml_root, "show-portal-summary",
                                                          config.show_portal_summary, logger)
 
@@ -1273,11 +1281,20 @@ def main (config_file=None, run_internal_server=True, initialize=True,
                     logger.info ("Enabled 2FA for %s.", email_address)
 
             if initialize:
-                if not server.db.state_graph_is_initialized ():
+                is_initialized = server.db.state_graph_is_initialized ()
+                if not server.db.sparql_is_up:
+                    wait_time = 0
+                    while wait_time < config.sparql_wait_for_online:
+                        is_initialized = server.db.state_graph_is_initialized ()
+                        logger.info ("Waiting for the SPARQL endpoint to come online (%d/%d).",
+                                     wait_time + 1, config.sparql_wait_for_online)
+                        wait_time += 1
+                        sleep(1)
                     if not server.db.sparql_is_up:
                         logger.error ("Cannot initialize because the SPARQL endpoint is down.")
                         return None
 
+                if not is_initialized:
                     logger.info ("Invalidating caches ...")
                     server.db.cache.invalidate_all ()
                     logger.info ("Initializing RDF store ...")

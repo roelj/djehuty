@@ -85,7 +85,11 @@ configuration file, for which an example is available at
                                be installed.\\
   \t{sparql-update-uri}      & The URI at which the SPARQL 1.1 Update endpoint
                                can be reached (in case it is different from
-                               the \t{sparql-uri}.
+                               the \t{sparql-uri}.\\
+  \t{seconds-to-wait-for-online} & Number of seconds to retry in case the SPARQL
+                               endpoint is down when initializing. A retry is
+                               done every second, and after the configured
+                               amount, \t{djehuty} will give up.
 \end{tabularx}
 
 \section{Audit trails and database reconstruction}

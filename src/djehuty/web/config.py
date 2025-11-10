@@ -30,6 +30,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.endpoint                    = "http://127.0.0.1:8890/sparql"
         self.update_endpoint             = None
         self.state_graph                 = "https://data.4tu.nl/portal/self-test"
+        self.sparql_wait_for_online      = 60
         self.privileges                  = {}
         self.thumbnail_storage           = None
         self.profile_images_storage      = None
