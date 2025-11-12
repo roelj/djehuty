@@ -93,6 +93,7 @@ class WebServer:
             R("/",                                                               self.ui_home),
             R("/portal",                                                         self.ui_redirect_to_home),
             R("/browse",                                                         self.ui_redirect_to_home),
+            R("/ping",                                                           self.ping),
             R("/robots.txt",                                                     self.robots_txt),
             R("/theme/colors.css",                                               self.colors_css),
             R("/theme/loader.svg",                                               self.loader_svg),
@@ -1668,6 +1669,17 @@ class WebServer:
             return redirect ("/", code=301)
 
         return self.response (json.dumps({ "status": "OK" }))
+
+    def ping (self, request):
+        """Implements /ping."""
+
+        if not self.accepts_content_type (request, "application/json", strict=False):
+            return self.error_406 ("application/json")
+
+        return self.response (json.dumps({
+            "in-maintenance": config.maintenance_mode,
+            "database-is-up": self.db.sparql_is_up
+        }))
 
     def robots_txt (self, request):  # pylint: disable=unused-argument
         """Implements /robots.txt."""
