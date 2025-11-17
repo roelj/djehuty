@@ -31,6 +31,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.update_endpoint             = None
         self.state_graph                 = "https://data.4tu.nl/portal/self-test"
         self.sparql_wait_for_online      = 60
+        self.sparql_read_only_mode       = False
         self.privileges                  = {}
         self.thumbnail_storage           = None
         self.profile_images_storage      = None

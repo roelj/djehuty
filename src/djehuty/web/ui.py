@@ -740,6 +740,9 @@ def read_configuration_file (server, config_file, logger, config_files):
             except ValueError:
                 logger.error ("The value for 'seconds-to-wait-for-online' must be an integer.")
 
+        config.sparql_read_only_mode = read_boolean_value (xml_root, "rdf-store/read-only-mode",
+                                                           config.sparql_read_only_mode, logger)
+
         config.show_portal_summary = read_boolean_value (xml_root, "show-portal-summary",
                                                          config.show_portal_summary, logger)
 

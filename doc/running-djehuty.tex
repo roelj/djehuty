@@ -89,7 +89,12 @@ configuration file, for which an example is available at
   \t{seconds-to-wait-for-online} & Number of seconds to retry in case the SPARQL
                                endpoint is down when initializing. A retry is
                                done every second, and after the configured
-                               amount, \t{djehuty} will give up.
+                                   amount, \t{djehuty} will give up.\\
+  \t{read-only-mode}         & When set to \code{1}, no queries that change
+                               the state of the database shall be made.  This
+                               is useful for running secondary instances to
+                               balance the load of specific endpoints. Defaults
+                               to \code{0}.
 \end{tabularx}
 
 \section{Audit trails and database reconstruction}

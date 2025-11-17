@@ -167,6 +167,9 @@ class SparqlInterface:
     def __run_logged_query (self, query):
         """Passthrough for '__run_query' that handles the audit log feature."""
 
+        if config.sparql_read_only_mode:
+            return False
+
         if config.enable_query_audit_log:
             self.__log_query (query, "Query Audit Log")
 
@@ -187,6 +190,10 @@ class SparqlInterface:
             if execution_type == "update":
                 if query_type == "LOAD":
                     self.log.audit ("Denied SPARQL LOAD request.")
+                    return False
+
+                if config.sparql_read_only_mode:
+                    self.log.warning ("Update query blocked due to read-only mode.")
                     return False
                 self.sparql.update (query)
                 self.sparql.commit()
@@ -253,8 +260,15 @@ class SparqlInterface:
     def __insert_query_for_graph (self, graph, only_log_query=False):
         if config.enable_query_audit_log:
             query = rdf.insert_query (config.state_graph, graph)
+            suffix = []
             if only_log_query:
-                self.__log_query (query, "Query Audit Log (delayed)")
+                suffix.append ("delayed")
+            if config.sparql_read_only_mode:
+                suffix.append ("read-only-mode")
+
+            if suffix:
+                suffix_string = ", ".join(suffix)
+                self.__log_query (query, f"Query Audit Log ({suffix_string})")
             else:
                 self.__log_query (query, "Query Audit Log")
             return query
@@ -3586,8 +3600,9 @@ class SparqlInterface:
         if processing_complete:
             return True
 
-        self.log.error ("Inserting triples from a graph failed.")
-        self.__log_query (query)
+        if not config.sparql_read_only_mode:
+            self.log.error ("Inserting triples from a graph failed.")
+            self.__log_query (query)
 
         return False
 
