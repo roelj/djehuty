@@ -22,7 +22,6 @@ EXTRA_DIST              =                   \
   debian/source/include-binaries            \
   docker/Dockerfile                         \
   docker/docker-compose.yaml                \
-  requirements.txt                          \
   pyproject.toml                            \
   tests/admin_panel.py                      \
   tests/create_article.py                   \

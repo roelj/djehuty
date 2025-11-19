@@ -15,13 +15,12 @@ Next, we need to create a somewhat isolated Python environment:
 $ python -m venv djehuty-env
 $ . djehuty-env/bin/activate
 [env]$ cd djehuty
-[env]$ pip install -r requirements.txt
 \end{lstlisting}
 
 And finally, we can install \t{djehuty} in the virtual environment to make
 the \t{djehuty} command available:
 \begin{lstlisting}[language=bash]
-[env]$ sed -e 's/@VERSION@/0.0.1/g' pyproject.toml.in > pyproject.toml
+[env]$ autoreconf -if && ./configure
 [env]$ pip install --editable .
 \end{lstlisting}
 

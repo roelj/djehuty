@@ -18,7 +18,15 @@ classifiers     = [
     "Environment :: Web Environment",
     "Operating System :: OS Independent",
 ]
-
+dependencies = [
+    "Jinja2>=3.0.3",
+    "pygit2>=1.6.1",
+    "rdflib>=6.0.0",
+    "requests>=2.26.0",
+    "Werkzeug>=2.0.2",
+    "defusedxml>=0.7.1",
+    "pillow>=9.4.0"
+]
 [project.urls]
 "Homepage"      = "@BASE_URL@/"
 "Source Code"   = "@GIT_URL@"

@@ -25,7 +25,6 @@ autoreconf -if && ./configure
 python -m venv ../djehuty-env
 . ../djehuty-env/bin/activate
 pip install --upgrade pip
-pip install --requirement requirements.txt
 pip install --editable .
 ```
 
@@ -51,7 +50,6 @@ autoreconf -if && ./configure
 python3 -m venv ../djehuty-env
 . ../djehuty-env/bin/activate
 pip install --upgrade pip
-pip install --requirement requirements.txt
 pip install --editable .
 ```
 

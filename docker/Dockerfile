@@ -29,7 +29,6 @@ RUN git clone --branch "$BRANCH" --depth 1 "$GIT_URL" /opt/djehuty/djehuty \
     && GIT_VERSION=$(git -C /opt/djehuty/djehuty rev-parse --short HEAD); cd /opt/djehuty/djehuty; autoreconf -if && ./configure \
     && python3 -m venv /opt/djehuty/virtual-env \
     && . /opt/djehuty/virtual-env/bin/activate \
-    && pip install -r /opt/djehuty/djehuty/requirements.txt python3-saml \
-    && pip install --editable /opt/djehuty/djehuty
+    && pip install python3-saml --editable /opt/djehuty/djehuty
 
 CMD ["/bin/bash"]
