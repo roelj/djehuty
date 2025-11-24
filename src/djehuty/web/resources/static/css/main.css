@@ -69,7 +69,7 @@ body,html {
 }
 #wrapper {
     width: 100%;
-    min-height: calc(100% - 92pt); /* 92pt is a footer with one paragraph. */
+    min-height: calc(100% - 80px); /* 80px is a footer with one paragraph. */
     padding: 0em;
     margin: 0em auto auto auto;
     border: none;
@@ -278,7 +278,7 @@ pre {
 #footer-wrapper2 a { text-decoration: none; color: #fff; }
 #footer-wrapper2 p { line-height: 60px; color: #aaa; }
 #footer-wrapper2 {
-    height: 80px;
+    height: 77px;
     max-width: 880pt;
     margin: 0 auto;
     padding: 0;
