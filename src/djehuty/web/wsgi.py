@@ -858,31 +858,29 @@ class WebServer:
             "code":    code
         })
 
-    def error_403 (self, request, audit_log_message=None):
-        """Procedure to respond with HTTP 403."""
+    def error_40x (self, request, audit_log_message, error_code, error_message):
+        """General error response handler."""
         response = None
         if audit_log_message is not None:
             self.log.audit (audit_log_message)
         if self.accepts_html (request, strict=True):
-            response = self.__render_template (request, "403.html")
+            response = self.__render_template (request, f"{error_code}.html")
         else:
-            response = self.response (json.dumps ({"message": "Not allowed."}))
-        response.status_code = 403
+            response = self.response (json.dumps ({"message": error_message}))
+        response.status_code = error_code
         return response
+
+    def error_403 (self, request, audit_log_message=None):
+        """Procedure to respond with HTTP 403."""
+        return self.error_40x (request, audit_log_message, 403, "Not allowed.")
 
     def error_404 (self, request, audit_log_message=None):
         """Procedure to respond with HTTP 404."""
-        response = None
-        if audit_log_message is not None:
-            self.log.audit (audit_log_message)
-        if self.accepts_html (request, strict=True):
-            response = self.__render_template (request, "404.html")
-        else:
-            response = self.response (json.dumps({
-                "message": "This resource does not exist."
-            }))
-        response.status_code = 404
-        return response
+        return self.error_40x (request, audit_log_message, 404, "This resource does not exist.")
+
+    def error_410 (self, request, audit_log_message=None):
+        """Procedure to respond with HTTP 410."""
+        return self.error_40x (request, audit_log_message, 410, "This resource is gone.")
 
     def error_405 (self, allowed_methods):
         """Procedure to respond with HTTP 405."""
@@ -897,17 +895,6 @@ class WebServer:
             "message": "The resource is already available."
         }))
         response.status_code = 409
-        return response
-
-    def error_410 (self, request):
-        """Procedure to respond with HTTP 410."""
-        if self.accepts_html (request, strict=True):
-            response = self.__render_template (request, "410.html")
-        else:
-            response = self.response (json.dumps({
-                "message": "This resource is gone."
-            }))
-        response.status_code = 410
         return response
 
     def error_413 (self, request):
