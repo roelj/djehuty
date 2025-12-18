@@ -70,12 +70,6 @@
         "type": "data"
     },
     {
-        "url": "https://data.4tu.nl/info/fileadmin/user_upload/Documenten/4TU.ResearchData_Restricted_Data_2022.pdf",
-        "value": 149,
-        "name": "Restrictive Licence",
-        "type": "legacy"
-    },
-    {
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
         "value": 145,
         "name": "Apache-2.0",

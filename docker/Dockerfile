@@ -1,9 +1,9 @@
 FROM debian:trixie-slim
-LABEL authors="Nikhef, 4TU.ResearchData"
+LABEL authors="Nikhef, 4TU.ResearchData, Roel Janssen"
 ARG PURPOSE="release"
 ARG BRANCH="main"
 ARG VERSION="0.0.0"
-ARG GIT_URL="https://github.com/4TUResearchData/djehuty.git"
+ARG GIT_URL="https://codeberg.org/roelj/djehuty.git"
 
 # Build a self-updating (development) container:
 # docker image build --build-arg="PURPOSE=development" -t djehuty:devel .

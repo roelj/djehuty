@@ -16,13 +16,13 @@
   </colors>
   <small-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://github.com/4TUResearchData/djehuty">djehuty</a> built for <a href="https://data.4tu.nl">4TU.ResearchData</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">djehuty</a>.
       </p>
     </div>
   </small-footer>
   <large-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://github.com/4TUResearchData/djehuty">djehuty</a> built for <a href="https://data.4tu.nl">4TU.ResearchData</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">djehuty</a>.
       </p>
     </div>
   </large-footer>

@@ -1,13 +1,17 @@
 djehuty
 =========
 
-This Python package provides the repository system for 4TU.ResearchData and Nikhef.
+This software provides a general data and software repository system that
+attempts to promote active re-use of data and software by providing a
+rock-solid foundation of implementations of protocols and standards related
+to its aims.
 
 ## Reporting (potential) security issues
 
 For security-related matters, please e-mail
-[security@djehuty.4tu.nl](mailto:security@djehuty.4tu.nl).  This will only
-reach the security teams at 4TU.ResearchData and Nikhef.
+[security@djehuty.roelj.com](mailto:security@djehuty.roelj.com).  If you are
+(going to be) running an instance of this project and would like to be part of
+the security mailing list, then please write the mailing list.
 
 ## Creating a development environment
 
@@ -20,7 +24,7 @@ For development on GNU/Linux we recommend installing `git`, `autoconf`,
 creating a Python virtual environment for `djehuty`:
 
 ```bash
-git clone https://github.com/4TUResearchData/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
 autoreconf -if && ./configure
 python -m venv ../djehuty-env
 . ../djehuty-env/bin/activate
@@ -45,7 +49,7 @@ followed by creating a Python virtual environment for `djehuty`:
 
 ```bash
 brew install python3 git autoconf automake make
-git clone https://github.com/4TUResearchData/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
 autoreconf -if && ./configure
 python3 -m venv ../djehuty-env
 . ../djehuty-env/bin/activate
@@ -73,7 +77,7 @@ pacman -Suy git autoconf automake make ${PREFIX}python \
             ${PREFIX}python-werkzeug ${PREFIX}python-defusedxml \
             ${PREFIX}python-pillow ${PREFIX}python-build \
             ${PREFIX}python-setuptools
-git clone https://github.com/4TUResearchData/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
 # If you chose a different PREFIX above, change /mingw64 accordingly below.
 # See: https://www.msys2.org/docs/environments
 /mingw64/bin/python -m venv --system-site-packages ../djehuty-env

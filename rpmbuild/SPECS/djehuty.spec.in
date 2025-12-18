@@ -1,7 +1,7 @@
 Name:        djehuty
 Version:     @VERSION@
 Release:     1%{?dist}
-Summary:     Data repository system by 4TU.ResearchData and Nikhef
+Summary:     Data and software repository system
 Source0:     %{name}-%{version}.tar.gz
 License:     AGPL-3.0-or-later
 Group:       System Environment/Daemons
@@ -45,8 +45,7 @@ Requires: python%{python3_pkgversion}-pillow
 %undefine __brp_mangle_shebangs
 
 %description
-This package provides the data repository system by
-4TU.ResearchData and Nikhef.
+This package provides a data and software repository system.
 
 %prep
 %autosetup -p1 -n %{name}-%{version}
@@ -127,4 +126,4 @@ rm -rf %{buildroot}
 %changelog
 * Fri Jan 31 2025 Roel Janssen <r.r.e.janssen@tudelft.nl> 25.1-1
 - Initial RPM creation.
-- See https://djehuty.4tu.nl/#news-section for the full release notes.
+- See https://djehuty.roelj.com/#news-section for the full release notes.

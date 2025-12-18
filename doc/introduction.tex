@@ -1,8 +1,7 @@
 \chapter{Introduction}
 
-\code{djehuty} is the data repository system developed by
-4TU.ResearchData and Nikhef.  The name finds its inspiration in
-\href{https://en.wikipedia.org/wiki/Thoth}{Thoth}, the Egyptian
+\code{djehuty} is a data and software repository system.  The name finds its
+inspiration in \href{https://en.wikipedia.org/wiki/Thoth}{Thoth}, the Egyptian
 entity that introduced the idea of writing.
 
 \section{Obtaining the source code}
@@ -100,7 +99,7 @@ make install
 
 \section{Pre-built containers}
 
-  4TU.ResearchData provides Docker container images as a convenience service
+  Docker container images are provided as a convenience service
   for each monthly \t{djehuty} release.  The following table outlines the
   meaning of each image provided.  The images are published to
   \href{https://hub.docker.com/r/4turesearchdata/djehuty}{Docker Hub}%
@@ -117,11 +116,10 @@ make install
   \t{latest}          & This image points to the latest \t{djehuty} release.
                         It does not automatically update the \t{djehuty}
                         codebase.\\
-  \t{XX.X}            & 4TU.ResearchData releases a version each month where
-                        the number before the dot refers to the year and the
-                        number after the dot refers to the month.  Use a
-                        specific version image when you want to upgrade at
-                        your own pace.
+  \t{XX.X}            & Release number where the number before the dot refers
+                        to the year and the number after the dot refers to
+                        the month.  Use a specific version image when you
+                        want to upgrade at your own pace.
 \end{tabularx}
 
   To build the container images for yourself, see the build instructions in
@@ -129,19 +127,19 @@ make install
 
 \section{RPM packages}
 
-  4TU.ResearchData provides RPM packages built for Enterprise Linux 9.  This
+  RPM packages are provided and built for Enterprise Linux 10.  This
   RPM depends on packages in the \href{https://docs.fedoraproject.org/en-US/epel}%
   {Extra Packages for Enterprise Linux (EPEL)} repository.
 
 \begin{tabularx}{\textwidth}{*{1}{!{\VRule[-1pt]}l}!{\VRule[-1pt]}X}
   \headrow
   \textbf{Filename}  & \textbf{Description}\\
-  \href{\djehutygiturl/releases/download/v\djehutyversion/djehuty-\djehutyversion-1.el9.noarch.rpm}%
-  {djehuty-\djehutyversion-1.el9.noarch.rpm} & Binary RPM, to install and run \t{djehuty}.\\
-  \href{\djehutygiturl/releases/download/v\djehutyversion/djehuty-\djehutyversion-1.el9.src.rpm}%
-  {djehuty-\djehutyversion-1.el9.src.rpm} & Source RPM, to (re)build from source code.
+  \href{\djehutygiturl/releases/download/v\djehutyversion/djehuty-\djehutyversion-1.el10.noarch.rpm}%
+  {djehuty-\djehutyversion-1.el10.noarch.rpm} & Binary RPM, to install and run \t{djehuty}.\\
+  \href{\djehutygiturl/releases/download/v\djehutyversion/djehuty-\djehutyversion-1.el10.src.rpm}%
+  {djehuty-\djehutyversion-1.el10.src.rpm} & Source RPM, to (re)build from source code.
 \end{tabularx}
 
-  RPM packages for more distributions are
+  RPM packages for more distributions, including Enterprise Linux 9, are
   \href{https://copr.fedorainfracloud.org/coprs/4turesearchdata/djehuty}%
   {built via Copr}.

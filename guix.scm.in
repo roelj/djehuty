@@ -53,9 +53,9 @@
           python-requests
           python-werkzeug))
    (home-page "@GIT_URL@")
-   (synopsis "The 4TU.ResearchData and Nikhef data repository system.")
-   (description "This packge contains the implementation of the data
-repository of 4TU.ResearchData and Nikhef.")
+   (synopsis "Data and software repository system.")
+   (description "This packge contains the implementation of a data
+and software repository.")
    (license license:agpl3+)))
 
 ;; Evaluate to the above recipe, so that the development

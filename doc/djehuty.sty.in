@@ -32,9 +32,7 @@
 \Configure{@HEAD}{\HCode{<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\Hnewline}}
 \Configure{@HEAD}{\HCode{<meta name="viewport" content="width=device-width, initial-scale=1.0">\Hnewline}}
 \Configure{@HEAD}{\HCode{<meta name="description" content="This website
-    provides documentation on Djehuty: an archiving and publishing data
-    repository system for data and software developed by 4TU.ResearchData
-    and Nikhef.">\Hnewline}}
+    provides documentation on Djehuty: a data and software repository system.">\Hnewline}}
 \Configure{@HEAD}{\HCode{<meta name="og:site_name" content="Djehuty">\Hnewline}}
 \Configure{@HEAD}{\HCode{<meta name="og:type" content="website">\Hnewline}}
 \Configure{@HEAD}{\HCode{<meta name="og:title" content="Documentation of

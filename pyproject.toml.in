@@ -9,8 +9,8 @@ build-backend   = "setuptools.build_meta"
 name            = "djehuty"
 version         = "@VERSION@"
 license         = "AGPL-3.0-or-later"
-authors         = [{ name="Roel Janssen", email="r.r.e.janssen@tudelft.nl" }]
-description     = "The 4TU.ResearchData and Nikhef data repository system"
+authors         = [{ name="Roel Janssen", email="rrejanssen@gmail.com" }]
+description     = "A data and software repository system"
 readme          = "README.md"
 requires-python = ">=3.9"
 classifiers     = [

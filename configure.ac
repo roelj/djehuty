@@ -70,7 +70,7 @@ AC_ARG_VAR(GIT_URL, [The URL of the Git repository for the code of this
                      instance.  This is only used to align the documentation.])
 
 dnl Default value for GIT_URL
-: "${GIT_URL=https://github.com/4TUResearchData/djehuty}"
+: "${GIT_URL=https://codeberg.org/roelj/djehuty}"
 
 dnl Check for presence of 'git'.
 dnl ---------------------------------------------------------------------------

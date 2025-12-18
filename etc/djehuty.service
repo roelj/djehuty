@@ -1,5 +1,5 @@
 [Unit]
-Description=Djehuty repository system for 4TU.ResearchData.
+Description=Djehuty data and software repository system.
 StartLimitIntervalSec=500
 StartLimitBurst=5
 
