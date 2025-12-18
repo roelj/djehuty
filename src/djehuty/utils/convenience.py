@@ -192,7 +192,7 @@ def deduplicate_list (alist):
         return None
 
 def make_citation (authors, year, title, version, item_type, doi,
-                   publisher='4TU.ResearchData', max_cited_authors=5):
+                   publisher=None, max_cited_authors=5):
     """Return citation in standard Datacite format."""
     try:
         auths = [{key:val for key,val in author.items() if val}
@@ -206,7 +206,9 @@ def make_citation (authors, year, title, version, item_type, doi,
         citation += f' ({year}): {title}'
         if not citation.endswith('.'):
             citation += '.'
-        citation += f' Version {version}. {publisher}. {item_type}. https://doi.org/{doi}'
+        if publisher:
+            publisher = f"{publisher}. "
+        citation += f' Version {version}. {publisher}{item_type}. https://doi.org/{doi}'
         return citation
     except TypeError:
         logging.error('could not make citation for %s', doi)

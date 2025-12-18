@@ -3713,7 +3713,8 @@ class WebServer:
         citation = make_citation(authors, posted_date, dataset['title'],
                                  value_or (dataset, 'version', 0),
                                  value_or (dataset, 'defined_type_name', 'undefined'),
-                                 value_or (dataset, 'doi', 'unavailable'))
+                                 value_or (dataset, 'doi', 'unavailable'),
+                                 publisher = config.site_name)
 
         lat = self_or_value_or_none(dataset, 'latitude')
         lon = self_or_value_or_none(dataset, 'longitude')
@@ -3894,7 +3895,8 @@ class WebServer:
         citation = make_citation(authors, posted_date, value_or (collection, 'title', 'Untitled'),
                                  value_or (collection, 'version', 0),
                                  'collection',
-                                 value_or (collection, 'doi', 'unavailable'))
+                                 value_or (collection, 'doi', 'unavailable'),
+                                 publisher = config.site_name)
 
         lat = self_or_value_or_none(collection, 'latitude')
         lon = self_or_value_or_none(collection, 'longitude')

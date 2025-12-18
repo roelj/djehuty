@@ -5,6 +5,7 @@ and other XML formats.
 
 from xml.etree import ElementTree
 from djehuty.utils.convenience import value_or, value_or_none
+from djehuty.web.config import config
 
 class ElementMaker:
     '''
@@ -104,7 +105,7 @@ def dublincore_tree (parameters):
     for tag in value_or (parameters, 'tags', []):
         maker.child(root, 'dc:subject', {}, tag)
     maker.child(root, 'dc:description', {}, item['description'])
-    maker.child(root, 'dc:publisher', {}, value_or(item, 'publisher', '4TU.ResearchData'))
+    maker.child(root, 'dc:publisher', {}, value_or(item, 'publisher', config.site_name))
     for contributor in value_or (parameters, 'contributor', []):
         maker.child(root, 'dc:contributor', {}, contributor['name'])
     for name in value_or (parameters, 'organizations', []):
@@ -218,7 +219,7 @@ def datacite_tree (parameters, debug=False):
     maker.child(maker.child(root, 'titles'), 'title', {}, item['title'])
 
     #04 publisher
-    maker.child(root, 'publisher', {}, value_or(item, 'publisher', '4TU.ResearchData'))
+    maker.child(root, 'publisher', {}, value_or(item, 'publisher', config.site_name))
 
     #05 publicationYear
     maker.child(root, 'publicationYear', {}, value_or(parameters, 'published_year', None))
