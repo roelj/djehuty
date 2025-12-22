@@ -7179,6 +7179,7 @@ class WebServer:
                         return self.error_500 (f"Unable to clone {git_directory}: '{errors}'.")
             except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
                 process.kill()
+                shutil.rmtree (folder)
                 return self.error_500 (f"Unable to clone {git_directory}: '{error}'.")
 
             files  = self.__files_for_zipfly (folder, os.scandir(folder))
@@ -7187,6 +7188,7 @@ class WebServer:
                 zipfly_object = zipfly.ZipFly(paths = files, reproducible_timestamps=True)
                 writer = zipfly_object.generator()
             except TypeError:
+                shutil.rmtree (folder)
                 return self.error_500 (f"Could not ZIP files for git repository {git_uuid}.")
 
             response = self.response (writer, mimetype="application/zip")
