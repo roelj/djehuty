@@ -7925,7 +7925,7 @@ class WebServer:
             destination_fd = os.open (output_filename, os.O_WRONLY | os.O_CREAT, 0o600)
             is_incomplete = None
             try:
-                with open (destination_fd, "wb") as output_stream:
+                with os.fdopen (destination_fd, "wb") as output_stream:
                     file_size = 0
                     while content_to_read > 4096:
                         chunk = input_stream.read (4096)
@@ -7947,6 +7947,8 @@ class WebServer:
             except BadRequest:
                 is_incomplete = 1
                 self.log.error ("Failed to write %s to disk: possible that bad internet connection on user's side or page refreshed/closed during upload.", output_filename)
+            finally:
+                os.close (destination_fd)
 
             if computed_file_size != file_size:
                 is_incomplete = 1
