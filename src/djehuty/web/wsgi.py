@@ -7447,6 +7447,7 @@ class WebServer:
             return self.error_404 (request)
 
         if value_or (dataset, "is_shared_with_me", False):
+            self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
             return self.error_403 (request, (f"collaborator account:{account_uuid} "
                                              f"attempted to sumbit dataset:{dataset_id} "
                                              "for review."))
