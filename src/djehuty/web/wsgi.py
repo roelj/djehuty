@@ -7923,7 +7923,7 @@ class WebServer:
             md5 = hashlib.new ("md5", usedforsecurity=False)
             file_size = 0
             destination_fd = os.open (output_filename, os.O_WRONLY | os.O_CREAT, 0o600)
-            is_incomplete = None
+            is_incomplete = False
             try:
                 with os.fdopen (destination_fd, "wb") as output_stream:
                     file_size = 0
@@ -7945,26 +7945,26 @@ class WebServer:
                     if os.name != 'nt':
                         os.fchmod (destination_fd, 0o400)  # pylint: disable=no-member
             except BadRequest:
-                is_incomplete = 1
+                is_incomplete = True
                 self.log.error ("Failed to write %s to disk: possible that bad internet connection on user's side or page refreshed/closed during upload.", output_filename)
             finally:
                 os.close (destination_fd)
 
             if computed_file_size != file_size:
-                is_incomplete = 1
+                is_incomplete = True
                 self.log.error ("Computed file size (%d) and actual file size (%d) for uploaded file mismatch.",
                                 computed_file_size, file_size)
 
             bytes_to_read -= file_size
             if bytes_to_read != len(expected_end):
-                is_incomplete = 1
+                is_incomplete = True
                 self.log.error ("Expected different length after file contents: '%d' != '%d'.",
                                 bytes_to_read, len(expected_end))
 
-            if is_incomplete != 1:
+            if not is_incomplete:
                 ending = input_stream.read (bytes_to_read)
                 if ending != expected_end:
-                    is_incomplete = 1
+                    is_incomplete = True
                     self.log.error ("Expected different end after file contents: '%s' != '%s'.",
                                     ending, expected_end)
 
