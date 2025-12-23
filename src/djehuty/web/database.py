@@ -15,8 +15,7 @@ from rdflib.plugins.stores import sparqlstore, memory
 from rdflib.store import CORRUPTED_STORE, NO_STORE
 from jinja2 import Environment, FileSystemLoader
 from djehuty.web import cache
-from djehuty.utils import rdf
-from djehuty.utils import convenience as conv
+from djehuty.utils import rdf, convenience as conv
 from djehuty.utils.constants import datetime_format
 from djehuty.web.config import config
 

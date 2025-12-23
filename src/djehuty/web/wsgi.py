@@ -3,7 +3,6 @@
 from datetime import date, datetime, timedelta
 from io import StringIO
 from math import ceil, log2
-import os.path
 import os
 import shutil
 import tempfile
@@ -29,23 +28,18 @@ from rdflib import URIRef
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 from PIL import Image, ImageSequence, UnidentifiedImageError
-from djehuty.web import validator
-from djehuty.web import formatter
-from djehuty.web import xml_formatter
-from djehuty.web import database
-from djehuty.web import email_handler
-from djehuty.web import locks
-from djehuty.web import s3
-from djehuty.utils.convenience import pretty_print_size, decimal_coords, normalize_doi
-from djehuty.utils.convenience import value_or, value_or_none, deduplicate_list
-from djehuty.utils.convenience import self_or_value_or_none, parses_to_int
-from djehuty.utils.convenience import make_citation, is_opendap_url, landing_page_url
-from djehuty.utils.convenience import split_author_name, split_string, html_to_plaintext
-from djehuty.utils.convenience import limit_memory_for_subprocess
+from djehuty.web import (
+    database, email_handler, formatter, locks, s3, validator, xml_formatter, zipfly
+)
+from djehuty.utils.convenience import (
+    decimal_coords, deduplicate_list, html_to_plaintext, is_opendap_url,
+    landing_page_url, limit_memory_for_subprocess, make_citation, normalize_doi,
+    parses_to_int, pretty_print_size, self_or_value_or_none, split_author_name,
+    split_string, value_or, value_or_none
+)
 from djehuty.utils.constants import iiif_supported_formats, filetypes_by_extension
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
 from djehuty.web.config import config
-from djehuty.web import zipfly
 
 ## Error handling for loading python3-saml is done in 'ui'.
 ## So if it fails here, we can safely assume we don't need it.
