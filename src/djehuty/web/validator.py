@@ -492,7 +492,7 @@ def string_fits_pattern (value, max_length, pattern):
 
 def is_valid_uuid (value):
     """Returns True when VALUE looks like a UUID, False otherwise."""
-    return string_fits_pattern (value, 36, "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+    return string_fits_pattern (value, 36, "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 
 def is_valid_url (value):
     """Returns True when VALUE looks like a URL, False otherwise."""
