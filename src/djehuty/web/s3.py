@@ -83,7 +83,9 @@ class S3DownloadStreamer:
 
     def close (self):
         """Closes the S3 client and resets the internal state."""
-        self.file_contents.close()
+        if self.file_contents is not None:
+            self.file_contents.close()
+
         self.client.close()
         self.file_object = None
         self.file_contents = None
@@ -92,7 +94,7 @@ class S3DownloadStreamer:
         self.last_modified = None
 
     def reset (self, offset=0):
-        """Resets the S3 connection and ttempt to contunie reading at OFFSET."""
+        """Resets the S3 connection and attempts to continue reading at OFFSET."""
         self.close ()
         self.offset = offset
         self.connect ()
