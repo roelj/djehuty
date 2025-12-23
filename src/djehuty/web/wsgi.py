@@ -7947,8 +7947,6 @@ class WebServer:
             except BadRequest:
                 is_incomplete = True
                 self.log.error ("Failed to write %s to disk: possible that bad internet connection on user's side or page refreshed/closed during upload.", output_filename)
-            finally:
-                os.close (destination_fd)
 
             if computed_file_size != file_size:
                 is_incomplete = True
