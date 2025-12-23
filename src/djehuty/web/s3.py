@@ -29,7 +29,6 @@ class S3DownloadStreamer:
         self.chunk_size = chunk_size
         self.offset = offset
         self.log = logging.getLogger (__name__)
-        self.chunk_size = chunk_size
         self.original_filename = name
         self.content_length = 0
         self.content_type = "binary/octet-stream"
