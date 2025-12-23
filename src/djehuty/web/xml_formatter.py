@@ -149,7 +149,7 @@ def nlm (parameters):
             maker.child_option(name, 'given-name', author, 'first_name')
     maker.child(maker.child(meta, 'pub-date', {'pub-type': 'pub'}),
                 'year', {}, value_or(parameters, 'published_year', None))
-    maker.child(meta, 'self-uri', {'xlink:href': f"https:doi.org/{parameters['doi']}"})
+    maker.child(meta, 'self-uri', {'xlink:href': f"https://doi.org/{parameters['doi']}"})
     maker.child(front, 'abstract', {}, item['description'])
     return serialize_tree_to_string(root)
 
