@@ -165,6 +165,7 @@ class ZipFly:
                         z_info.external_attr = 0xA1ED0000
                         z_info.create_system = 3
                         zip_stream.writestr(z_info,os.readlink(path[self.filesystem]))
+                        yield stream.get()
                     else:
                         with open (path[self.filesystem], "rb") as e:
                             with zip_stream.open (z_info, mode="w") as d:
