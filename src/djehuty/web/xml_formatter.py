@@ -116,8 +116,8 @@ def dublincore_tree (parameters):
     maker.child_option(root, 'dc:format', item, 'format')
     maker.child(root, 'dc:identifier', {}, parameters['doi'])
     maker.child(root, 'dc:language', {}, value_or(item, 'language', 'en'))
-    if 'recource_doi' in item:
-        maker.child(root, 'dc:relation', {}, f"https://doi.org/{item['recource_doi']}")
+    if 'resource_doi' in item:
+        maker.child(root, 'dc:relation', {}, f"https://doi.org/{item['resource_doi']}")
     maker.child_option(root, 'dc:coverage', item, 'geolocation')
     maker.child_option(root, 'dc:coverage', item, 'time_coverage')
     maker.child_option(root, 'dc:rights', item, 'license_name')
