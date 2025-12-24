@@ -41,10 +41,11 @@ function decline_dataset (dataset_uuid, event) {
 
 function preview_dataset (dataset_uuid, event) {
     stop_event_propagation (event);
-    let current_date = new Date();
-    let year  = current_date.getFullYear();
-    let month = current_date.getMonth() + 1; // getMonth is zero-indexed.
-    let day   = current_date.getDate() + 1;
+    let expiry_date = new Date();
+    expiry_date.setDate(expiry_date.getDate() + 1);
+    let year  = expiry_date.getFullYear();
+    let month = expiry_date.getMonth() + 1; // getMonth is zero-indexed.
+    let day   = expiry_date.getDate();
     if (month < 10) { month = `0${month}`; }
     if (day < 10) { day = `0${day}`; }
 
