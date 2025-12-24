@@ -166,7 +166,7 @@ function gather_form_data () {
 function save_dataset (dataset_uuid, event, notify=true, on_success=jQuery.noop) {
     stop_event_propagation (event);
 
-    // When keywords were entered but yet submitted, handle those first.
+    // When keywords were entered but not yet submitted, handle those first.
     add_tag (dataset_uuid);
     add_reference (dataset_uuid);
     let external_url = jQuery("#external_url").val();
@@ -336,7 +336,7 @@ function render_collaborators_for_dataset (dataset_uuid, may_edit_metadata, call
                 group_member_badge = `<span class="active-badge">${collaborator.group_name}</span>`;
             }
             let input_settings = { "type": "checkbox" };
-            if (collaborator.is_supervisor) { input_settings["disabled"] = "disabled" };
+            if (collaborator.is_supervisor) { input_settings["disabled"] = "disabled"; }
 
             column1.html(`${collaborator.first_name} ${collaborator.last_name} (${collaborator.email})${supervisor_badge}${group_member_badge}`);
             let column2 = jQuery("<td/>", { "class": "type-begin" });
@@ -353,11 +353,11 @@ function render_collaborators_for_dataset (dataset_uuid, may_edit_metadata, call
             let input4_settings = { ...input_settings, ...{ "class": "subitem-checkbox-data", "name": "edit" } };
             let input5_settings = { ...input_settings, ...{ "class": "subitem-checkbox-data", "name": "remove" } };
 
-            if (collaborator.metadata_read) { input1_settings["checked"] = "checked" };
-            if (collaborator.metadata_edit) { input2_settings["checked"] = "checked" };
-            if (collaborator.data_read) { input3_settings["checked"] = "checked" };
-            if (collaborator.data_edit) { input4_settings["checked"] = "checked" };
-            if (collaborator.data_remove) { input5_settings["checked"] = "checked" };
+            if (collaborator.metadata_read) { input1_settings["checked"] = "checked"; }
+            if (collaborator.metadata_edit) { input2_settings["checked"] = "checked"; }
+            if (collaborator.data_read) { input3_settings["checked"] = "checked"; }
+            if (collaborator.data_edit) { input4_settings["checked"] = "checked"; }
+            if (collaborator.data_remove) { input5_settings["checked"] = "checked"; }
 
             column2.append (jQuery("<input/>", input1_settings));
             column3.append (jQuery("<input/>", input2_settings));
@@ -510,6 +510,7 @@ function render_tags_for_dataset (dataset_uuid) {
 function cancel_edit_author (author_uuid, dataset_uuid) {
     jQuery("#author-inline-edit-form").remove();
     jQuery(`#edit-author-${author_uuid}`)
+        .off("click")
         .removeClass("fa-times")
         .removeClass("fa-lg")
         .addClass("fa-pen")
@@ -592,6 +593,7 @@ function edit_author (author_uuid, dataset_uuid) {
         row.append(column1);
         jQuery(`#author-${author_uuid}`).after(row);
         jQuery(`#edit-author-${author_uuid}`)
+            .off("click")
             .removeClass("fa-pen")
             .addClass("fa-times")
             .addClass("fa-lg")
@@ -997,7 +999,7 @@ function add_tag (dataset_uuid) {
     let tag = jQuery.trim(jQuery("#tag").val());
     if (tag == "") { return 0; }
 
-    let tags = []
+    let tags = [];
     if (tag.indexOf (";") >= 0) {
         let items = tag.split(";");
         for (item of items) {
