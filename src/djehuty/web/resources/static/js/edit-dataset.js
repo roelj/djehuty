@@ -173,7 +173,7 @@ function save_dataset (dataset_uuid, event, notify=true, on_success=jQuery.noop)
     if (external_url && external_url != "") {
         submit_external_link (dataset_uuid);
     }
-    form_data = gather_form_data();
+    let form_data = gather_form_data();
     jQuery.ajax({
         url:         `/v2/account/articles/${dataset_uuid}`,
         type:        "PUT",
@@ -1559,7 +1559,7 @@ function submit_dataset (dataset_uuid, event) {
     jQuery("#content").addClass("loader-top");
     jQuery("#content-wrapper").css('opacity', '0.15');
     save_dataset (dataset_uuid, event, false, function() {
-        form_data = gather_form_data();
+        let form_data = gather_form_data();
         let is_open_access = jQuery("#open_access").prop("checked");
         if (form_data["license_id"] == "98") {
             jQuery("#license_open").addClass("missing-required");
@@ -1583,7 +1583,7 @@ function submit_dataset (dataset_uuid, event) {
             jQuery(".missing-required").removeClass("missing-required");
             let error_messages = jQuery.parseJSON (response.responseText);
             let error_message = "<p>Please fill in all required fields.</p>";
-            if (error_messages.length > 0) {
+            if (error_messages != null && error_messages.length > 0) {
                 for (let message of error_messages) {
                     if (message.field_name == "license_id") {
                         jQuery("#license_open").addClass("missing-required");

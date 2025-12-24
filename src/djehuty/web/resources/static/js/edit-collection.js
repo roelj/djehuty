@@ -474,7 +474,7 @@ function publish_collection (collection_id, event) {
             jQuery(".missing-required").removeClass("missing-required");
             let error_messages = jQuery.parseJSON (response.responseText);
             let error_message = "<p>Please fill in all required fields.</p>";
-            if (error_messages.length > 0) {
+            if (error_messages != null && error_messages.length > 0) {
                 for (let message of error_messages) {
                     if (message.field_name == "license_id") {
                         jQuery("#license_open").addClass("missing-required");
