@@ -17,7 +17,7 @@ function render_references_for_collection (collection_id) {
         url:         `/v3/collections/${collection_id}/references`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (references) {
         jQuery("#references-list tbody").empty();
         for (let url of references) {
@@ -52,7 +52,7 @@ function render_datasets_for_collection (collection_id) {
         url:         `/v2/account/collections/${collection_id}/articles`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (datasets) {
         jQuery("#articles-list tbody").empty();
         for (let dataset of datasets) {
@@ -85,7 +85,7 @@ function reorder_author (collection_id, author_uuid, direction) {
         data: JSON.stringify({ "author":  author_uuid, "direction": direction }),
         type: "POST",
         contentType: "application/json",
-        accept: "application/json"
+        accepts: { json: "application/json" }
     }).done (function () {
         render_authors_for_collection (collection_id);
     }).fail(function () {
@@ -110,7 +110,7 @@ function render_authors_for_collection (collection_id) {
         url:         `/v2/account/collections/${collection_id}/authors`,
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (authors) {
         jQuery("#authors-list tbody").empty();
         let number_of_items = authors.length;
@@ -188,7 +188,7 @@ function render_funding_for_collection (collection_id) {
         url:         `/v2/account/collections/${collection_id}/funding`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (funders) {
         jQuery("#funding-list tbody").empty();
         for (let funding of funders) {
@@ -226,7 +226,7 @@ function render_tags_for_collection (collection_id) {
         url:         `/v3/collections/${collection_id}/tags`,
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (tags) {
         jQuery("#tags-list").empty();
         for (let tag of tags) {
@@ -246,7 +246,7 @@ function add_author (author_id, collection_id) {
         url:         `/v2/account/collections/${collection_id}/authors`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "authors": [{ "uuid": author_id }] }),
     }).done(function () {
         render_authors_for_collection (collection_id);
@@ -262,7 +262,7 @@ function add_funding (funding_uuid, collection_id) {
         url:         `/v2/account/collections/${collection_id}/funding`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "funders": [{ "uuid": funding_uuid }] }),
     }).done(function () {
         render_funding_for_collection (collection_id);
@@ -276,7 +276,7 @@ function add_dataset (dataset_id, collection_id) {
         url:         `/v2/account/collections/${collection_id}/articles`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "articles": [dataset_id] }),
     }).done(function () {
         render_datasets_for_collection (collection_id);
@@ -294,7 +294,7 @@ function add_reference (collection_id) {
             url:         `/v3/collections/${collection_id}/references`,
             type:        "POST",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify({ "references": [{ "url": url }] }),
         }).done(function () {
             render_references_for_collection (collection_id);
@@ -320,7 +320,7 @@ function add_tag (collection_id) {
         url:         `/v3/collections/${collection_id}/tags`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "tags": tags }),
     }).done(function () {
         render_tags_for_collection (collection_id);
@@ -333,7 +333,7 @@ function remove_author (author_id, collection_id) {
     jQuery.ajax({
         url:         `/v2/account/collections/${collection_id}/authors/${author_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_authors_for_collection (collection_id); })
       .fail(function () {
           show_message ("failure",`<p>Failed to remove ${author_id}</p>`);
@@ -344,7 +344,7 @@ function remove_funding (funding_id, collection_id) {
     jQuery.ajax({
         url:         `/v2/account/collections/${collection_id}/funding/${funding_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_funding_for_collection (collection_id); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${funding_id}.</p>`); });
 }
@@ -353,7 +353,7 @@ function remove_reference (url, collection_id) {
     jQuery.ajax({
         url:         `/v3/collections/${collection_id}/references?url=${url}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_references_for_collection (collection_id); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${url}</p>`); });
 }
@@ -362,7 +362,7 @@ function remove_dataset (dataset_id, collection_id) {
     jQuery.ajax({
         url:         `/v2/account/collections/${collection_id}/articles/${dataset_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () {
         render_datasets_for_collection (collection_id);
     }).fail(function () {
@@ -374,7 +374,7 @@ function remove_tag (tag, collection_id) {
     jQuery.ajax({
         url:         `/v3/collections/${collection_id}/tags?tag=${tag}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_tags_for_collection (collection_id); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${tag}.</p>`); });
 }
@@ -442,7 +442,7 @@ function save_collection (collection_id, event, notify=true, on_success=jQuery.n
         url:         `/v2/account/collections/${collection_id}`,
         type:        "PUT",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(form_data),
     }).done(function () {
         if (notify) {
@@ -467,7 +467,7 @@ function publish_collection (collection_id, event) {
         jQuery.ajax({
             url:         `/v3/collections/${collection_id}/publish`,
             type:        "POST",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
         }).done(function () {
             window.location.replace(`/my/collections/published/${collection_id}`);
         }).fail(function (response, text_status, error_code) {
@@ -510,7 +510,7 @@ function autocomplete_dataset (event, collection_id) {
             url:         `/v2/articles/search`,
             type:        "POST",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify({ "search_for": current_text, "is_latest": true }),
             dataType:    "json"
         }).done(function (data) {
@@ -613,7 +613,7 @@ function submit_new_author (collection_id) {
         url:         `/v2/account/collections/${collection_id}/authors`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "authors": authors }),
     }).done(function () {
         jQuery("#authors-ac").remove();
@@ -629,7 +629,7 @@ function submit_new_funding (collection_id) {
         url:         `/v2/account/collections/${collection_id}/funding`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({
             "funders": [{
                 "title":       jQuery("#funding_title").val(),
@@ -682,7 +682,7 @@ function activate (collection_id) {
     jQuery.ajax({
         url:         `/v2/account/collections/${collection_id}`,
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (data) {
         render_categories_for_collection (collection_id, data["categories"]);
         render_authors_for_collection (collection_id);

@@ -22,7 +22,7 @@ function save_profile (notify=true, on_success=jQuery.noop) {
         url:         "/v3/profile",
         type:        "PUT",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(form_data),
     }).done(function () {
         if (notify) { show_message ("success", "<p>Saved changes.</p>"); }
@@ -39,7 +39,7 @@ function render_categories_for_profile () {
         url:         "/v3/profile/categories",
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (categories) {
         for (let category of categories) {
             jQuery(`#category_${category["uuid"]}`).prop("checked", true);
@@ -55,7 +55,7 @@ function remove_profile_image () {
     jQuery.ajax({
         url:         "/v3/profile/picture",
         type:        "DELETE",
-        accept:      "application/json"
+        accepts      { json: "application/json" }
     }).done (function () {
         jQuery("#upload-profile-image").removeClass("profile-image");
         jQuery(".dz-button").show();

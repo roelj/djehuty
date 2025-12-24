@@ -17,7 +17,7 @@ function clear_reviews_cache (event) {
     jQuery.ajax({
         url:         "/v3/admin/reviews/clear-cache",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { location.reload();
     }).fail(function () {
         show_message ("failure", "<p>Failed to clear the reviews cache.</p>");
@@ -32,7 +32,7 @@ function assign_reviewer (event) {
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}/assign-reviewer/${reviewer_uuid}`,
         type:        "PUT",
-        accept:      "application/json"
+        accepts:     { json: "application/json" }
     }).done(function (response) {
         jQuery(`#${dataset_uuid}_status .fa-hourglass`)
             .replaceWith('<span class="fas fa-glasses" title="Assigned to ' +
@@ -111,7 +111,7 @@ function render_overview_table () {
     jQuery.ajax({
         url:         "/v3/reviews",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (reviews) {
         let published_date = null;
         let version = "new";

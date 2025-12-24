@@ -693,7 +693,7 @@ function load_search_results() {
         url:         target_api_url,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(request_params),
         dataType:    "json"
     }).done(function (data) {

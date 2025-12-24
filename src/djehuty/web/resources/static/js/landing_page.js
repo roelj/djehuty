@@ -3,7 +3,7 @@ function add_dataset_to_collection (dataset_id, collection_id) {
         url:         `/v2/account/collections/${collection_id}/articles`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "articles": [dataset_id] }),
     }).done(function () {
         show_message ("success", "<p>Dataset succesfully added to collection.</p>");
@@ -45,7 +45,7 @@ function submit_access_request (event) {
         url:         `/data_access_request`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(data),
         dataType:    "json"
     }).done(function () {
@@ -93,7 +93,7 @@ function render_draft_collections () {
     jQuery.ajax({
         url:         "/v2/account/collections",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         dataType:    "json"
     }).done(function (records) {
         jQuery("#collect ul").remove();

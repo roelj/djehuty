@@ -123,7 +123,7 @@ function node_mousedown () {
     jQuery.ajax({
         url:         "/v3/explore/properties",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        { "uri": `${encodeURIComponent(longform_uri(value))}` },
     }).done(function (properties) {
         draw_column_title (1, "Properties");
@@ -144,7 +144,7 @@ function clear_exploratory_cache (event) {
     jQuery.ajax({
         url:         "/v3/explore/clear-cache",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () {
         location.reload();
     }).fail(function () {
@@ -159,7 +159,7 @@ jQuery(document).ready(function () {
     jQuery.ajax({
         url:         "/v3/explore/types",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (types) {
         draw_column_title (0, "Types");
         d3.selectAll(".column-0").remove();

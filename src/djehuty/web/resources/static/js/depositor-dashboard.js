@@ -27,7 +27,7 @@ function submit_storage_request (event) {
         url:         `/v3/profile/quota-request`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(data),
         dataType:    "json"
     }).done(function () {

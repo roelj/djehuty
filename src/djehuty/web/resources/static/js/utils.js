@@ -121,7 +121,7 @@ function autocomplete_collaborator (event, item_id) {
             url:     "/v3/accounts/search",
             type:    "POST",
             contentType: "application/json",
-            accept: "application/json",
+            accepts: { json: "application/json" },
             data: JSON.stringify({ "search_for": current_text, "exclude": existing_collaborators}),
             }).done(function (data) {
                 jQuery("#collaborator-ac").remove();
@@ -169,7 +169,7 @@ function autocomplete_author (event, item_id) {
             url:         `/v2/account/authors/search`,
             type:        "POST",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify({ "search": current_text }),
             dataType:    "json"
         }).done(function (data) {
@@ -227,7 +227,7 @@ function autocomplete_funding (event, item_id) {
             url:         `/v2/account/funding/search`,
             type:        "POST",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify({ "search": current_text }),
             dataType:    "json"
         }).done(function (data) {
@@ -308,7 +308,7 @@ function autocomplete_tags(event, item_id) {
         url: '/v3/tags/search',
         type: "POST",
         contentType: "application/json",
-        accept: "application/json",
+        accepts: { json: "application/json" },
         data: JSON.stringify({"search_for": current_text}),
         dataType: "json"
     }).done(function (data) {

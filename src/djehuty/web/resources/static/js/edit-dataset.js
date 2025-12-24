@@ -24,7 +24,7 @@ function decline_dataset (dataset_uuid, event) {
     jQuery("#content-wrapper").css("opacity", "0.15");
     save_dataset (dataset_uuid, event, false, function() {
         jQuery.ajax({
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             type:        "POST",
             url:         `/v3/datasets/${dataset_uuid}/decline`
         }).done(function () {
@@ -51,7 +51,7 @@ function preview_dataset (dataset_uuid, event) {
 
     save_dataset (dataset_uuid, event, false, function() {
         jQuery.ajax({
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             contentType: "application/json",
             data:        JSON.stringify({ "expires_date": `${year}-${month}-${day}` }),
             type:        "POST",
@@ -178,7 +178,7 @@ function save_dataset (dataset_uuid, event, notify=true, on_success=jQuery.noop)
         url:         `/v2/account/articles/${dataset_uuid}`,
         type:        "PUT",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(form_data),
     }).done(function () {
         if (notify) {
@@ -200,7 +200,7 @@ function delete_all_files (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/files`,
         data:        JSON.stringify({ "remove_all": true }),
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         contentType: "application/json",
     }).done(function () {
         jQuery("#remove-all-files").text(`Remove all files.`);
@@ -217,7 +217,7 @@ function repair_md5_sums (dataset_uuid, event) {
         jQuery.ajax({
             url:         `/v3/datasets/${dataset_uuid}/repair_md5s`,
             type:        "GET",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
         }).done(function (record) {
             location.reload();
         }).fail(function () {
@@ -236,7 +236,7 @@ function render_licenses (dataset) {
     jQuery.ajax({
         url:         "/v2/licenses",
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (licenses) {
         for (let license of licenses) {
             // Skip legacy licenses; render them last.
@@ -255,7 +255,7 @@ function render_categories_for_dataset (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/categories`,
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (categories) {
         for (let category of categories) {
             jQuery(`#category_${category["uuid"]}`).prop("checked", true);
@@ -277,7 +277,7 @@ function render_references_for_dataset (dataset_uuid) {
         url:         `/v3/datasets/${dataset_uuid}/references`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (references) {
         jQuery("#references-list tbody").empty();
         for (let url of references) {
@@ -320,7 +320,7 @@ function render_collaborators_for_dataset (dataset_uuid, may_edit_metadata, call
         url:         `/v3/datasets/${dataset_uuid}/collaborators`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (collaborators) {
         jQuery("#collaborators-form tbody").empty();
 
@@ -466,7 +466,7 @@ function add_collaborator (dataset_uuid, may_edit_metadata) {
         url:         `/v3/datasets/${dataset_uuid}/collaborators`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify(form_data),
     }).done(function () {
         render_collaborators_for_dataset(dataset_uuid, may_edit_metadata);
@@ -478,7 +478,7 @@ function remove_collaborator (collaborator_uuid, dataset_uuid, may_edit_metadata
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}/collaborators/${collaborator_uuid}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_collaborators_for_dataset (dataset_uuid, may_edit_metadata); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${collaborator_uuid}</p>`); });
 }
@@ -493,7 +493,7 @@ function render_tags_for_dataset (dataset_uuid) {
         url:         `/v3/datasets/${dataset_uuid}/tags`,
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (tags) {
         jQuery("#tags-list").empty();
         for (let tag of tags) {
@@ -523,7 +523,7 @@ function reorder_author (dataset_uuid, author_uuid, direction) {
         data: JSON.stringify({ "author":  author_uuid, "direction": direction }),
         type: "POST",
         contentType: "application/json",
-        accept: "application/json"
+        accepts: { json: "application/json" }
     }).done (function () {
         render_authors_for_dataset (dataset_uuid);
     }).fail(function () {
@@ -543,7 +543,7 @@ function update_author (author_uuid, dataset_uuid) {
         data:        JSON.stringify(record),
         type:        "PUT",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () {
         cancel_edit_author (author_uuid, dataset_uuid);
         render_authors_for_dataset (dataset_uuid);
@@ -571,7 +571,7 @@ function edit_author (author_uuid, dataset_uuid) {
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}/authors/${author_uuid}`,
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (author) {
         let row = jQuery("<tr/>", { "id": "author-inline-edit-form" });
         let column1 = jQuery("<td/>", { "colspan": "5" });
@@ -617,7 +617,7 @@ function render_authors_for_dataset (dataset_uuid) {
         url:         `/v3/datasets/${dataset_uuid}/authors`,
         data:        { "limit": 10000 },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (authors) {
         jQuery("#authors-list tbody").empty();
         let number_of_items = authors.length;
@@ -699,7 +699,7 @@ function render_funding_for_dataset (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/funding`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (funders) {
         jQuery("#funding-list tbody").empty();
         for (let funding of funders) {
@@ -724,7 +724,7 @@ function render_git_branches_for_dataset (dataset_uuid, event) {
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}.git/branches`,
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (data) {
         branches = data["branches"];
         jQuery("#git-branches").empty();
@@ -755,7 +755,7 @@ function set_default_git_branch (dataset_uuid, event) {
         data:        JSON.stringify({ "branch": branch_name }),
         type:        "PUT",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () {
         show_message ("success", `<p>Default Git branch set to <strong>${branch_name}</strong>.</p>`);
         render_git_files_for_dataset (dataset_uuid, event);
@@ -770,7 +770,7 @@ function render_git_files_for_dataset (dataset_uuid, event) {
         url:         `/v3/datasets/${dataset_uuid}.git/files`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (files) {
         jQuery("#git-files").empty();
         for (let index in files) {
@@ -795,7 +795,7 @@ function render_files_for_dataset (dataset_uuid, fileUploader) {
         url:         `/v2/account/articles/${dataset_uuid}/files`,
         data:        { "limit": 10000, "order": "id", "order_direction": "asc" },
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (files) {
         if (fileUploader !== null) {
             fileUploader.removeAllFiles();
@@ -884,7 +884,7 @@ function render_files_for_thumbnail (dataset_uuid) {
         url: `/v3/datasets/${dataset_uuid}/image-files`,
         data: { "limit": 10000 },
         type: "GET",
-        accept: "application/json",
+        accepts: { json: "application/json" },
     }).done(function (files) {
         jQuery("#thumbnails-wrapper").empty();
         if (files.length > 0) {
@@ -915,7 +915,7 @@ function render_files_for_thumbnail (dataset_uuid) {
                     url: `/v3/datasets/${dataset_uuid}/update-thumbnail`,
                     type: "PUT",
                     contentType: "application/json",
-                    accept:      "application/json",
+                    accepts:     { json: "application/json" },
                     data:        JSON.stringify({ "uuid": `${selected_thumb.val()}` })
                 }).fail(function () {
                     show_message ("failure", "<p>Failed to set thumbnail.</p>");
@@ -935,7 +935,7 @@ function add_author (author_uuid, dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/authors`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "authors": [{ "uuid": author_uuid }] }),
     }).done(function () {
         render_authors_for_dataset (dataset_uuid);
@@ -949,7 +949,7 @@ function add_funding (funding_uuid, dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/funding`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "funders": [{ "uuid": funding_uuid }] }),
     }).done(function () {
         render_funding_for_dataset (dataset_uuid);
@@ -968,7 +968,7 @@ function submit_external_link (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/files`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "link": url }),
     }).done(function () {
         jQuery("#external_url").val("");
@@ -984,7 +984,7 @@ function add_reference (dataset_uuid) {
             url:         `/v3/datasets/${dataset_uuid}/references`,
             type:        "POST",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify({ "references": [{ "url": url }] }),
         }).done(function () {
             render_references_for_dataset (dataset_uuid);
@@ -1010,7 +1010,7 @@ function add_tag (dataset_uuid) {
         url:         `/v3/datasets/${dataset_uuid}/tags`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({ "tags": tags }),
     }).done(function () {
         render_tags_for_dataset (dataset_uuid);
@@ -1044,7 +1044,7 @@ function submit_new_author (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/authors`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({
             "authors": authors
         }),
@@ -1061,7 +1061,7 @@ function submit_new_funding (dataset_uuid) {
         url:         `/v2/account/articles/${dataset_uuid}/funding`,
         type:        "POST",
         contentType: "application/json",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
         data:        JSON.stringify({
             "funders": [{
                 "title":       jQuery("#funding_title").val(),
@@ -1185,7 +1185,7 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
     jQuery.ajax({
         url:         `/v2/account/articles/${dataset_uuid}`,
         type:        "GET",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function (data) {
         render_authors_for_dataset (dataset_uuid);
         render_references_for_dataset (dataset_uuid);
@@ -1496,7 +1496,7 @@ function remove_file (file_id, dataset_uuid, rerender=true) {
     return jQuery.ajax({
         url:         `/v2/account/articles/${dataset_uuid}/files/${file_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () {
         if (rerender) {
             render_files_for_dataset (dataset_uuid, null);
@@ -1515,7 +1515,7 @@ function remove_author (author_id, dataset_uuid) {
     jQuery.ajax({
         url:         `/v2/account/articles/${dataset_uuid}/authors/${author_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_authors_for_dataset (dataset_uuid); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${author_id}</p>`); });
 }
@@ -1524,7 +1524,7 @@ function remove_funding (funding_id, dataset_uuid) {
     jQuery.ajax({
         url:         `/v2/account/articles/${dataset_uuid}/funding/${funding_id}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_funding_for_dataset (dataset_uuid); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${funding_id}.</p>`); });
 }
@@ -1533,7 +1533,7 @@ function remove_reference (url, dataset_uuid) {
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}/references?url=${url}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_references_for_dataset (dataset_uuid); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${url}</p>`); });
 }
@@ -1542,7 +1542,7 @@ function remove_tag (tag, dataset_uuid) {
     jQuery.ajax({
         url:         `/v3/datasets/${dataset_uuid}/tags?tag=${tag}`,
         type:        "DELETE",
-        accept:      "application/json",
+        accepts:     { json: "application/json" },
     }).done(function () { render_tags_for_dataset (dataset_uuid); })
       .fail(function () { show_message ("failure", `<p>Failed to remove ${tag}.</p>`); });
 }
@@ -1575,7 +1575,7 @@ function submit_dataset (dataset_uuid, event) {
             url:         `/v3/datasets/${dataset_uuid}/submit-for-review`,
             type:        "PUT",
             contentType: "application/json",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
             data:        JSON.stringify(form_data),
         }).done(function () {
             window.location.replace("/my/datasets/submitted-for-review");
@@ -1621,7 +1621,7 @@ function publish_dataset (dataset_uuid, event) {
         jQuery.ajax({
             url:         `/v3/datasets/${dataset_uuid}/publish`,
             type:        "POST",
-            accept:      "application/json",
+            accepts:     { json: "application/json" },
         }).done(function () {
             window.location.replace("/logout");
         }).fail(function (response, text_status, error_code) {
