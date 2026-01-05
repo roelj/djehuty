@@ -7914,7 +7914,7 @@ class WebServer:
             output_filename = os.path.join (config.storage, f"{dataset_id}_{file_uuid}")
 
             computed_md5 = None
-            md5 = hashlib.new ("md5", usedforsecurity=False)
+            md5 = hashlib.md5 (usedforsecurity=False)
             file_size = 0
             destination_fd = os.open (output_filename, os.O_WRONLY | os.O_CREAT, 0o600)
             is_incomplete = False
@@ -9093,7 +9093,7 @@ class WebServer:
         for row in files:
             file_uuid = row["file_uuid"]
             computed_md5 = None
-            md5 = hashlib.new ("md5", usedforsecurity=False)
+            md5 = hashlib.md5 (usedforsecurity=False)
             filename = os.path.join (config.storage, f"{container_uuid}_{file_uuid}")
             with open(filename, "rb") as stream:
                 for chunk in iter(lambda: stream.read(4096), b""): # pylint: disable=cell-var-from-loop

@@ -20,11 +20,10 @@ class CacheLayer:
 
     def make_key (self, input_string):
         """Procedure to turn 'input_string' into a short, unique identifier."""
-        if input_string is None:
+        if not isinstance(input_string, str):
             return None
 
-        md5 = hashlib.new ("md5", usedforsecurity=False)
-        md5.update (input_string.encode('utf-8'))
+        md5 = hashlib.md5 (input_string.encode("utf-8"), usedforsecurity=False)
         return md5.hexdigest()
 
     def cache_is_ready(self):
