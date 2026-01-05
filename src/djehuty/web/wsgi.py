@@ -7156,44 +7156,39 @@ class WebServer:
             self.log.audit ("NoGitBranch error occurred for %s.", git_uuid)
             return self.error_400 (request, "No default branch found.", "NoGitBranch")
 
-        with tempfile.TemporaryDirectory(dir = self.db.cache.storage,
-                                         prefix = "git-zip-",
-                                         delete = False) as folder:
-            git_directory  = os.path.join (config.storage, f"{git_uuid}.git")
+        folder = tempfile.mkdtemp(dir = self.db.cache.storage, prefix = "git-zip-")
+        git_directory  = os.path.join (config.storage, f"{git_uuid}.git")
+        try:
+            with subprocess.Popen(["git", "clone", f"--branch={branch}",  # pylint: disable=subprocess-popen-preexec-fn
+                                   git_directory, folder],
+                                  env = os.environ,
+                                  preexec_fn = limit_memory_for_subprocess,
+                                  stdout = subprocess.PIPE,
+                                  stderr = subprocess.PIPE) as process:
+                _, errors = process.communicate (timeout = 600)
+                if process.returncode != 0:
+                    return self.error_500 (f"Unable to clone {git_directory}: '{errors}'.")
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+            process.kill()
+            shutil.rmtree (folder)
+            return self.error_500 (f"Unable to clone {git_directory}: '{error}'.")
 
-            try:
-                with subprocess.Popen(["git", "clone", f"--branch={branch}",  # pylint: disable=subprocess-popen-preexec-fn
-                                       git_directory, folder],
-                                      env = os.environ,
-                                      preexec_fn = limit_memory_for_subprocess,
-                                      stdout = subprocess.PIPE,
-                                      stderr = subprocess.PIPE) as process:
-                    _, errors = process.communicate (timeout = 600)
-                    if process.returncode != 0:
-                        return self.error_500 (f"Unable to clone {git_directory}: '{errors}'.")
-            except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
-                process.kill()
-                shutil.rmtree (folder)
-                return self.error_500 (f"Unable to clone {git_directory}: '{error}'.")
+        files  = self.__files_for_zipfly (folder, os.scandir(folder))
+        writer = None
+        try:
+            zipfly_object = zipfly.ZipFly(paths = files, reproducible_timestamps=True)
+            writer = zipfly_object.generator()
+        except TypeError:
+            shutil.rmtree (folder)
+            return self.error_500 (f"Could not ZIP files for git repository {git_uuid}.")
 
-            files  = self.__files_for_zipfly (folder, os.scandir(folder))
-            writer = None
-            try:
-                zipfly_object = zipfly.ZipFly(paths = files, reproducible_timestamps=True)
-                writer = zipfly_object.generator()
-            except TypeError:
-                shutil.rmtree (folder)
-                return self.error_500 (f"Could not ZIP files for git repository {git_uuid}.")
+        response = self.response (writer, mimetype="application/zip")
+        response.headers["Content-disposition"] = f"attachment; filename={git_uuid}.zip"
 
-            response = self.response (writer, mimetype="application/zip")
-            response.headers["Content-disposition"] = f"attachment; filename={git_uuid}.zip"
-
-            # Removes the temporary cloned repository. This should only be
-            # done after the request is complete.
-            response.call_on_close (lambda: shutil.rmtree (folder))
-            return response
-
-        return self.error_404 (request)
+        # Removes the temporary cloned repository. This should only be
+        # done after the request is complete.
+        response.call_on_close (lambda: shutil.rmtree (folder))
+        return response
 
     def api_v3_dataset_decline (self, request, dataset_id):
         """Implements /v3/datasets/<id>/decline."""
