@@ -46,8 +46,8 @@ function init_search_filter_info() {
             "values": [],
         }
 
-        filter_info[filter_name]["is_multiple"] = this.classList.contains("multiple") ? true : false;
-        filter_info[filter_name]["enable_other"] = this.classList.contains("other") ? true : false;
+        filter_info[filter_name]["is_multiple"] = this.classList.contains("multiple");
+        filter_info[filter_name]["enable_other"] = this.classList.contains("other");
     });
 }
 
@@ -312,51 +312,6 @@ function register_event_handlers() {
     jQuery('#search-licenses-show-more').click(function() {
         toggle_filter_licenses_showmore(false);
     });
-
-
-    // Register events for each filter.
-    for (let filter_name of Object.keys(filter_info)) {
-        let event_id = "search-filter-content-" + filter_name;
-        let is_multiple = filter_info[filter_name]["is_multiple"];
-
-        jQuery(`#${event_id} input[type='checkbox']`).change(function() {
-            let target_element = this;
-            if (target_element.checked) {
-                if (!is_multiple) {
-                    jQuery(`#${event_id} input[type='checkbox']`).each(function() {
-                        this.checked = false;
-                        jQuery(`#${event_id} input[type='text']`).each(function() {
-                            this.value = "";
-                            toggle_filter_input_text(this.id, false);
-                        });
-                        jQuery(`#${event_id} input[type='date']`).each(function() {
-                            this.value = "";
-                            toggle_filter_input_text(this.id, false);
-                        });
-
-                    });
-                    target_element.checked = true;
-                }
-
-                if (target_element.classList.contains("parentcategory")) {
-                    let parent_category_id = target_element.id.split("_").pop();
-                    toggle_checkbox_subcategories(parent_category_id);
-                } else if (target_element.classList.contains("subcategory")) {
-                    let parent_category_id = jQuery(target_element).parent().parent().prop("id").split("_").pop();
-                    update_checkbox_parentcategory(parent_category_id);
-                }
-            }
-
-            if (target_element.id.split("_").pop() === "other") {
-                jQuery(`#${event_id} input[type='text']`).each(function() {
-                    toggle_filter_input_text(this.id, target_element.checked);
-                });
-                jQuery(`#${event_id} input[type='date']`).each(function() {
-                    toggle_filter_input_text(this.id, target_element.checked);
-                });
-            }
-        });
-    }
 
     // Enable the apply button if any checkbox is checked.
     // If collection is checked, disable Search Scope and File Types.
