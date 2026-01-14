@@ -507,7 +507,8 @@ img { user-select: none; }
 .no-script { background: #cc0000; color: #ffffff; padding: 1em; }
 .no-show { font-size: 0pt; }
 .hide-for-javascript { display: none !important; }
-#message { display: none; color: #ffffff; border-radius: .5em; padding: 0em; margin: 0em;  }
+#message { display: none; transition: opacity 250ms; color: #fff; border-radius: .5em; padding: 0em; margin: 0em;  }
+#message.fading-out { opacity: 0; transition: opacity 500ms; }
 #message p { padding: 1em; }
 #message a { color: #fff; }
 .success { background: #009900; padding: 0em; margin: 0em; }

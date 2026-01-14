@@ -185,3 +185,7 @@
 a.fa-angle-up { cursor: pointer; }
 a.fa-angle-down { cursor: pointer; }
 button.ql-link { display: none !important }
+#expanded-categories { display: none; transition: all 250ms ease-in-out; }
+#expanded-categories.open { display: block; transition: all 250ms ease-in-out; }
+#expanded-collaborators { display: none; transition: all 250ms ease-in-out; }
+#expanded-collaborators.open { display: block; transition: all 250ms ease-in-out; }

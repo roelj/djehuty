@@ -3,17 +3,22 @@ function render_in_form (text) { return [text].join(""); }
 function or_null (value) { return (value == "" || value == "<p><br></p>") ? null : value; }
 function or_empty (value) { return (value === undefined || value == null || value == "") ? "" : value;}
 function show_message (type, message) {
-    if (jQuery ("#message.transparent").length > 0) {
-        jQuery("#message").removeClass("transparent").empty();
+    let element = document.getElementById("message");
+    if (element === null) { return; }
+    if (element.classList.contains("transparent")) {
+        element.classList.remove("transparent");
+        element.innerHTML = "";
     }
-    jQuery("#message")
-        .addClass(type)
-        .append(message)
-        .fadeIn(250);
-    setTimeout(function() {
-        jQuery("#message").fadeOut(500, function() {
-            jQuery("#message").removeClass(type).addClass("transparent").html("<p>&nbsp;</p>").show();
-        });
+    element.classList.add(type);
+    element.insertAdjacentHTML("beforeend", message);
+    element.style.display = "block";
+    setTimeout(() => {
+        element.classList.add("fading-out");
+        element.addEventListener("transitionend", () => {
+            element.classList.remove(type, "fading-out");
+            element.classList.add("transparent");
+            element.innerHTML = "<p>&nbsp;</p>";
+        }, { once: true });
     }, 20000);
 }
 
@@ -24,84 +29,91 @@ function stop_event_propagation (event) {
     }
 }
 
-function install_sticky_header () {
-    var submenu_offset = jQuery("#submenu").offset().top;
-    jQuery(window).on("resize scroll", function() {
-        if (submenu_offset <= jQuery(window).scrollTop()) {
-            jQuery("#submenu").addClass("sticky");
-            jQuery("#message").addClass("sticky-message");
-            jQuery("h1").addClass("sticky-margin");
-            jQuery("#message").width(jQuery("#content-wrapper").width());
-        } else {
-            jQuery("#submenu").removeClass("sticky");
-            jQuery("#message").removeClass("sticky-message");
-            jQuery("h1").removeClass("sticky-margin");
-            if (jQuery ("#message.transparent").length > 0) {
-                jQuery("#message").removeClass("transparent").empty().hide();
-            }
+function install_sticky_header() {
+    const submenu = document.getElementById("submenu");
+    const message = document.getElementById("message");
+    const content_wrapper = document.getElementById("content-wrapper");
+    if (submenu === null || message === null || content_wrapper === null) { return; }
+    const submenu_offset = submenu.offsetTop;
+
+    function scroll_handler() {
+        let is_sticky = window.scrollY >= submenu_offset;
+        submenu.classList.toggle("sticky", is_sticky);
+        message.classList.toggle("sticky-message", is_sticky);
+	let h1 = document.querySelector("h1");
+	if (h1) { h1.classList.toggle("sticky-margin", is_sticky); }
+        if (is_sticky) {
+            message.style.width = `${content_wrapper.offsetWidth}px`;
+        } else if (message.classList.contains("transparent")) {
+            message.classList.remove("transparent");
+            message.textContent = "";
+            message.style.display = "none";
         }
+    }
+
+    window.addEventListener("scroll", scroll_handler, { passive: true });
+    window.addEventListener("resize", scroll_handler, { passive: true });
+}
+
+function install_touchable_help_icons() {
+    document.querySelectorAll(".help-icon").forEach(icon => {
+        icon.addEventListener("click", () => {
+            let text = icon.querySelector(".help-text");
+	    if (text) {
+		let is_visible = text.offsetParent !== null || getComputedStyle(text).display !== "none";
+		icon.classList.toggle("help-icon-clicked", !is_visible);
+	    }
+        });
     });
 }
 
-function install_touchable_help_icons () {
-    jQuery(".help-icon").on("click", function () {
-        let selector = jQuery(this).find(".help-text");
-        if (selector.is(":visible") ||
-            selector.css("display") != "none") {
-            jQuery(this).removeClass("help-icon-clicked");
-        } else {
-            jQuery(this).addClass("help-icon-clicked");
-        }
-    });
+function toggle_categories (event = null) {
+    stop_event_propagation (event);
+    const categories = document.getElementById("expanded-categories");
+    if (categories === null) { return; }
+    const is_open = categories.classList.toggle("open");
+    const button = document.getElementById("expand-categories-button");
+    button.textContent = is_open ? "Hide categories" : "Select categories";
 }
 
-function toggle_categories (event=null) {
-    stop_event_propagation (event);
-    let expanded_categories = jQuery("#expanded-categories");
-    if (expanded_categories.is(":visible")) {
-        jQuery("#expanded-categories").slideUp(250, function() {
-            jQuery("#expand-categories-button").text("Select categories");
-        });
-    } else {
-        jQuery("#expanded-categories").slideDown(250, function() {
-            jQuery("#expand-categories-button").text("Hide categories");
-        });
-    }
-}
+function toggle_collaborators(dataset_uuid, may_edit_metadata, event) {
+    stop_event_propagation(event);
 
-function toggle_collaborators (dataset_uuid, may_edit_metadata, event) {
-    stop_event_propagation (event);
-    function show_collaborators () {
-        jQuery("#expanded-collaborators").slideDown(250, function() {
-            jQuery("#expand-collaborators-button").text("Hide collaborators");
-        });
-    }
+    let expanded_collaborators = document.getElementById("expanded-collaborators");
+    if (expanded_collaborators === null) { return; }
+    let button = document.getElementById("expand-collaborators-button");
+    let is_visible = expanded_collaborators.classList.contains("open");
 
-    let expanded_collaborators = jQuery("#expanded-collaborators");
-    if (expanded_collaborators.is(":visible")) {
-        jQuery("#expanded-collaborators").slideUp(250, function() {
-            let text = "Show collaborators";
-            if (may_edit_metadata) { text = "Manage collaborators"; }
-            jQuery("#expand-collaborators-button").text(text);
-        });
+  function show_collaborators() {
+      expanded_collaborators.style.display = "block";
+      expanded_collaborators.classList.add("open");
+      button.textContent = "Hide collaborators";
+  }
+
+  function hide_collaborators() {
+      expanded_collaborators.style.display = "none";
+      expanded_collaborators.classList.remove("open");
+      button.textContent = may_edit_metadata ? "Manage collaborators" : "Show collaborators";
+  }
+
+  if (is_visible) {
+    hide_collaborators();
+  } else {
+    if (!document.getElementById("add_collaborator")) {
+      render_collaborators_for_dataset(dataset_uuid, may_edit_metadata, show_collaborators);
     } else {
-        if (jQuery("#add_collaborator").length == 0) {
-            render_collaborators_for_dataset (dataset_uuid, may_edit_metadata, function() {
-                show_collaborators ();
-            });
-        } else { show_collaborators (); }
+      show_collaborators();
     }
+  }
 }
 
 function fill_collaborator (email, full_name, account_uuid) {
-    let input_text = `${full_name}, (${email})`;
-    if (full_name == "null") {
-        input_text = `${email}`;
-    }
-    jQuery("#add_collaborator").val(`${input_text}`);
-    jQuery("#account_uuid").val(`${account_uuid}`);
-    jQuery("#collaborator-ac").remove();
-    jQuery("#add_collaborator").removeClass("input-for-ac");
+    const input_text = full_name === null ? email : `${full_name}, (${email})`;
+    document.getElementById('add_collaborator').value = input_text;
+    document.getElementById('account_uuid').value = account_uuid;
+    let element = document.getElementById('collaborator-ac');
+    if (element) { element.remove(); }
+    document.getElementById('add_collaborator').classList.remove('input-for-ac');
 }
 
 function add_collaborator_event (event) {
@@ -110,43 +122,48 @@ function add_collaborator_event (event) {
 }
 
 function autocomplete_collaborator (event, item_id) {
-    let current_text = jQuery.trim(jQuery("#add_collaborator").val());
-    let existing_collaborators = [];
-    jQuery(".contributor-uuid").each(function(){existing_collaborators.push(jQuery(this).val()); });
+    let current_text = document.getElementById("add_collaborator").value.trim();
+    let existing_collaborators = [...document.querySelectorAll(".contributor-uuid")].map(el => el.value);
     if (current_text == "") {
-        jQuery("#collaborator-ac").remove();
-        jQuery("#add_collaborator").removeClass("input-for-ac");
+	let element = document.getElementById("collaborator-ac");
+	if (element) { element.remove(); }
+        document.getElementById("add_collaborator").classList.remove("input-for-ac");
     } else if (current_text.length > 2) {
-        jQuery.ajax({
-            url:     "/v3/accounts/search",
-            type:    "POST",
-            contentType: "application/json",
-            accepts: { json: "application/json" },
-            data: JSON.stringify({ "search_for": current_text, "exclude": existing_collaborators}),
-            }).done(function (data) {
-                jQuery("#collaborator-ac").remove();
-                let unordered_list = jQuery("<ul/>");
-                let html = "<ul>";
-                for (let item of data) {
-                    let full_name = item["full_name"];
-                    let account_text = `${item["full_name"]}, ${item["email"]}`;
-                    if (full_name == null) { account_text = `${item["email"]}`; }
-                    let list_item = jQuery("<li/>");
-                    let anchor = jQuery("<a/>", { "href": "#" });
-                    anchor.text (account_text);
-                    anchor.on("click",
-                              { "email": item["email"], "full_name": item["full_name"], "uuid": item["uuid"] },
-                              add_collaborator_event);
-                    list_item.html (anchor);
-                    unordered_list.append (list_item);
-                }
-                let wrapper = jQuery("<div/>", { "id": "collaborator-ac", "class": "autocomplete" });
-                wrapper.html (unordered_list);
-                jQuery("#add_collaborator")
-                    .addClass("input-for-ac")
-                    .after(wrapper);
-            }).fail(function (response, text_status, error_code) { console.log (`Error code: ${error_code} `);
-        });
+        fetch("/v3/accounts/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ "search_for": current_text, "exclude": existing_collaborators })
+        }).then(response => response.json())
+          .then(data => {
+	      let element = document.getElementById('collaborator-ac');
+	      if (element) { element.remove(); }
+              const unordered_list = document.createElement("ul");
+              for (const item of data) {
+                  const account_text = item.full_name ? `${item.full_name}, ${item.email}` : item.email;
+                  const anchor = document.createElement("a");
+                  anchor.href = "#";
+                  anchor.textContent = account_text;
+                  anchor.addEventListener("click", event => {
+                      event.data = { "email": item.email,
+                                     "full_name": item.full_name,
+                                     "uuid": item.uuid
+                                   };
+                      add_collaborator_event(event);
+                  });
+
+                  const list_item = document.createElement("li");
+                  list_item.appendChild(anchor);
+                  unordered_list.appendChild(list_item);
+              }
+
+	      const wrapper = document.createElement("div");
+	      wrapper.id = "collaborator-ac";
+	      wrapper.className = "autocomplete";
+	      wrapper.appendChild(unordered_list);
+              const add_collaborator = document.getElementById("add_collaborator");
+              add_collaborator.classList.add("input-for-ac");
+              add_collaborator.after(wrapper);
+          }).catch(error => { console.log(`Error: ${error.message}`); });
     }
 }
 
@@ -160,50 +177,72 @@ function add_author_event (event) {
 }
 
 function autocomplete_author (event, item_id) {
-    let current_text = jQuery.trim(jQuery("#authors").val());
+    let current_text = document.getElementById("authors").value.trim();
     if (current_text == "") {
-        jQuery("#authors-ac").remove();
-        jQuery("#authors").removeClass("input-for-ac");
+	let element = document.getElementById("authors-ac");
+	if (element) { element.remove(); }
+        document.getElementById("authors").classList.remove("input-for-ac");
     } else if (current_text.length > 2) {
-        jQuery.ajax({
-            url:         `/v2/account/authors/search`,
-            type:        "POST",
-            contentType: "application/json",
-            accepts:     { json: "application/json" },
-            data:        JSON.stringify({ "search": current_text }),
-            dataType:    "json"
-        }).done(function (data) {
-            jQuery("#authors-ac").remove();
-            let unordered_list = jQuery("<ul/>");
-            let new_author_text = "Do you want to create a new author record? Then click on the button below.";
-            if (data.length == 0) {
-                new_author_text = "Seems like the author is not registered in our system. Click on the button below to add a new author.";
-            }
-            for (let item of data) {
-                let list_item = jQuery("<li/>");
-                let anchor = jQuery("<a/>", { "href": "#" });
-                let name = item["full_name"]
-                if (item["orcid_id"] != null && item["orcid_id"] != "") {
-                    name += ` (${item["orcid_id"]})`;
-                }
-                anchor.on("click", { "uuid": item["uuid"], "item_id": item_id }, add_author_event);
-                anchor.text (name);
-                list_item.html (anchor);
-                unordered_list.append(list_item);
-            }
-            let new_author_description = jQuery("<span/>", { "id": "new-author-description" });
-            new_author_description.text(new_author_text);
+        fetch("/v2/account/authors/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ "search": current_text })
+        }).then(response => response.json())
+          .then(data => {
+	      let element = document.getElementById("authors-ac");
+	      if (element) { element.remove(); }
+              const unordered_list = document.createElement("ul");
+              const new_author_text = data.length === 0
+                    ? "It seems the author is not registered in our system. Click the button below to register a new author."
+                    : "Do you want to create a new author record? Then click on the button below.";
 
-            let new_author_button = jQuery("<div/>", { "id": "new-author", "class": "a-button" });
-            let anchor = jQuery("<a/>", { "href": "#" });
-            anchor.on("click", { "item_id": item_id }, add_author_event);
-            anchor.text("Create new author record");
-            new_author_button.html (anchor);
+              for (const item of data) {
+                  let name = item.full_name;
+                  if (item.orcid_id != null && item.orcid_id !== "") {
+                      name += ` (${item.orcid_id})`;
+                  }
 
-            let wrapper = jQuery("<div/>", { "id": "authors-ac", "class": "autocomplete" });
-            wrapper.html(unordered_list.append(new_author_description.append(new_author_button)));
-            jQuery("#authors").addClass("input-for-ac").after(wrapper);
-        });
+                  const anchor = document.createElement("a");
+                  anchor.href = "#";
+                  anchor.textContent = name;
+                  anchor.addEventListener("click", event => {
+                      event.data = { "uuid": item.uuid, "item_id": item_id };
+                      add_author_event(event);
+                  });
+
+                  const list_item = document.createElement("li");
+                  list_item.appendChild(anchor);
+                  unordered_list.appendChild(list_item);
+              }
+
+              const new_author_description = document.createElement("span");
+              new_author_description.id = "new-author-description";
+              new_author_description.textContent = new_author_text;
+
+              const new_author_anchor = document.createElement("a");
+              new_author_anchor.href = "#";
+              new_author_anchor.textContent = "Create new author record";
+              new_author_anchor.addEventListener("click", event => {
+                  event.data = { "item_id": item_id };
+                  add_author_event(event);
+              });
+
+              const new_author_button = document.createElement("div");
+              new_author_button.id = "new-author";
+              new_author_button.className = "a-button";
+              new_author_button.appendChild(new_author_anchor);
+
+              new_author_description.appendChild(new_author_button);
+              unordered_list.appendChild(new_author_description);
+
+	      const wrapper = document.createElement("div");
+	      wrapper.id = "authors-ac";
+	      wrapper.className = "autocomplete";
+	      wrapper.appendChild(unordered_list);
+              const authors_input = document.getElementById("authors");
+              authors_input.classList.add("input-for-ac");
+              authors_input.after(wrapper);
+          }).catch(error => { console.log(`Error: ${error.message}`); });
     }
 }
 
@@ -218,68 +257,101 @@ function new_funding_event (event) {
 }
 
 function autocomplete_funding (event, item_id) {
-    let current_text = jQuery.trim(jQuery("#funding").val());
+    let current_text = document.getElementById("funding").value.trim();
     if (current_text == "") {
-        jQuery("#funding-ac").remove();
-        jQuery("#funding").removeClass("input-for-ac");
+	let element = document.getElementById("funding-ac");
+	if (element) { element.remove(); }
+        document.getElementById("funding").classList.remove("input-for-ac");
     } else if (current_text.length > 2) {
-        jQuery.ajax({
-            url:         `/v2/account/funding/search`,
-            type:        "POST",
-            contentType: "application/json",
-            accepts:     { json: "application/json" },
-            data:        JSON.stringify({ "search": current_text }),
-            dataType:    "json"
-        }).done(function (data) {
-            jQuery("#funding-ac").remove();
-            let html = jQuery("<ul/>");
-            for (let item of data) {
-                let list_item = jQuery("<li/>");
-                let anchor = jQuery("<a/>", { "href": "#" });
-                anchor.on ("click", { "uuid": item["uuid"], "item_id": item_id }, add_funding_event);
-                anchor.text(item["title"]);
-                list_item.append(anchor);
-                html.append(list_item);
-            }
-            let new_funding_button = jQuery("<div/>", { "id": "new-funding", "class": "a-button" });
-            let anchor = jQuery("<a/>", { "href": "#" });
-            anchor.on ("click", { "item_id": item_id }, new_funding_event);
-            anchor.text ("Create funding record");
-            new_funding_button.append (anchor);
-            html.append (new_funding_button);
-            let funding_ac_wrapper = jQuery("<div/>", { "id": "funding-ac", "class": "autocomplete" }).append(html);
-            jQuery("#funding").addClass("input-for-ac").after(funding_ac_wrapper);
-        });
+        fetch("/v2/account/funding/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ "search": current_text })
+        }).then(response => response.json())
+          .then(data => {
+	      let element = document.getElementById("funding-ac");
+	      if (element) { element.remove(); }
+              const unordered_list = document.createElement("ul");
+              for (const item of data) {
+                  const anchor = document.createElement("a");
+                  anchor.href = "#";
+                  anchor.textContent = item.title;
+                  anchor.addEventListener("click", event => {
+                      event.data = { "uuid": item.uuid, "item_id": item_id };
+                      add_funding_event(event);
+                  });
+
+                  const list_item = document.createElement("li");
+                  list_item.appendChild(anchor);
+                  unordered_list.appendChild(list_item);
+              }
+
+              const new_funding_anchor = document.createElement("a");
+              new_funding_anchor.href = "#";
+              new_funding_anchor.textContent = "Create funding record";
+              new_funding_anchor.addEventListener("click", event => {
+                  event.data = { "item_id": item_id };
+                  new_funding_event(event);
+              });
+
+              const new_funding_button = document.createElement("div");
+              new_funding_button.id = "new-funding";
+              new_funding_button.className = "a-button";
+              new_funding_button.appendChild(new_funding_anchor);
+              unordered_list.appendChild(new_funding_button);
+
+	      const wrapper = document.createElement("div");
+	      wrapper.id = "funding-ac";
+	      wrapper.className = "autocomplete";
+	      wrapper.appendChild(unordered_list);
+              const funding_input = document.getElementById("funding");
+              funding_input.classList.add("input-for-ac");
+              funding_input.after(wrapper);
+          }).catch(error => { console.log(`Error: ${error.message}`); });
     }
 }
 
 function toggle_cite_collect (event, action) {
     stop_event_propagation (event);
-    let other = (action === "collect") ? "cite" : "collect";
-    let label = (action === "collect") ? "Collect" : "Citation";
-    let item = jQuery(`#${action}`);
-    let other_item = jQuery(`#${other}`);
-    if (item.is(":visible")) {
-        item.slideUp(150, function (){
-            jQuery(`#${action}-btn`)
-                .removeClass("close")
-                .addClass("open")
-                .text(label);
-        });
-        if (!other_item.is(":visible")) {
-            jQuery(`#${other}-btn`).removeClass("close").removeClass("secondary");
+
+    const other = action === "collect" ? "cite" : "collect";
+    const label = action === "collect" ? "Collect" : "Citation";
+    const item = document.getElementById(action);
+    const other_item = document.getElementById(other);
+    const btn = document.getElementById(`${action}-btn`);
+    const other_btn = document.getElementById(`${other}-btn`);
+
+    if (item === null || other_item === null) { return; }
+    const is_visible = item.classList.contains("open");
+    const other_is_visible = other_item.classList.contains("open");
+
+    if (is_visible) {
+        item.classList.remove("open");
+        item.addEventListener("transitionend", () => {
+            item.style.display = "none";
+            btn.classList.remove("close");
+            btn.classList.add("open");
+            btn.textContent = label;
+        }, { once: true });
+
+        if (!other_is_visible) {
+            other_btn.classList.remove("close", "secondary");
         }
     } else {
-        other_item.slideUp(150, function (){
-            jQuery(`#${other}-btn`).removeClass("open").addClass("secondary");
-        });
-        item.slideDown(150, function (){
-            jQuery(`#${action}-btn`)
-                .removeClass("open")
-                .removeClass("secondary")
-                .addClass("close")
-                .text(label);
-        });
+        other_item.classList.remove("open");
+        other_item.addEventListener("transitionend", () => {
+            other_item.style.display = "none";
+            other_btn.classList.remove("open");
+            other_btn.classList.add("secondary");
+        }, { once: true });
+
+        item.style.display = "grid";
+        item.classList.add("open");
+        item.addEventListener("transitionend", () => {
+            btn.classList.remove("open", "secondary");
+            btn.classList.add("close");
+            btn.textContent = label;
+        }, { once: true });
     }
 }
 
@@ -292,42 +364,57 @@ function toggle_collect (event) {
 
 function add_tag_event (event) {
     stop_event_propagation (event);
-    jQuery('#tag').val(event.data["selected_tag"] + '; ').focus();
+    const tag_input = document.getElementById('tag');
+    tag_input.value = event.data["selected_tag"] + '; ';
+    tag_input.focus();
     add_tag(event.data["item_id"]);
 }
 
-function autocomplete_tags(event, item_id) {
-    const current_text = jQuery.trim(jQuery(`#tag`).val());
-    if (current_text === "") {
-        jQuery("#tag-ac").remove();
-        jQuery("#tag").removeClass("input-for-ac");
+function autocomplete_tags (event, item_id) {
+    let current_text = document.getElementById("tag").value.trim();
+    if (current_text == "") {
+	let element = document.getElementById("tag-ac");
+	if (element) { element.remove(); }
+        document.getElementById("tag").classList.remove("input-for-ac");
         return;
     }
-    if (current_text.length <= 2) return;
-    jQuery.ajax({
-        url: '/v3/tags/search',
-        type: "POST",
-        contentType: "application/json",
-        accepts: { json: "application/json" },
-        data: JSON.stringify({"search_for": current_text}),
-        dataType: "json"
-    }).done(function (data) {
-        jQuery("#tag-ac").remove();
-        if (data?.length) {
-            const unordered_list = jQuery("<ul/>");
-            for (let item of data) {
-                const anchor = jQuery("<a/>", {href: "#"}).text(item);
-                anchor.on("click", {"item_id": item_id, "selected_tag": item}, add_tag_event);
-                unordered_list.append(jQuery("<li/>").append(anchor));
-            }
-            const wrapper = jQuery("<div/>", {id: "tag-ac", class: "autocomplete"}).html(unordered_list);
-            jQuery("#tag").addClass("input-for-ac");
-            jQuery("#wrap-input-tag").after(wrapper);
-        } else {
-            jQuery("#tag").removeClass("input-for-ac");
-        }
-    }).fail(function () {
-        jQuery("#tag-ac").remove();
-        jQuery("#tag").removeClass("input-for-ac");
-    });
+    if (current_text.length <= 2) { return; }
+
+    fetch("/v3/tags/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "search_for": current_text })
+    }).then(response => response.json())
+      .then(data => {
+	  let element = document.getElementById("tag-ac");
+	  if (element) { element.remove(); }
+	  if (data && data.length) {
+              const unordered_list = document.createElement("ul");
+              for (const item of data) {
+                  const anchor = document.createElement("a");
+                  anchor.href = "#";
+                  anchor.textContent = item;
+                  anchor.addEventListener("click", event => {
+                      event.data = { "item_id": item_id, "selected_tag": item };
+                      add_tag_event(event);
+                  });
+                  const list_item = document.createElement("li");
+                  list_item.appendChild(anchor);
+                  unordered_list.appendChild(list_item);
+              }
+
+	      const wrapper = document.createElement("div");
+	      wrapper.id = "tag-ac";
+	      wrapper.className = "autocomplete";
+	      wrapper.appendChild(unordered_list);
+              document.getElementById("tag").classList.add("input-for-ac");
+              document.getElementById("wrap-input-tag").after(wrapper);
+          } else {
+              document.getElementById("tag").classList.remove("input-for-ac");
+          }
+      }).catch(() => {
+	  let element = document.getElementById("tag-ac");
+	  if (element) { element.remove(); }
+          document.getElementById("tag").classList.remove("input-for-ac");
+      });
 }
