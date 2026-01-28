@@ -1,4 +1,5 @@
 ;; Copyright (c) 2022, 2023, 2024 TU Delft <r.r.e.janssen@tudelft.nl>
+;; Copyright (c) 2026 Roel Janssen <rrejanssen@gmail.com>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU Affero General Public License as published by
@@ -17,6 +18,7 @@
 (use-modules (guix packages)
              ((guix licenses) #:prefix license:)
              (gnu packages python)
+	     (gnu packages python-build)
              (gnu packages python-xyz)
              (gnu packages python-web)
              (gnu packages rdf)
@@ -41,8 +43,7 @@
    (build-system pyproject-build-system)
    (arguments `(#:tests? #f))
    (native-inputs
-    (list python-setuptools
-          python-wheel))
+    (list python-setuptools))
    (propagated-inputs
     (list git
           python-defusedxml
