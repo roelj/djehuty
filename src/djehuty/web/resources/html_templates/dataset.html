@@ -30,32 +30,22 @@ const dataset_uuid = "{{item.container_uuid}}";
             <p>The files in this dataset are under embargo{%- if item.embargo_until_date %} until {{item.embargo_until_date}}{%- endif %}.</p>
     {%- if item.embargo_reason or item.confidential_reason %}
             <h4>Reason</h4>
-        {%- autoescape false %}
-        {%- if item.embargo_reason %}
-            {{item.embargo_reason}}
-        {%- else %}
-            {{item.confidential_reason}}
-        {%- endif %}
-        {%- endautoescape %}
+	    {{ item.embargo_reason | default(item.confidential_reason) | safe }}
     {%- endif %}
        </div>
 {%- elif item.is_restricted %}
     <h3 class="label">DATA - restricted access</h3>
         <div id="limited_access">
-            <h4>Reason</h4>
-    {%- autoescape false %}
-    {%- if item.embargo_reason %}
-            {{item.embargo_reason}}
-    {%- elif item.confidential_reason %}
-            {{item.confidential_reason}}
+    <h4>Reason</h4>
+    {%- if item.embargo_reason or item.confidential_reason %}
+    {{ item.embargo_reason | default(item.confidential_reason) | safe }}
     {%- else %}
-            Data is confidential.
+    Data is confidential.
     {%- endif %}
     {%- if item.eula %}
-            <h4>End User Licence Agreement</h4>
-            {{item.eula}}
+    <h4>End User Licence Agreement</h4>
+    {{item.eula | safe }}
     {%- endif %}
-    {%- endautoescape %}
         </div>
         {%- include 'dataset_access_request.html' %}
 {%- elif item.is_metadata_record %}
