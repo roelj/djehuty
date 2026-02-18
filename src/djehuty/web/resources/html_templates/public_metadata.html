@@ -117,14 +117,14 @@
 {%- endif %}
 {%- if item.time_coverage %}
         <div id="time_coverage">
-            <h3 class="label">Time coverage</h2>
+            <h3 class="label">Time coverage</h3>
             {{item.time_coverage}}
         </div>
 {%- endif %}
 {%- if item_type == "dataset" %}
     {%- if item.license_url %}
         <div id="licence">
-            <h3 class="label">Licence</h2>
+            <h3 class="label">Licence</h3>
             <a class="corporate-identity public-button" href="{{item.license_url}}" target="_blank" rel="noopener noreferrer" title="opens in new window">
               {{item.license_name}}</a>
     {%- if item.license_remarks %}
