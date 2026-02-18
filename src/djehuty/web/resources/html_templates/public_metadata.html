@@ -39,11 +39,7 @@
     </div>
   {%- endif %}
 {%- endif %}
-{%- if item_type == "dataset" %}
-    {%- set dtype = item.defined_type_name|capitalize %}
-{%- else %}
-    {%- set dtype = "Collection" %}
-{%- endif %}
+{%- set dtype = item.defined_type_name|capitalize if item_type == "dataset" else "Collection" %}
     <div id="type_versions">
         <h3 class="label" id="type">{{ dtype }}</h3>
 {%- if not private_view and versions[1:2] %}
@@ -101,13 +97,13 @@
         <div id="geo">
             <h3 class="label">Geolocation</h3>
     {%- if geo %}
-            <div id = "geo_name">{{geo}}</div>
+            <div id="geo_name">{{geo}}</div>
     {%- endif %}
     {%- if lat %}
-            <div id = "lat">lat (N): {{lat}}</div>
+            <div id="lat">lat (N): {{lat}}</div>
     {%- endif %}
     {%- if lon %}
-            <div id = "lon">lon (E): {{lon}}</div>
+            <div id="lon">lon (E): {{lon}}</div>
     {%- endif %}
     {%- if vlat and vlon %}
             <a class="corporate-identity" href="https://www.openstreetmap.org/?mlat={{vlat}}&mlon={{vlon}}#map=12/{{vlat}}/{{vlon}}"
@@ -187,11 +183,9 @@
         </div>
 {%- endif %}
         <div id="description">
-{%- autoescape false %}
         {%- if item.description %}
-        {{ item.description.replace('\\n', '\n') }}
+        {{ item.description.replace('\\n', '\n') | safe }}
         {%- endif %}
-{%- endautoescape %}
         </div>
         <div id="dates">
             <h3 class="label">History</h3>
@@ -257,13 +251,11 @@
             <a class="corporate-identity" href="{{item.data_link}}" target="_blank" rel="noopener noreferrer" title="opens in new window">{{item.data_link}}</a>
         </div>
 {%- endif %}
-{%- if item.language %}
-    {%- if item.language != 'en' %}
+{%- if item.language and item.language != 'en' %}
         <div id="language">
             <h3 class="label">Language</h3>
             {{item.language}}
         </div>
-    {%- endif %}
 {%- endif %}
 {%- if fundings %}
         <div id="funding">
@@ -291,12 +283,10 @@
         </div>
 {%- endif %}
 {%- if item.organizations %}
-    {%- autoescape false %}
         <div id="organizations">
             <h3 class="label">Organizations</h3>
-            {{ item.organizations.replace('\n', '<br />') }}
+            {{ item.organizations.replace('\n', '<br />') | safe }}
         </div>
-    {%- endautoescape %}
 {%- endif %}
 {%- if contributors %}
         <div id="contributors">
