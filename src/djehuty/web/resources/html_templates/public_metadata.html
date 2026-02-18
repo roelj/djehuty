@@ -195,11 +195,11 @@
         </div>
         <div id="dates">
             <h3 class="label">History</h3>
-{%- for (date, dtype) in dates %}
             <ul>
+{%- for (date, dtype) in dates %}
                   <li>{{date}} {{dtype}}</li>
-            </ul>
 {%- endfor %}
+            </ul>
         </div>
 {%- if item.publisher %}
         <div id="publisher">
