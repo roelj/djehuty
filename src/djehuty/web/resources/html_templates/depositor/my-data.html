@@ -51,7 +51,7 @@ jQuery(document).ready(function () {
 </noscript>
 <div class="hide-for-javascript">
 <h1>Datasets</h1>
-{%- if draft_datasets: %}
+{%- if draft_datasets %}
 <h2>Drafts</h2>
 <div id="table-unpublished-loader" class="loader"></div>
 <table id="table-unpublished" class="corporate-identity-table">
@@ -64,7 +64,7 @@ jQuery(document).ready(function () {
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody>{% for article in draft_datasets: %}
+  <tbody>{% for article in draft_datasets %}
     <tr>
       <td><a href="/my/datasets/{{article.container_uuid}}/edit">{{article.title}}</a>{% if article.is_shared_with_me %}<span class="active-badge">Shared with me</span>{% endif %}</td>
       <td>{{article.defined_type_name | default("undefined", False)}}</td>
@@ -80,7 +80,7 @@ jQuery(document).ready(function () {
 {%- else %}
 <p>You have not been invited to collaborate on a dataset (yet).</p>
 {%- endif %}
-{%- if review_datasets: %}
+{%- if review_datasets %}
 <h2>Under review</h2>
 <div id="table-review-loader" class="loader"></div>
 <table id="table-review" class="corporate-identity-table">
@@ -94,7 +94,7 @@ jQuery(document).ready(function () {
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody>{% for article in review_datasets: %}
+  <tbody>{% for article in review_datasets %}
     <tr>
       <td><a href="/my/datasets/{{article.container_uuid}}/edit">{{article.title}}</a></td>
       <td>{{article.defined_type_name | default("undefined", False)}}</td>
@@ -106,7 +106,7 @@ jQuery(document).ready(function () {
   {% endfor %}</tbody>
 </table>
 {%- endif %}
-{%- if published_datasets: %}
+{%- if published_datasets %}
 <h2>Published</h2>
 <div id="table-published-loader" class="loader"></div>
 <table id="table-published" class="corporate-identity-table">
@@ -119,7 +119,7 @@ jQuery(document).ready(function () {
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody>{% for article in published_datasets: %}
+  <tbody>{% for article in published_datasets %}
     <tr>
       <td><a href="/datasets/{{article.container_uuid}}">{{article.title}}</a></td>
       <td>{{article.defined_type_name | default("undefined", False)}}</td>

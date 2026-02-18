@@ -35,7 +35,7 @@
 <table id="quotas-table" class="corporate-identity-table">
   <thead><tr><th>Account</th><th>Requested size</th><th>Date</th><th>Reason</th><th>Status</th></tr></thead>
   <tbody>
-    {%- for request in quota_requests: %}
+    {%- for request in quota_requests %}
     <tr>
       <td>{{request.first_name | default("", False)}} {{request.last_name | default("", False)}} ({{request.email | default("-", False)}})</td>
       <td>{{request.requested_size / 1000000000 | default("-", False)}} GB</td>

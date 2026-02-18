@@ -17,7 +17,7 @@
 <table id="private-links-table" class="corporate-identity-table">
   <thead><tr><th>Private link</th><th>Purpose</th><th>Shared with</th><th>Expire date</th><th>Actions</th></tr></thead>
   <tbody>
-    {%- for link in private_links: %}
+    {%- for link in private_links %}
     <tr>
       <td><a href="/private_datasets/{{link.id_string}}">{{link.id_string}}</a></td>
       <td>{{link.purpose}}</td>

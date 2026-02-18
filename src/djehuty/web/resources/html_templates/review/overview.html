@@ -35,7 +35,7 @@
 </style>
 <script nonce="{{nonce}}">
   const reviewers = [
-      {%- for reviewer in reviewers: %}
+      {%- for reviewer in reviewers %}
       { "uuid": "{{reviewer.uuid}}",
         "first_name": "{{reviewer.first_name}}",
         "last_name": "{{reviewer.last_name}}",
@@ -54,7 +54,7 @@
       <select class="reviewer-filter">
         <option value="all">All reviewers</option>
         <option value="unassigned">Unassigned</option>
-        {%- for reviewer in reviewers: %}
+        {%- for reviewer in reviewers %}
         <option value="{{reviewer.uuid}}">
           {{reviewer.first_name | default("", False)}}
           {{reviewer.last_name | default("", False)}}

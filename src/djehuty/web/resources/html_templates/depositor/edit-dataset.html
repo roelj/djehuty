@@ -26,7 +26,7 @@ jQuery(document).ready(function (){
     root_categories = [];
     jQuery(".hide-for-javascript").removeClass("hide-for-javascript");
     jQuery(".subcategory-wrapper").hide();
-{%- for category in categories: %}
+{%- for category in categories %}
     root_categories.push("{{category.uuid}}");
     jQuery("#category_{{category.uuid}}").change(function () {
         if (this.checked) {
@@ -255,7 +255,7 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
   <tbody></tbody>
 </table>
 
-{%- if not disable_collaboration: %}
+{%- if not disable_collaboration %}
 <label for="collaborator-wrapper">Collaborators <span class="beta-badge">Beta</span></label><div class="fas fa-question-circle help-icon"><span class="help-text">Add people who can collaborate on this dataset.  Collaborators are not visible on the publication, but instead are given access to this form to either change metadata, or upload files.</span></div>
 <div id="collaborator-wrapper" class="options-wrapper">
 <a id="expand-collaborators-button" href="#">{% if article.is_shared_with_me %}Show{% else %}Manage{% endif %} collaborators</a>
@@ -360,11 +360,11 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
   <a id="expand-categories-button" href="#">Select categories</a>
   <div class="expand-categories"></div>
   <div id="expanded-categories">
-{%- for root in categories: %}
+{%- for root in categories %}
 <input type="checkbox" name="categories" value="{{root.uuid}}" id="category_{{root.uuid}}"><!--
 --><label class="item-label" for="category_{{root.uuid}}">{{root.title}}</label><br>
 <div id="subcategories_{{root.uuid}}" class="subcategory-wrapper">
-{%- for sub in root.subcategories: %}
+{%- for sub in root.subcategories %}
 <input class="subitem-checkbox" type="checkbox" name="categories" value="{{sub.uuid}}" id="category_{{sub.uuid}}"><!--
 --><label class="subitem-label no-head" for="category_{{sub.uuid}}">{{sub.title}}</label><br>
 {%- endfor %}
@@ -378,15 +378,15 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 <h4>{{article.group_name}}</h4>
 <input class="subitem-checkbox" type="radio" name="groups" value="{{article.group_id}}" id="group_{{article.group_id}}" checked="checked"><!--
 --><label class="subitem-label no-head" for="group_{{article.group_id}}">{{article.group_name}}</label><br>
-{%- elif not groups: %}
+{%- elif not groups %}
 <p>No group association found.  Please contact <a href="mailto:{{support_email_address}}">support</a>.</p>
 {%- else %}
-{%- for group in groups: %}
+{%- for group in groups %}
 <h4>{{group.name}}</h4>
 <div id="subgroups_{{group.id}}" class="subgroup-wrapper">
-<input class="subitem-checkbox" type="radio" name="groups" value="{{group.id}}" id="group_{{group.id}}" {% if account.group_id == group.id: %}checked="checked"{% endif %}><!--
+<input class="subitem-checkbox" type="radio" name="groups" value="{{group.id}}" id="group_{{group.id}}" {% if account.group_id == group.id %}checked="checked"{% endif %}><!--
 --><label class="subitem-label no-head" for="group_{{group.id}}">{{group.name}}</label><br>
-{%- for sub in group.subgroups: %}
+{%- for sub in group.subgroups %}
 <input class="subitem-checkbox" type="radio" name="groups" value="{{sub.id}}" id="group_{{sub.id}}"><!--
 --><label class="subitem-label no-head" for="group_{{sub.id}}">{{sub.name}}</label><br>
 {%- endfor %}

@@ -41,7 +41,7 @@ jQuery(document).ready(function () {
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody>{% for collection in draft_collections: %}
+  <tbody>{% for collection in draft_collections %}
     <tr>
       <td>
         <a href="/my/collections/{{collection.container_uuid}}/edit">{{collection.title}}</a>
@@ -68,7 +68,7 @@ jQuery(document).ready(function () {
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody>{% for collection in published_collections: %}
+  <tbody>{% for collection in published_collections %}
     <tr>
       <td>
         <a href="/collections/{{collection.container_uuid}}">{{collection.title}}</a>

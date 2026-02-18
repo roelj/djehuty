@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block headers %}
 <script nonce="{{nonce}}">
-var categories = "{% for item in subcategories: %}{{item.id}}{{ ',' if not loop.last else '' }}{% endfor %}";
+var categories = "{% for item in subcategories %}{{item.id}}{{ ',' if not loop.last else '' }}{% endfor %}";
 </script>
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/ranking.js?cache=1742461855"></script>
@@ -47,9 +47,9 @@ var categories = "{% for item in subcategories: %}{{item.id}}{{ ',' if not loop.
 <h2>Collections</h2>
 {% for item in collections %}
 <div class="tile-item">
-  <a href="/collections/{{item.container_uuid}}">{% if item.thumb | length: %}
+  <a href="/collections/{{item.container_uuid}}">{% if item.thumb | length %}
   <img class="tile-preview" src="{{item.thumb}}" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
-  {% else: %}
+  {% else %}
   <img class="tile-preview" src="/static/images/collection-thumb.svg" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
   {% endif %}</a>
   <div class="tile-title"><a href="/collections/{{item.container_uuid}}">{{item.title}}</a></div>
@@ -62,9 +62,9 @@ var categories = "{% for item in subcategories: %}{{item.id}}{{ ',' if not loop.
 <h2>All datasets</h2>
 {% for item in articles %}
 <div class="tile-item">
-  <a href="/datasets/{{item.container_uuid}}">{% if item.thumb | length: %}
+  <a href="/datasets/{{item.container_uuid}}">{% if item.thumb | length %}
   <img class="tile-preview" src="{{item.thumb}}" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
-  {% else: %}
+  {% else %}
   <img class="tile-preview" src="/static/images/dataset-thumb.svg" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
   {% endif %}</a>
   <div class="tile-title"><a href="/datasets/{{item.container_uuid}}">{{item.title}}</a></div>

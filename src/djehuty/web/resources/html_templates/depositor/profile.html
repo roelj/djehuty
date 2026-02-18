@@ -11,7 +11,7 @@ jQuery(document).ready(function (){
     root_categories = []
     jQuery(".hide-for-javascript").removeClass("hide-for-javascript");
     jQuery(".subcategory-wrapper").hide();
-{%- for category in categories: %}
+{%- for category in categories %}
     root_categories.push("{{category.uuid}}");
     jQuery("#category_{{category.uuid}}").change(function () {
         if (this.checked) {
@@ -45,7 +45,7 @@ jQuery(document).ready(function (){
 }
 .upload-container:hover { cursor: pointer; }
 .upload-container p { font-size: 1.0em; line-height: .5em; }
-    .dz-button { line-height: 1.5em !important; font-size: 15pt !important; font-weight: normal !important;{% if account.profile_image: %} display: none;{% endif %} }
+    .dz-button { line-height: 1.5em !important; font-size: 15pt !important; font-weight: normal !important;{% if account.profile_image %} display: none;{% endif %} }
 .small-text { text-align: center; font-size: small; }
 .small-text a { color: #cc0000; }
 .small-text a:hover { color: #ff0000; }
@@ -65,10 +65,10 @@ jQuery(document).ready(function (){
   <li class="hide-for-javascript save-button"><a id="save" href="#">Save</a>
 {%- if account.author_uuid != "unknown" %}
   <li class="hide-for-javascript"><a id="show-public-profile" href="/authors/{{account.author_uuid}}">Public profile</a>
-  {%- if orcid_client_id is not none: %}
-    {%- if "orcid" not in account or account.orcid is none or account.orcid == "": %}
+  {%- if orcid_client_id is not none %}
+    {%- if "orcid" not in account or account.orcid is none or account.orcid == "" %}
   <li class="hide-for-javascript orcid-button"><a id="connect-with-orcid" href="/my/profile/connect-with-orcid"><span class="fab fa-orcid"></span>Connect ORCID</a>
-    {%- else: %}
+    {%- else %}
     <li class="hide-for-javascript orcid-button"><a href="https://orcid.org/{{account.orcid}}"><span class="fab fa-orcid"></span><strong>{{account.orcid}}</strong></a>
     {%- endif %}
   {%- endif %}
@@ -78,12 +78,12 @@ jQuery(document).ready(function (){
 {% block body %}
 <h1>Profile</h1>
 <h2>Profile picture</h2>
-    <form id="upload-profile-image" class="upload-container dropzone {% if account.profile_image: %}profile-image{% endif%}" action="/v3/profile/picture" method="post" enctype="multipart/form-data">
+    <form id="upload-profile-image" class="upload-container dropzone {% if account.profile_image %}profile-image{% endif%}" action="/v3/profile/picture" method="post" enctype="multipart/form-data">
   <div class="fallback">
     <input type="file" name="file" id="file" aria-label="Upload your profile picture">
   </div>
 </form>
-{%- if account.profile_image: %}
+{%- if account.profile_image %}
 <p class="small-text"><a id="remove-image" href="#">Remove profile image</a></p>
 {%- endif %}
 <p class="small-text">Upload a JPG or PNG image of (ideally) 800 by 800 pixels.</p>
@@ -119,11 +119,11 @@ jQuery(document).ready(function (){
   <a id="expand-categories-button" href="#">Select categories</a>
   <div class="expand-categories"></div>
   <div id="expanded-categories">
-{%- for root in categories: %}
+{%- for root in categories %}
 <input type="checkbox" name="categories" value="{{root.uuid}}" id="category_{{root.uuid}}"><!--
 --><label class="item-label" for="category_{{root.uuid}}">{{root.title}}</label><br>
 <div id="subcategories_{{root.uuid}}" class="subcategory-wrapper">
-{%- for sub in root.subcategories: %}
+{%- for sub in root.subcategories %}
 <input class="subitem-checkbox" type="checkbox" name="categories" value="{{sub.uuid}}" id="category_{{sub.uuid}}"><!--
 --><label class="subitem-label no-head" for="category_{{sub.uuid}}">{{sub.title}}</label><br>
 {%- endfor %}

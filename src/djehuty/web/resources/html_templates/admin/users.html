@@ -58,7 +58,7 @@ jQuery(document).ready(function () {
 <table id="users-table" class="corporate-identity-table">
   <thead><tr><th>Name</th><th>E-mail</th><th>Group</th><th>Actions</th></tr></thead>
   <tbody>
-    {%- for account in accounts: %}
+    {%- for account in accounts %}
     <tr>
       <td>{{account.first_name | default("", False)}} {{account.last_name | default("", False)}}</td>
       <td>{{account.email | default("-", False)}}</td>

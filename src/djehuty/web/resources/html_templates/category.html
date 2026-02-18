@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>Overview of {{site_name}}</h1>
-{% for category in categories: %}
+{% for category in categories %}
 <h2>{{category.title}}</h2>
-{% for item in category.articles: %}
+{% for item in category.articles %}
 <div class="tile-item">
-  <a href="/datasets/{{item.container_uuid}}">{% if item.thumb | length: %}
+  <a href="/datasets/{{item.container_uuid}}">{% if item.thumb | length %}
   <img class="tile-preview" src="{{item.thumb}}" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
-  {% else: %}
+  {% else %}
   <img class="tile-preview" src="/static/images/dataset-thumb.svg" aria-hidden="true" alt="thumbnail for {{item.container_uuid}}" />
   {% endif %}</a>
   <div class="tile-title"><a href="/datasets/{{item.container_uuid}}">{{item.title}}</a></div>

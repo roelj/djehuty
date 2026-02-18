@@ -94,7 +94,7 @@ jQuery(document).ready(function (){
 <table id="session-table" class="corporate-identity-table">
   <thead><tr><th>Name</th><th>Created at</th><th>Actions</th></tr></thead>
   <tbody>
-    {%- for session in sessions: %}
+    {%- for session in sessions %}
     <tr>
       <td>{% if session.editable %}
         <a href="/my/sessions/{{session.uuid}}/edit">{{session.name | default("Unnamed", False)}}</a>

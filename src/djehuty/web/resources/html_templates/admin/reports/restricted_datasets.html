@@ -44,7 +44,7 @@ Export: <a href="/admin/reports/restricted_datasets?export=1&format=csv">CSV</a>
 <table id="reports-table" class="corporate-identity-table">
   <thead><tr><th>Report</th><th>Published Date</th></thead>
   <tbody>
-{%-   for item in datasets: %}
+{%-   for item in datasets %}
     <tr>
       <td><a href="/datasets/{{item.container_uuid}}">{{item.title}}</a></td>
 {%-     if 'published_date' in item %}
