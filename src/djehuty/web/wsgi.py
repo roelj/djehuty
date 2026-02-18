@@ -37,7 +37,7 @@ from djehuty.utils.convenience import (
     parses_to_int, pretty_print_size, self_or_value_or_none, split_author_name,
     split_string, value_or, value_or_none
 )
-from djehuty.utils.constants import iiif_supported_formats, filetypes_by_extension
+from djehuty.utils.constants import datetime_format, iiif_supported_formats, filetypes_by_extension
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
 from djehuty.web.config import config
 
@@ -644,7 +644,7 @@ class WebServer:
     def __log_event (self, request, item_uuid, item_type, event_type):
         """Records a view or download event."""
         try:
-            timestamp  = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            timestamp  = datetime.now().strftime(f"{datetime_format}Z")
             ip_address = request.remote_addr
             if self.log_access == self.log_access_using_x_forwarded_for:
                 ip_address = request.headers["X-Forwarded-For"]
@@ -1275,7 +1275,7 @@ class WebServer:
             for row in report_data:
                 writer.writerow(row)
 
-            report_name = f"{datetime.now().strftime('%Y%m%d%H%M%S')}-{report_name}"
+            report_name = f"{datetime.now().strftime(datetime_format)}_{report_name}"
             output = self.response (inmemory_file.getvalue(), mimetype="text/csv")
             output.headers["Content-disposition"] = f"attachment; filename={report_name}.csv"
             return output
