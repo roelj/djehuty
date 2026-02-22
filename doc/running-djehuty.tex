@@ -646,3 +646,86 @@ server {
   To ensure \code{djehuty} receives the actual client IP address so it can log
   this information, one can set the \code{use-x-forwarded-for} option
   described in section \ref{sec:essential-options}.
+
+\section{Running \t{djehuty} with feature isolation}
+
+Some features are more prone to denial-of-service situations because they
+require more CPU, memory, or disk space to complete.  To mitigate outages while
+using these features, multiple instances of \t{djehuty} can run simultaneous
+as long as all but one instance runs in \t{read-only-mode} in the \t{rdf-store}
+section.
+
+Only one instance may write to the database, but other instances can be useful
+to handle specific endpoints (like IIIF image processing or Git operations).  The
+\t{read-only} instances need to be able to query the database, but need not to
+write to it.  They can run on completely different machines, as long as a database
+connection can be established.
+
+\subsection{Isolating Git operations}
+\label{sec:isolating-git-ops}
+
+To take advantage of the multi-instance deployment, we are going to use the \t{nginx}
+configuration file to let a second instance of \t{djehuty} handle all Git operations
+by defining multiple \code{location} blocks in the \t{nginx} configuration.
+
+So we create two configuration files, differing only in the \code{port},
+\code{log-file} and \code{rdf-store/read-only-mode} options.
+\begin{itemize}
+\item{djehuty-primary.xml}: Set the \code{rdf-store/read-only-mode} to
+  \code{0} and \code{port} to \code{8080}.
+\item{djehuty-git.xml}: Set the \code{rdf-store/read-only-mode} to
+  \code{1} and \code{port} to \code{8081}.
+\end{itemize}
+
+Setting two different log files makes it easier to track which request goes where.
+
+With both instances of \t{djehuty} running (one with the `primary' and one `git'
+configuration file),
+
+The accompanying \t{nginx} \t{server}-block configuration looks as following:
+\begin{lstlisting}
+server {
+    listen              443 ssl;
+    listen              [::]:443 ssl;
+    server_name         example.domain;
+
+    ssl_certificate     /etc/letsencrypt/live/example.domain/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.domain/privkey.pem;
+
+    # Here we group the endpoints that are used to push/pull with Git.
+    # These requests will then use an instance bound to port 8081.
+    location ~* ^/v3/datasets/(.*).git/(info/refs|git-upload-pack|git-receive-pack)$ {
+       root /usr/share/nginx/html;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_pass http://127.0.0.1:8081;
+    }
+
+    # Additionally, we group the endpoints that have a Git interaction.
+    # You can also concatenate the last part of the regexp to the previous
+    # location block.
+    location ~* ^/v3/datasets/(.*).git/(languages|contributors|zip)$ {
+       root /usr/share/nginx/html;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_pass http://127.0.0.1:8081;
+    }
+
+    # All other locations use the instance of Djehuty bound to port 8080.
+    location / {
+       root /usr/share/nginx/html;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_pass http://127.0.0.1:8080;
+     }
+}
+\end{lstlisting}
+
+\subsection{Isolating IIIF operations}
+
+  The IIIF endpoints can be captured by the following regular expression for
+  the \code{location} block in \t{nginx}:
+
+\begin{lstlisting}
+^/iiif/v3/(.*)$
+\end{lstlisting}
+
+  The rest of the instructions are identical to isolating Git requests (see
+  section \refer{sec:isolating-git-ops}).
