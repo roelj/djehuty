@@ -98,12 +98,10 @@ function toggle_collaborators(dataset_uuid, may_edit_metadata, event) {
 
   if (is_visible) {
     hide_collaborators();
+  } else if (document.getElementById("add_collaborator")) {
+    show_collaborators();
   } else {
-    if (!document.getElementById("add_collaborator")) {
-      render_collaborators_for_dataset(dataset_uuid, may_edit_metadata, show_collaborators);
-    } else {
-      show_collaborators();
-    }
+    render_collaborators_for_dataset(dataset_uuid, may_edit_metadata, show_collaborators);
   }
 }
 
