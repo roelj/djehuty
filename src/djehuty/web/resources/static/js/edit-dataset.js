@@ -1468,7 +1468,7 @@ function perform_upload (files, current_file, dataset_uuid) {
             let xhr = new window.XMLHttpRequest();
             xhr.upload.addEventListener("progress", function (evt) {
                 if (evt.lengthComputable) {
-                    let completed = parseInt(evt.loaded / evt.total * 100);
+                    let completed = Number.parseInt(evt.loaded / evt.total * 100);
                     jQuery("#file-upload h4").text(`Uploading at ${completed}% (${current_file}/${total_files})`);
                     if (completed === 100) {
                         jQuery("#file-upload h4").text(`Computing MD5 ... (${current_file}/${total_files})`);
@@ -1552,7 +1552,7 @@ function remove_tag (tag, dataset_uuid) {
 function prettify_size (size) {
     let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (size == 0 || size == null) return '0 Byte';
-    let i = parseInt(Math.floor(Math.log(size) / Math.log(1000)));
+    let i = Number.parseInt(Math.floor(Math.log(size) / Math.log(1000)));
     return Math.round(size / Math.pow(1000, i)) + ' ' + sizes[i];
 }
 

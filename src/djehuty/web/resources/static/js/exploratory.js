@@ -12,8 +12,8 @@ function longform_uri (value) {
 
 function draw_grid () {
     let explorer    = d3.select("#data-model-explorer");
-    let width       = parseInt(explorer.style("width"));
-    let height      = parseInt(explorer.style("height"));
+    let width       = Number.parseInt(explorer.style("width"));
+    let height      = Number.parseInt(explorer.style("height"));
 
     explorer.select("#grid").remove();
     let grid = explorer.append("g").attr("id", "grid");
@@ -70,7 +70,7 @@ function draw_node (row, column, value) {
     let node_group  = explorer.append("g").attr("transform", "translate("+ translate_x +","+ translate_y +")");
 
     // Re-adjust the height so that all rendered nodes are visible.
-    let current_height = parseInt(explorer.style("height"));
+    let current_height = Number.parseInt(explorer.style("height"));
     let new_height     = translate_y + 50;
     if (current_height < new_height) {
         explorer.style("height", new_height + "px");
