@@ -356,7 +356,6 @@ class SparqlInterface:
                         continue
                     escaped_value = rdf.escape_string_value (element.lower())
                     filters += f"CONTAINS(LCASE(?{last_used_field}), {escaped_value})\n"
-                    continue
                 else:
                     filter_list = []
                     for key, value in element.items():

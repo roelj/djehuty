@@ -13,7 +13,7 @@ RLIMIT_AVAILABLE = False  # pylint: disable=invalid-name
 try:
     from resource import setrlimit, RLIMIT_AS, RLIM_INFINITY
     RLIMIT_AVAILABLE = True  # pylint: disable=invalid-name
-except (ImportError, ModuleNotFoundError):
+except (ImportError):
     pass
 
 class HTMLStripper (HTMLParser):
@@ -143,7 +143,7 @@ def decimal_coord(raw_input, axis, digits=5):
                 direction = components[-1] #direction may be N,E,S,W, axis N,E.
                 if (direction == 'S' and axis == 'N') or (direction == 'W' and axis == 'E'):
                     deg = -deg
-                elif not direction in (axis, ''):
+                elif direction not in (axis, ''):
                     return None #something is wrong, probably mixed up lat and lon
             else:
                 return None #something is wrong, undecipherable gibberish

@@ -2788,8 +2788,7 @@ class WebServer:
                                                          False,
                                                          data["read"],
                                                          data["edit"],
-                                                         data["remove"],
-                                                         )
+                                                         data["remove"])
 
             if collaborators is None:
                 return self.error_500 ("Inserting collaborator failed. ")
