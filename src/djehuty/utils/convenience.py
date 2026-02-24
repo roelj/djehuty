@@ -13,7 +13,7 @@ RLIMIT_AVAILABLE = False  # pylint: disable=invalid-name
 try:
     from resource import setrlimit, RLIMIT_AS, RLIM_INFINITY
     RLIMIT_AVAILABLE = True  # pylint: disable=invalid-name
-except (ImportError):
+except ImportError:
     pass
 
 class HTMLStripper (HTMLParser):
