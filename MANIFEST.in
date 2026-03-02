@@ -1,7 +1,11 @@
+include configure.ac configure guix.scm.in pyproject.toml.in missing install-sh
+include Makefile.am doc/Makefile.am src/Makefile.am Makefile.in doc/Makefile.in src/Makefile.in
+include docker/Dockerfile docker/docker-compose.yaml
 include etc/djehuty.service
 include etc/djehuty/djehuty-example-config.xml
-include doc/*.tex doc/djehuty.sty doc/references.bib doc/figures/*.pdf
-include rpmbuild/SPECS/djehuty.spec
+include doc/*.typ doc/config.typ.in doc/references.bib doc/figures/*.svg doc/figures/favicon.png doc/djehuty.pdf doc/index.html
+include rpmbuild/SPECS/djehuty.spec.in
+include debian/changelog debian/control debian/copyright debian/rules debian/source/format debian/source/include-binaries
 recursive-include src *.py
-recursive-include src/djehuty/web/resources *.txt *.html *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.sparql *.png *.ico
-recursive-include src/djehuty/backup/resources *.json
+recursive-include tests *.py
+recursive-include src/djehuty/web/resources *.bib *.enw *.ris *.cff *.txt *.html *.xml *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.json *.sparql *.png *.ico

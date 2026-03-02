@@ -14,7 +14,7 @@ doc_TYPST               = $(doc_NAME).typ
 dist_doc_DATA           =
 
 if HAVE_TYPST
-dist_doc_DATA           += $(doc_PDF)
+dist_doc_DATA           += $(doc_PDF) $(doc_HTML)
 
 $(doc_PDF):
 	@$(TYPST) compile $(doc_TYPST) $(doc_PDF)
@@ -27,26 +27,27 @@ $(doc_HTML):
 all: $(doc_PDF) $(doc_HTML)
 endif
 
-EXTRA_DIST              = $(doc_TEX) $(doc_STYLE)                  \
-                          introduction.tex                         \
-                          contributing.tex                         \
-                          knowledge-graph.tex                      \
-                          news.tex                                 \
-                          contact.tex                              \
-                          running-djehuty.tex                      \
-                          api.tex                                  \
+EXTRA_DIST              = $(doc_TYPST) $(doc_HTML) $(doc_PDF)      \
+                          api.typ                                  \
+                          config.typ.in                            \
+                          contact.typ                              \
+                          contributing.typ                         \
+                          introduction.typ                         \
+                          knowledge-graph.typ                      \
+                          news.typ                                 \
+                          running-djehuty.typ                      \
                           references.bib                           \
                           figures/account.svg                      \
                           figures/author.svg                       \
                           figures/category.svg                     \
                           figures/collaborators.svg                \
-                          figures/collection.svg                   \
                           figures/collection-container.svg         \
-                          figures/dataset.svg                      \
+                          figures/collection.svg                   \
                           figures/dataset-container.svg            \
-                          figures/institutiongroup.svg             \
+                          figures/dataset.svg                      \
                           figures/file.svg                         \
                           figures/funding.svg                      \
+                          figures/institutiongroup.svg             \
                           figures/privatelink.svg                  \
                           figures/rdf-list-abbrev.svg              \
                           figures/references-graph.svg             \

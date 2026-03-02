@@ -21,17 +21,11 @@ BuildRequires: python%{python3_pkgversion}-devel
 BuildRequires: python%{python3_pkgversion}-setuptools
 BuildRequires: python%{python3_pkgversion}-pip
 %if 0%{?fedora} >= 40
-BuildRequires: texlive-libertine
 BuildRequires: python%{python3_pkgversion}-wheel
 %else
 BuildRequires: python%{python3_pkgversion}-setuptools-wheel
 BuildRequires: python%{python3_pkgversion}-pip-wheel
 %endif
-BuildRequires: texlive
-BuildRequires: texlive-tex4ht
-BuildRequires: texlive-appendix
-BuildRequires: texlive-titlesec
-BuildRequires: texlive-float
 BuildRequires: make
 Requires: git
 Requires: python%{python3_pkgversion}-requests
@@ -81,37 +75,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/%{name}/%{name}-example-config.xml
 %{_bindir}/%{name}
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/%{name}.css
 %{_datadir}/%{name}/%{name}.pdf
-%{_datadir}/%{name}/%{name}2.html
-%{_datadir}/%{name}/%{name}3.html
-%{_datadir}/%{name}/%{name}4.html
-%{_datadir}/%{name}/%{name}5.html
-%{_datadir}/%{name}/%{name}6.html
-%{_datadir}/%{name}/%{name}7.html
-%dir %{_datadir}/%{name}/figures
-%{_datadir}/%{name}/figures/account-.png
-%{_datadir}/%{name}/figures/author-.png
-%{_datadir}/%{name}/figures/category-.png
-%{_datadir}/%{name}/figures/collaborators-.png
-%{_datadir}/%{name}/figures/collection-.png
-%{_datadir}/%{name}/figures/collection-container-.png
-%{_datadir}/%{name}/figures/dataset-.png
-%{_datadir}/%{name}/figures/dataset-container-.png
-%{_datadir}/%{name}/figures/favicon.png
-%{_datadir}/%{name}/figures/file-.png
-%{_datadir}/%{name}/figures/funding-.png
-%{_datadir}/%{name}/figures/institutiongroup-.png
-%{_datadir}/%{name}/figures/privatelink-.png
-%{_datadir}/%{name}/figures/rdf-list-abbrev-.png
-%{_datadir}/%{name}/figures/references-graph-.png
-%{_datadir}/%{name}/figures/typed-literals-notation-.png
-%{_datadir}/%{name}/figures/typed-notation-.png
-%dir %{_datadir}/%{name}/fonts
-%{_datadir}/%{name}/fonts/FiraMono-Regular.ttf
-%{_datadir}/%{name}/fonts/SourceSansPro-Bold.ttf
-%{_datadir}/%{name}/fonts/SourceSansPro-Italic.ttf
-%{_datadir}/%{name}/fonts/SourceSansPro-Regular.ttf
 %{_datadir}/%{name}/index.html
 
 %post
@@ -124,6 +88,8 @@ rm -rf %{buildroot}
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon Mar 2 2026 Roel Janssen <rrejanssen@gmail.com> 25.6-1
+- Clean-up LaTeX legacy
 * Fri Jan 31 2025 Roel Janssen <r.r.e.janssen@tudelft.nl> 25.1-1
 - Initial RPM creation.
 - See https://djehuty.roelj.com/#news-section for the full release notes.

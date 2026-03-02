@@ -4,7 +4,7 @@ SUBDIRS                 = src
 # Help make tarballs more reproducible.
 export TAR_OPTIONS      = --owner=0 --group=0 --numeric-owner
 
-# Only attempt to build the documentation when PDFLATEX is available.
+# Only attempt to build the documentation when Typst is available.
 if HAVE_TYPST
 SUBDIRS                += doc
 endif
@@ -31,7 +31,7 @@ EXTRA_DIST              =                   \
   tests/validators.py
 
 dist-rpm: dist
-	mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+	mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 	rm -f rpmbuild/SOURCES/*
 	ln -s $(abs_top_srcdir)/djehuty-@VERSION@.tar.gz rpmbuild/SOURCES/djehuty-@VERSION@.tar.gz
 	rpmbuild --define "_topdir $(abs_top_srcdir)/rpmbuild" -ba $(abs_top_srcdir)/rpmbuild/SPECS/djehuty.spec
