@@ -5,7 +5,7 @@ SUBDIRS                 = src
 export TAR_OPTIONS      = --owner=0 --group=0 --numeric-owner
 
 # Only attempt to build the documentation when PDFLATEX is available.
-if HAVE_PDFLATEX
+if HAVE_TYPST
 SUBDIRS                += doc
 endif
 

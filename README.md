@@ -20,8 +20,8 @@ This project uses the GNU autotools build system.
 ### GNU/Linux
 
 For development on GNU/Linux we recommend installing `git`, `autoconf`,
-`automake` and `make` through your system's package manager, followed by
-creating a Python virtual environment for `djehuty`:
+`automake`, `make` and `typst` through your system's package manager, followed
+by creating a Python virtual environment for `djehuty`:
 
 ```bash
 git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
@@ -48,7 +48,7 @@ For development on Apple's macOS X, we recommend installing `python3`, `git`,
 followed by creating a Python virtual environment for `djehuty`:
 
 ```bash
-brew install python3 git autoconf automake make
+brew install python3 git autoconf automake make typst
 git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
 autoreconf -if && ./configure
 python3 -m venv ../djehuty-env
@@ -76,7 +76,7 @@ pacman -Suy git autoconf automake make ${PREFIX}python \
             ${PREFIX}python-jinja ${PREFIX}python-requests \
             ${PREFIX}python-werkzeug ${PREFIX}python-defusedxml \
             ${PREFIX}python-pillow ${PREFIX}python-build \
-            ${PREFIX}python-setuptools
+            ${PREFIX}python-setuptools ${PREFIX}typst
 git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
 # If you chose a different PREFIX above, change /mingw64 accordingly below.
 # See: https://www.msys2.org/docs/environments

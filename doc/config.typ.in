@@ -1,0 +1,32 @@
+#let djehutyversion = "@VERSION@"
+#let djehutybaseurl = "@BASE_URL@"
+#let djehutygiturl = "@GIT_URL@"
+
+#let render_code_output(output) = raw(
+  output.text
+      .replace("<djehutybaseurl>", djehutybaseurl)
+      .replace("<djehutygiturl>", djehutygiturl)
+      .replace("<djehutyversion>", djehutyversion),
+  block: true,
+  lang: "json",
+)
+
+#let commitLink(hash) = {
+  let short = hash.slice(0, 9)
+  link(djehutygiturl + "/commit/" + hash)[#raw(short)]
+}
+
+#let render_chapter(chapter_text, chapter_title) = {
+  let target = dictionary(std).at("target", default: () => "paged")
+  context if target() == "paged" {
+    set page(
+      header: align(right)[#chapter_title],
+      numbering: "1",
+    )
+  }
+  context if target() == "html" {
+    html.elem("div", attrs: (class: "chapter"))[ #chapter_text ]
+  } else [ #chapter_text ]
+}
+
+#let code(text) = raw(text)
