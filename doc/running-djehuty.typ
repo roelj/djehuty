@@ -273,16 +273,16 @@ the following attributes must be configured.
   [`x509-certificate`],           [Contents of the public certificate without whitespacing.],
   [`private-key`],                [Contents of the private key belonging to the `x509-certificate` to sign messages with.],
   [`metadata`],                   [This section contains metadata that may be displayed by the identity provider to users before authorizing them.],
-  [#h(1em)`display-name`],        [The name to be displayed by the identity provider when authorizing the user to the service.],
-  [#h(1em)`url`],                 [The URL to the service.],
-  [#h(1em)`description`],         [Textual description of the service.],
-  [#h(1em)`organization`],        [This section contains metadata to describe the organization behind the service.],
-  [#h(2em)`name`],                [The name of the service provider's organization.],
-  [#h(2em)`url`],                 [The URL to the web page of the organization.],
-  [#h(1em)`contact`],             [A repeatable section to list contact persons and their roles within the organization. The role can be configured by setting the `type` attribute.],
-  [#h(2em)`first-name`],          [The first name of the contact person.],
-  [#h(2em)`last-name`],           [The last name of the contact person.],
-  [#h(2em)`email`],               [The e-mail address of the contact person. Note that some identity providers prefer functional e-mail addresses (e.g. support\@... instead of jdoe\@...).],
+  [`  display-name`],        [The name to be displayed by the identity provider when authorizing the user to the service.],
+  [`  url`],                 [The URL to the service.],
+  [`  description`],         [Textual description of the service.],
+  [`  organization`],        [This section contains metadata to describe the organization behind the service.],
+  [`    name`],                [The name of the service provider's organization.],
+  [`    url`],                 [The URL to the web page of the organization.],
+  [`  contact`],             [A repeatable section to list contact persons and their roles within the organization. The role can be configured by setting the `type` attribute.],
+  [`    first-name`],          [The first name of the contact person.],
+  [`    last-name`],           [The last name of the contact person.],
+  [`    email`],               [The e-mail address of the contact person. Note that some identity providers prefer functional e-mail addresses (e.g. support\@... instead of jdoe\@...).],
 )
 
 === ORCID
@@ -464,7 +464,7 @@ to `1`. Privileges are disabled by default, except for
 ]
 
 #render_chapter(chapter_text, "Configuring `djehuty`")
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 
 #let chapter_text = [
 = Running `djehuty` <chap-running-djehuty>

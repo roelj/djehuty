@@ -30,3 +30,10 @@
 }
 
 #let code(text) = raw(text)
+
+#let pagebreak-when-paged() = {
+    let target = dictionary(std).at("target", default: () => "paged")
+    context if target() == "paged" {
+        pagebreak(weak: true)
+    }
+}

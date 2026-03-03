@@ -116,24 +116,26 @@
     ]
 }
 
-#set page(numbering: "1")
-#counter(page).update(1)
+#context if target() == "paged" {
+    set page(numbering: "1")
+    counter(page).update(1)
+}
 
 #include "introduction.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "running-djehuty.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "knowledge-graph.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "contributing.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "api.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #let bib = bibliography("references.bib", style: "apa")
 #render_chapter(bib, "Bibliography")
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "contact.typ"
-#pagebreak(weak: true)
+#pagebreak-when-paged()
 #include "news.typ"
 
 //  begin{html}
