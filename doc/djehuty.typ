@@ -1,4 +1,10 @@
 #import "config.typ": *
+#show link: underline
+#show link: set text(fill: rgb("#000"))
+#show outline.entry.where(level: 1): set text(fill: rgb("#000"), weight: "bold")
+#show outline.entry.where(level: 2): set text(fill: rgb("#111"))
+#show outline.entry.where(level: 3): set text(fill: rgb("#222"))
+#show outline.entry.where(level: 3): set text(fill: rgb("#333"))
 
 #set text(
     font: "New Computer Modern"
@@ -34,24 +40,24 @@
             \@media (min-width: 1074pt) {
             .table-of-contents { position: fixed; height: 100vh; overflow-y: auto; width: 210pt; min-width: 210pt; max-width: 210pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: 1em; }
             .chapter { margin-left: 224pt !important; }
-            nav > ol > li > ol > li > ol > li > a,
-            nav > ol > li > ol > li > ol > li > div { display: none; }
-            nav > ol > li > ol > li > a,
-            nav > ol > li > ol > li > div > a { font-size: 0.9em; }
+            nav > ol > li > ol > li > ol > li > span > a,
+            nav > ol > li > ol > li > ol > li > div > span { display: none; }
+            nav > ol > li > ol > li > span >a,
+            nav > ol > li > ol > li > div > span > a { font-size: 0.9em; }
             }
             .table-of-contents p { padding: 0em 0em 0em 1em; margin-bottom: 0em; }
             .table-of-contents ol { margin: 0em; padding: 1em; line-height: 1.3em; }
             .table-of-contents ol ol { margin: 0em; padding: 0em 1em 0em 1em; }
             .table-of-contents h2 { background: \#ccc; color: \#111; padding: .75em; margin: 0em; border-radius: .5em .5em 0em 0em; }
             nav > ol { margin-top: 0em; }
-            nav > ol > li > div > a,
-            nav > ol > li > a { display: inline-block; width: calc(100% - 1em); background: \#f6f6f6; padding: .25em .5em .25em .5em; border-radius: .5em; margin: .25em 0em .25em 0em; font-size: 1.2em; color: \#111; border: solid 1pt \#ccc; }
-            nav > ol > li > ol > li > a,
-            nav > ol > li > ol > li > div > a { color: \#7c0000; }
-            nav > ol > li > ol > li > a:hover,
-            nav > ol > li > ol > li > div > a:hover { color: \#af6666; }
-            nav > ol > li > ol > li > ol > li > a { color: \#00007c; }
-            nav > ol > li > ol > li > ol > li > a:hover { color: \#6666af; }
+            nav > ol > li > div > span > a,
+            nav > ol > li > span > a { display: inline-block; width: calc(100% - 1em); background: \#f6f6f6; padding: .25em .5em .25em .5em; border-radius: .5em; margin: .25em 0em .25em 0em; font-size: 1.2em; color: \#111; border: solid 1pt \#ccc; }
+            nav > ol > li > ol > li > span > a,
+            nav > ol > li > ol > li > div > span > a { color: \#7c0000; }
+            nav > ol > li > ol > li > span > a:hover,
+            nav > ol > li > ol > li > div > span > a:hover { color: \#af6666; }
+            nav > ol > li > ol > li > ol > li > span > a { color: \#00007c; }
+            nav > ol > li > ol > li > ol > li > span > a:hover { color: \#6666af; }
             .center { text-align: center; }
             img { display: block; max-width: 760pt; margin: 1em auto 1em auto; padding: auto; }
             figure { background: \#fcfcfc; border: solid 1pt \#ccc; border-radius: .5em; }

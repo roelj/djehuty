@@ -1,6 +1,18 @@
 #import "config.typ": *
 #let chapter_text = [
-= Contact <contact>
+#heading(numbering: none)[Contact] <contact>
+
+== The team
+
+This software is voluntarily maintained by
+#link("mailto:symmetricbutterfly@proton.me")[Malaika Newman],
+#link("mailto:rrejanssen@gmail.com")[Roel Janssen] and
+#link("mailto:emualliugdb@gmail.com")[Guillaume Dubois].
+
+== Mailing lists
+
+You can best reach us through the #link("https://djehuty.roelj.com/postorius/lists/devel.djehuty.roelj.com/")[development mailing list],
+which we use for all communication regarding the project.
 
 == Reporting security vulnerabilities <reporting-security-vulnerabilities>
 
