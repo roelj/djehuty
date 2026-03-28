@@ -275,6 +275,34 @@ function autocomplete_author (event, item_id) {
     }
 }
 
+function submit_new_funding_event (event) {
+    stop_event_propagation (event);
+    submit_new_funding (event.data["item_id"]);
+}
+
+
+function new_funding (item_id) {
+    let html = jQuery("<div/>", { "id": "new-funding-form" });
+    html.append (jQuery ("<label/>", { "for": "funding_title" }).text("Title"));
+    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_title", "name": "funding_title" }));
+    html.append (jQuery ("<label/>", { "for": "funding_grant_code" }).text("Grant code"));
+    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_grant_code", "name": "funding_grant_code" }));
+    html.append (jQuery ("<label/>", { "for": "funding_funder_name" }).text("Funder name"));
+    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_funder_name", "name": "funding_funder_name" }));
+    html.append (jQuery ("<label/>", { "for": "funding_url" }).text("URL"));
+    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_url", "name": "funding_url" }));
+
+    let new_funding_button = jQuery ("<div/>", { "id": "new-funding", "class": "a-button" });
+    let anchor = jQuery("<a/>", { "href": "#" }).text("Add funding");
+    anchor.on ("click", { "item_id": item_id }, submit_new_funding_event);
+    new_funding_button.append (anchor);
+    html.append (new_funding_button);
+
+    jQuery("#funding-ac ul").remove();
+    jQuery("#new-funding").remove();
+    jQuery("#funding-ac").append(html);
+}
+
 function add_funding_event (event) {
     stop_event_propagation (event);
     add_funding (event.data["uuid"], event.data["item_id"]);

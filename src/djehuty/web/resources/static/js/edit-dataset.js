@@ -1079,33 +1079,6 @@ function submit_new_funding (dataset_uuid) {
     }).fail(function () { show_message ("failure", `<p>Failed to add funding.</p>`); });
 }
 
-function submit_new_funding_event (event) {
-    stop_event_propagation (event);
-    submit_new_funding (event.data["dataset_uuid"]);
-}
-
-function new_funding (dataset_uuid) {
-    let html = jQuery("<div/>", { "id": "new-funding-form" });
-    html.append (jQuery ("<label/>", { "for": "funding_title" }).text("Title"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_title", "name": "funding_title" }));
-    html.append (jQuery ("<label/>", { "for": "funding_grant_code" }).text("Grant code"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_grant_code", "name": "funding_grant_code" }));
-    html.append (jQuery ("<label/>", { "for": "funding_funder_name" }).text("Funder name"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_funder_name", "name": "funding_funder_name" }));
-    html.append (jQuery ("<label/>", { "for": "funding_url" }).text("URL"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_url", "name": "funding_url" }));
-
-    let new_funding_button = jQuery ("<div/>", { "id": "new-funding", "class": "a-button" });
-    let anchor = jQuery("<a/>", { "href": "#" });
-    anchor.on ("click", { "dataset_uuid": dataset_uuid }, submit_new_funding_event).text("Add funding");
-    new_funding_button.append (anchor);
-    html.append (new_funding_button);
-
-    jQuery("#funding-ac ul").remove();
-    jQuery("#new-funding").remove();
-    jQuery("#funding-ac").append(html);
-}
-
 function toggle_record_type () {
     if (jQuery("#external_link").prop("checked")) {
         jQuery(".record-type-field").hide();
