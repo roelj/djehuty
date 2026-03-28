@@ -1079,37 +1079,6 @@ function submit_new_funding (dataset_uuid) {
     }).fail(function () { show_message ("failure", `<p>Failed to add funding.</p>`); });
 }
 
-function submit_new_author_event (event) {
-    stop_event_propagation (event);
-    submit_new_author (event.data["dataset_uuid"]);
-}
-
-function new_author (dataset_uuid) {
-    let banner = `<br><span><i>Enter the details of the author you want to add.</i></span>`;
-    jQuery("#new-author-description").after(banner).remove();
-    let html = jQuery("<div/>", { "id": "new-author-form" });
-    html.append(jQuery ("<label/>", { "for": "author_first_name" }).text("First name"));
-    html.append(jQuery ("<span/>", { "class": "required-field" }).text("*"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_first_name", "name": "author_first_name" }));
-    html.append(jQuery ("<label/>", { "for": "author_last_name" }).text("Last name"));
-    html.append(jQuery ("<span/>", { "class": "required-field" }).text("*"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_last_name", "name": "author_last_name" }));
-    html.append(jQuery ("<label/>", { "for": "author_email" }).text("E-mail address"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_email", "name": "author_email" }));
-    html.append(jQuery ("<label/>", { "for": "author_orcid" }).text("ORCID"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_orcid", "name": "author_orcid" }));
-
-    let button_wrapper = jQuery("<div/>", { "id": "new-author", "class": "a-button" });
-    let anchor = jQuery("<a/>", { "href": "#" }).text("Add author");
-    anchor.on ("click", { "dataset_uuid": dataset_uuid}, submit_new_author_event);
-    button_wrapper.append(anchor);
-
-    html.append(button_wrapper);
-    jQuery("#authors-ac ul").remove();
-    jQuery("#new-author").remove();
-    jQuery("#authors-ac").append(html);
-}
-
 function submit_new_funding_event (event) {
     stop_event_propagation (event);
     submit_new_funding (event.data["dataset_uuid"]);
