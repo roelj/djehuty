@@ -7166,6 +7166,7 @@ class WebServer:
                                   stderr = subprocess.PIPE) as process:
                 _, errors = process.communicate (timeout = 600)
                 if process.returncode != 0:
+                    shutil.rmtree (folder)
                     return self.error_500 (f"Unable to clone {git_directory}: '{errors}'.")
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
             process.kill()
