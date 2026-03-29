@@ -8521,7 +8521,6 @@ class WebServer:
         """Implements /v3/datasets/<id>.git/<suffix>."""
 
         service = validator.string_value (request.args, "service", 0, 16)
-        self.__git_create_repository (git_uuid)
 
         ## Used for clone and pull.
         if service == "git-upload-pack":
@@ -8542,6 +8541,7 @@ class WebServer:
 
             dataset = self.db.datasets (git_uuid = git_uuid, is_published=False)[0]
             if dataset is not None:
+                self.__git_create_repository (git_uuid)
                 return self.__git_passthrough (request)
         except IndexError:
             pass
