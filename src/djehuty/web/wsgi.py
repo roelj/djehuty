@@ -8447,8 +8447,6 @@ class WebServer:
 
         ## The wrapping in 'str' is deliberate: It copies the opaque content_type value.
         content_type = str(request.content_type)
-        git_protocol = value_or (request.headers, "Git-Protocol", "version 2")
-
         rpc_env = {
             ## Include the regular run-time environment (PATH variable etc).
             **os.environ,
@@ -8464,7 +8462,6 @@ class WebServer:
             "REMOTE_USER": getpass.getuser(),
 
             ## Passthrough some HTTP information.
-            "GIT_PROTOCOL":        git_protocol,
             "CONTENT_TYPE":        content_type,
             "REQUEST_METHOD":      request.method,
             "QUERY_STRING":        request.query_string,
@@ -8475,6 +8472,14 @@ class WebServer:
         }
 
         try:
+            raw_git_protocol = value_or (request.headers, "Git-Protocol", None)
+            git_protocol = validator.options_value (raw_git_protocol,
+                                                    field_name = None,
+                                                    options = ["version=2"])
+
+            if git_protocol is not None:
+                rpc_env["GIT_PROTOCOL"] = git_protocol
+
             rpc_command   = subprocess.run(['git', 'http-backend'],
                                            stdout = subprocess.PIPE,
                                            input  = bytes(request.stream.read()),
@@ -8494,6 +8499,9 @@ class WebServer:
             self.log.error ("Proxying to Git failed with exit code %d", error.returncode)
             self.log.error ("The command was:\n---\n%s\n---", error.cmd)
             return self.error_500()
+        except validator.ValidationException as error:
+            return self.error_500 (("Proxying to Git failed due to "
+                                    f"Git-Protocol value: '{raw_git_protocol}'"))
 
     def api_v3_private_dataset_git_instructions (self, request, git_uuid):
         """Implements an instruction page for /v3/datasets/<id>.git."""
