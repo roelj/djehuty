@@ -282,7 +282,7 @@ function render_references_for_dataset (dataset_uuid) {
         jQuery("#references-list tbody").empty();
         for (let url of references) {
             let encoded_url = encodeURIComponent(url);
-            encoded_url = encoded_url.replaceAll("\'", "%27");
+            encoded_url = encoded_url.replaceAll("'", "%27");
             let row = jQuery("<tr/>");
             let column1 = jQuery("<td/>");
             let column2 = jQuery("<td/>");
@@ -1000,7 +1000,7 @@ function add_tag (dataset_uuid) {
     if (tag == "") { return 0; }
 
     let tags = [];
-    if (tag.indexOf (";") >= 0) {
+    if (tag.includes (";")) {
         let items = tag.split(";");
         for (let item of items) {
             if (item != "") { tags.push(jQuery.trim(item)); }
