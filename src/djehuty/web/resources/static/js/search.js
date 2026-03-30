@@ -735,7 +735,7 @@ function render_search_results(data, page_number) {
     }
 
     html_list_view += `</tbody></table>`;
-    html_pager = get_pager_html(data, page_number);
+    let html_pager = get_pager_html(data, page_number);
     jQuery("#search-results-tile-view").html(html_tile_view);
     jQuery("#search-results-list-view").html(html_list_view);
     jQuery(".search-results-pager").html(html_pager);

@@ -310,7 +310,7 @@ function add_tag (collection_id) {
     let tags = []
     if (tag.indexOf (";") >= 0) {
         let items = tag.split(";");
-        for (item of items) {
+        for (let item of items) {
             if (item != "") { tags.push(jQuery.trim(item)); }
         }
     } else {
@@ -437,7 +437,7 @@ function save_collection (collection_id, event, notify=true, on_success=jQuery.n
     add_tag (collection_id);
     add_reference (collection_id);
 
-    form_data = gather_form_data();
+    let form_data = gather_form_data();
     jQuery.ajax({
         url:         `/v2/account/collections/${collection_id}`,
         type:        "PUT",

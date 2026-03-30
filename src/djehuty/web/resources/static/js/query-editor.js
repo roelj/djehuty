@@ -37,7 +37,7 @@ function execute_query (editor) {
         error: function (request, status, error) {
             var errorMessage = "";
             try {
-                data = JSON.parse(request.responseText);
+                let data = JSON.parse(request.responseText);
                 errorMessage = data.error.message;
             }
             catch (err) { errorMessage = error; }

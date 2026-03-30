@@ -728,11 +728,11 @@ function render_git_branches_for_dataset (dataset_uuid, event) {
         type:        "GET",
         accepts:     { json: "application/json" },
     }).done(function (data) {
-        branches = data["branches"];
+        let branches = data["branches"];
         jQuery("#git-branches").empty();
         if (branches !== null && branches.length > 0) {
             for (let index in branches) {
-                default_branch = data["default-branch"];
+                let default_branch = data["default-branch"];
                 let selected = "";
                 if (branches[index] == default_branch) {
                     selected = ' selected="selected"';
@@ -873,7 +873,7 @@ function render_files_for_thumbnail (dataset_uuid) {
         if (initial_thumbnail_file_uuid == null) { initial_thumbnail_file_uuid = ""; }
         let active = " thumbnail-active";
         if (file_uuid != initial_thumbnail_file_uuid) { active = " thumbnail-inactive"; }
-        html  = `<div class="thumbnail-item${active}"><label>`;
+        let html = `<div class="thumbnail-item${active}"><label>`;
         html += `<input type="radio" name="thumbnail" value="${file_uuid}" />`;
         html += '<div class="thumbnail-item-img-wrapper">';
         html += `<img src="${img_src}" aria-hidden="true"/></div>`;
@@ -1002,7 +1002,7 @@ function add_tag (dataset_uuid) {
     let tags = [];
     if (tag.indexOf (";") >= 0) {
         let items = tag.split(";");
-        for (item of items) {
+        for (let item of items) {
             if (item != "") { tags.push(jQuery.trim(item)); }
         }
     } else {

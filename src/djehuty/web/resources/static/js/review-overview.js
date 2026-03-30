@@ -97,13 +97,13 @@ function copy_row (uuid, dataset_uuid, title, version, first_name, last_name,
 }
 
 function copy_to_clipboard_event (event) {
-    review = event.data["review"];
-    published_date = event.data["published_date"];
-    version = event.data["version"];
+    let review = event.data["review"];
+    let published_date = event.data["published_date"];
+    let version = event.data["version"];
     copy_row (review.uuid, review.dataset_uuid, review.dataset_title,
               version, review.submitter_first_name, review.submitter_last_name,
               review.submitter_email, review.group_name, review.request_date,
-                          review.modified_date, published_date);
+              review.modified_date, published_date);
 }
 
 function render_overview_table () {
@@ -121,7 +121,7 @@ function render_overview_table () {
         let table_body = jQuery("#overview-table tbody");
         let copy_button = null;
         let row = null;
-        for (review of reviews) {
+        for (let review of reviews) {
             published_date = null;
             version = "new";
             reviewer_html = "";
@@ -156,7 +156,7 @@ function render_overview_table () {
                 reviewer_html = `${review.reviewer_first_name} ${review.reviewer_last_name}`;
             } else {
                 reviewer_html = '<select class="reviewer-selector"><option value="" hidden>Unassigned</option>';
-                for (reviewer of reviewers) {
+                for (let reviewer of reviewers) {
                     reviewer_html += `<option value="${review.dataset_uuid}:${reviewer.uuid}"`;
                     if (review.reviewer_email == reviewer.email) { reviewer_html += "selected"; }
                     reviewer_html += `>${reviewer.first_name} ${reviewer.last_name}</option>`;
