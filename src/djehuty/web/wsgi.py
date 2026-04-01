@@ -35,7 +35,7 @@ from djehuty.utils.convenience import (
     decimal_coords, deduplicate_list, html_to_plaintext, is_opendap_url,
     landing_page_url, limit_memory_for_subprocess, make_citation, normalize_doi,
     parses_to_int, pretty_print_size, self_or_value_or_none, split_author_name,
-    split_string, value_or, value_or_none
+    split_string, value_or, value_or_none, decode_html
 )
 from djehuty.utils.constants import datetime_format, iiif_supported_formats, filetypes_by_extension
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
@@ -8142,7 +8142,8 @@ class WebServer:
             references     = list(map(lambda reference: reference["url"], references))
 
             if request.method == 'DELETE':
-                url = validator.string_value (request.args, "url", 0, 1024, True)
+                url_encoded = validator.string_value (request.args, "url", 0, 1024, True)
+                url = decode_html (url_encoded)
                 references.remove (next (filter (lambda item: item == url, references)))
                 if not self.db.update_item_list (item["uuid"], account_uuid,
                                                  references, "references"):

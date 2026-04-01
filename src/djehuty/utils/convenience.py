@@ -91,6 +91,10 @@ def encode_html (value, allow_simple_tags=True, allow_some_punctuation=True):
 
     return encoded_value
 
+def decode_html (value):
+    """Reverses the effect of 'encode_html'."""
+    return unescape(value)
+
 def value_or (record, key, other):
     """Return the value of KEY or OTHER."""
     try:
