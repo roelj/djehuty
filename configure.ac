@@ -16,7 +16,7 @@ AC_CHECK_PROG(TYPST, typst, typst)
 if test "x$TYPST" = "x"; then
   AC_MSG_WARN([Unable to create the user manual.])
 else
-  AC_CONFIG_FILES([doc/Makefile doc/config.typ])
+  AC_CONFIG_FILES([doc/Makefile doc/config.typ src/djehuty/config.py])
 fi
 
 AM_CONDITIONAL([HAVE_TYPST], [test -n "$TYPST"])

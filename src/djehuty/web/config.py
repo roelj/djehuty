@@ -15,6 +15,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.port                        = None
         self.alternative_port            = None
         self.base_url                    = None
+        self.documentation_url           = "/doc"
         self.log_file                    = None
         self.use_reloader                = None
         self.use_debugger                = None

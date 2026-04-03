@@ -1,0 +1,9 @@
+"""
+This module helps the code find stuff outside of the Python package's scope.
+It is optional, and only available when built using the autotools-based build.
+"""
+import os
+
+PREFIX                  = "@prefix@"
+DATA_ROOT_DIR           = "@datarootdir@".replace("${prefix}", PREFIX)
+DOCUMENTATION_DIRECTORY = os.path.join (DATA_ROOT_DIR, "@PACKAGE@")

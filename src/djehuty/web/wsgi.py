@@ -56,6 +56,13 @@ try:
 except (OSError, ImportError, ModuleNotFoundError):
     pass
 
+## Attempt to load the 'djehuty.config' module to find out the local path
+## for the documentation.
+try:
+    from djehuty.config import DOCUMENTATION_DIRECTORY
+except (ImportError, ModuleNotFoundError):
+    DOCUMENTATION_DIRECTORY=None
+
 def R (uri_path, endpoint):  # pylint: disable=invalid-name
     """
     Short-hand for defining a route between a URI and its
@@ -88,6 +95,9 @@ class WebServer:
             R("/portal",                                                         self.ui_redirect_to_home),
             R("/browse",                                                         self.ui_redirect_to_home),
             R("/ping",                                                           self.ping),
+            R("/doc",                                                            self.ui_doc),
+            R("/doc/",                                                           self.ui_doc),
+            R("/doc/djehuty.pdf",                                                self.ui_doc),
             R("/robots.txt",                                                     self.robots_txt),
             R("/theme/colors.css",                                               self.colors_css),
             R("/theme/loader.svg",                                               self.loader_svg),
@@ -2147,6 +2157,7 @@ class WebServer:
             quota        = pretty_print_size (account_quota),
             requested_quota = requested_quota,
             percentage_used = percentage_used,
+            documentation_url = config.documentation_url,
             sessions     = sessions)
 
     def __datasets_with_storage_usage (self, datasets):
@@ -3524,6 +3535,31 @@ class WebServer:
                                        notice_message = config.notice_message,
                                        show_portal_summary = config.show_portal_summary,
                                        show_latest_datasets = config.show_latest_datasets)
+
+    def ui_doc (self, request):
+        """Implements /doc, /doc/ and /doc/djehuty.pdf."""
+
+        if DOCUMENTATION_DIRECTORY is None:
+            return self.error_404 (request, "Local documentation directory cannot be found.")
+
+        # We need to ensure the trailing slash is in the URL for links in
+        # the documentation to be interpreted properly.
+        if request.path == "/doc":
+            return redirect ("/doc/", code=302)
+
+        mimetype = "text/html"
+        documentation_file_path = f"{DOCUMENTATION_DIRECTORY}/index.html"
+        expects_pdf = self.accepts_content_type (request, "application/pdf", strict=True)
+        if expects_pdf or request.path == "/doc/djehuty.pdf":
+            mimetype = "application/pdf"
+            documentation_file_path = f"{DOCUMENTATION_DIRECTORY}/djehuty.pdf"
+        elif not self.accepts_html (request):
+            return self.error_406 (["text/html", "application/pdf"])
+
+        if os.path.exists (documentation_file_path):
+            return send_file (documentation_file_path, request.environ, mimetype=mimetype)
+        else:
+            return self.error_404 (request, f"Cannot find '{documentation_file_path}'.")
 
     def ui_categories (self, request, category_id):
         """Implements /categories/<id>."""

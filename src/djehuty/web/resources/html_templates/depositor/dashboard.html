@@ -111,16 +111,8 @@ jQuery(document).ready(function (){
 
 <div class="notice-box">
 <h3>API documentation</h3>
-<p>This repository implements a compatible API to version <code>v2</code> of
-  the <a href="https://docs.figshare.com">Figshare API</a> with the following
-  differences:</p>
-<ol>
-  <li>The <strong>Base URL</strong> is <code>{{base_url}}/v2</code>
-    instead of <code>https://api.figshare.com/v2</code>.</li>
-  <li>Previously generated API tokens are no longer valid.
-    <a href="/my/sessions/new">Generate a new token</a>.
-  <li>Numerical identifiers (<code>id</code>) properties are deprecated for
-    newly created datasets/collections and superseded by the <code>uuid</code> property.</li>
-</ol>
+<p>This repository can be interacted with using its application programming
+  interface. <a href="{{documentation_url}}/#api-section">Read the documentation</a> to get
+  started.</p>
 </div>
 {% endblock %}

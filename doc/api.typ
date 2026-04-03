@@ -99,7 +99,7 @@
 )
 
 #let chapter_text = [
-= Application Programming Interface
+= Application Programming Interface <api-section>
 
 The application programming interface (API) provided by `djehuty` allows
 for automating tasks otherwise done through the user interface. In addition
