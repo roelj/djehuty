@@ -34,24 +34,27 @@
             html { width: 100%; margin: 0em; padding: 0em; background: repeating-linear-gradient(90deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%), repeating-linear-gradient(180deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%); background-size: 1em 1em; background-color: \#f9f9f9; }
             body { margin: 12pt auto 0pt auto; max-width: 1074pt; min-width: 720pt; }
             \@media (max-width: 1074pt) {
-            .table-of-contents { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 850pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: 1em 1em .5em .5em; }
+            .table-of-contents { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 820pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: 1em 1em .5em .5em; }
             .chapter { margin: auto auto 1em auto; }
+            section[role=doc-endnotes] { margin-left: auto; }
             }
             \@media (min-width: 1074pt) {
-            .table-of-contents { position: fixed; height: 100vh; overflow-y: auto; width: 210pt; min-width: 210pt; max-width: 210pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: 1em; }
-            .chapter { margin-left: 224pt !important; }
+            .chapter { margin-left: 254pt !important; }
+            .table-of-contents { position: fixed; height: 100vh; overflow-y: auto; width: 240pt; min-width: 240pt; max-width: 240pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: .5em; }
             nav > ol > li > ol > li > ol > li > span > a,
             nav > ol > li > ol > li > ol > li > div > span { display: none; }
             nav > ol > li > ol > li > span >a,
             nav > ol > li > ol > li > div > span > a { font-size: 0.9em; }
+            section[role=doc-endnotes] { margin-left: 254pt; }
             }
             .table-of-contents p { padding: 0em 0em 0em 1em; margin-bottom: 0em; }
-            .table-of-contents ol { margin: 0em; padding: 1em; line-height: 1.3em; }
+            .table-of-contents ol { margin: 0em; padding: 1em 0em 1em 0em; line-height: 1.3em; }
             .table-of-contents ol ol { margin: 0em; padding: 0em 1em 0em 1em; }
-            .table-of-contents h2 { background: \#ccc; color: \#111; padding: .75em; margin: 0em; border-radius: .5em .5em 0em 0em; }
+            .table-of-contents h2 { background: \#ccc; color: \#111; padding: .75em; margin: 0em; }
             nav > ol { margin-top: 0em; }
+            nav > ol > li { margin: 0em; }
             nav > ol > li > div > span > a,
-            nav > ol > li > span > a { display: inline-block; width: calc(100% - 1em); background: \#f6f6f6; padding: .25em .5em .25em .5em; border-radius: .5em; margin: .25em 0em .25em 0em; font-size: 1.2em; color: \#111; border: solid 1pt \#ccc; }
+            nav > ol > li > span > a { display: inline-block; width: calc(100% - 2em); background: \#f6f6f6; padding: .25em 1em .25em 1em; margin: .25em 0em .25em 0em; font-size: 1.2em; color: \#111; border-top: solid 1pt \#ccc; border-bottom: solid 1pt \#ccc; }
             nav > ol > li > ol > li > span > a,
             nav > ol > li > ol > li > div > span > a { color: \#7c0000; }
             nav > ol > li > ol > li > span > a:hover,
@@ -62,9 +65,9 @@
             img { display: block; max-width: 760pt; margin: 1em auto 1em auto; padding: auto; }
             figure { background: \#fcfcfc; border: solid 1pt \#ccc; border-radius: .5em; }
             figcaption { text-align: center;  border-top: solid 1pt \#ccc; border-radius: 0em 0em .5em .5em; background: \#eee; padding: .5em; }
-            .chapter { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 850pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: 1em 1em .5em .5em; }
+            .chapter { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 820pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: .5em; }
             .chapter p, .chapter pre, .chapter table { padding: 0pt 12pt 0pt 12pt; }
-            .chapter h2 { background: \#222; color: \#fff; padding: .75em; margin: 0em; border-radius: .5em .5em 0em 0em; }
+            .chapter h2 { background: \#222; color: \#fff; padding: .75em; margin: 0em; border-radius: .25em .25em 0em 0em; }
             .chapter h3 { font-size: 1.25em; padding: .25em 1em .25em 1em; background: \#eee; }
             .chapter h4 { font-size: 1.10em; padding: .25em 1em .25em 1em; background: \#f6f6f6; }
             .chapter h5 { font-size: 1.0em; padding: .25em 1em .25em 1em; background: \#f6f6f6; }
@@ -81,6 +84,7 @@
             table tbody tr:last-child td:first-child { border-radius: 0 0 0 0.5em; }
             table tbody tr:nth-child(even) { background: \#f6f6f6; }
             table tbody tr td:first-child { border-left: solid 1pt \#333; }
+            section[role=doc-endnotes] ol { padding-left: .5em; }
         ]
     ]
 }
