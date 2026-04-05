@@ -2,6 +2,7 @@
 {% block headers %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/jquery.dataTables.min.js"></script>
+<script src="/static/js/my-data.js"></script>
 <link href="/static/css/jquery.dataTables.min.css" rel="stylesheet">
 <style nonce="{{nonce}}">
 #table-unpublished thead tr th:last-child { min-width: 50pt }
@@ -10,32 +11,6 @@
 #table-review { display: none; }
 #add-new-dataset { margin: auto; }
 </style>
-<script nonce="{{nonce}}">
-jQuery(document).ready(function () {
-    jQuery(".hide-for-javascript").removeClass("hide-for-javascript");
-    jQuery("#table-unpublished").DataTable({
-        columnDefs: [{ type: 'file-size', targets: 2 },
-                     { orderable: false,  targets: 4 }],
-        order: [[3, 'desc']]
-    });
-    jQuery("#table-unpublished").show();
-    jQuery("#table-unpublished-loader").remove();
-
-    jQuery("#table-published").DataTable({
-        columnDefs: [{ type: 'file-size', targets: 2 }],
-        order: [[3, 'desc']]
-    });
-    jQuery("#table-published").show();
-    jQuery("#table-published-loader").remove();
-
-    jQuery("#table-review").DataTable({
-        columnDefs: [{ type: 'file-size', targets: 2 }],
-        order: [[3, 'desc']]
-    });
-    jQuery("#table-review").show();
-    jQuery("#table-review-loader").remove();
-});
-</script>
 {% endblock %}
 {% block submenu %}
 <ul>

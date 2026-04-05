@@ -258,6 +258,7 @@ EXTRA_RESOURCES =                                                             \
     djehuty/web/resources/static/js/jquery.dataTables.min.js                  \
     djehuty/web/resources/static/js/jquery-3.6.0.min.js                       \
     djehuty/web/resources/static/js/landing_page.js                           \
+    djehuty/web/resources/static/js/my-data.js                                \
     djehuty/web/resources/static/js/query-editor.js                           \
     djehuty/web/resources/static/js/quill.min.js                              \
     djehuty/web/resources/static/js/review-overview.js                        \
