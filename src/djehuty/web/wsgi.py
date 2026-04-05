@@ -1997,7 +1997,7 @@ class WebServer:
 
             if mfa_token is None:
                 response = redirect ("/my/dashboard", code=302)
-                response.set_cookie (key=self.cookie_key, value=token, secure=config.in_production)
+                response.set_cookie (key=self.cookie_key, value=token, samesite="Strict", secure=config.in_production)
                 return response
 
             ## Send e-mail
@@ -2009,7 +2009,7 @@ class WebServer:
                 "2fa_token", token = mfa_token)
 
             response = redirect (f"/my/sessions/{session_uuid}/activate", code=302)
-            response.set_cookie (key=self.cookie_key, value=token, secure=config.in_production)
+            response.set_cookie (key=self.cookie_key, value=token, secure=config.in_production, samesite="Strict")
             return response
 
         return self.error_500 ("Failed to complete the log in procedure for an unknown reason.")
@@ -2078,9 +2078,11 @@ class WebServer:
         response = redirect (f"/my/datasets/{dataset['container_uuid']}/edit", code=302)
         response.set_cookie (key    = self.impersonator_cookie_key,
                              value  = self.token_from_request (request),
+                             samesite = "Strict",
                              secure = config.in_production)
         response.set_cookie (key    = "redirect_to",
                              value  = "/review/overview",
+                             samesite = "Strict",
                              secure = config.in_production)
 
         # Create a new session for the user to be impersonated as.
@@ -2089,6 +2091,7 @@ class WebServer:
                                                   override_mfa=True)
         response.set_cookie (key    = self.cookie_key,
                              value  = new_token,
+                             samesite = "Strict",
                              secure = config.in_production)
         return response
 
@@ -2108,9 +2111,11 @@ class WebServer:
         response = redirect ("/my/dashboard", code=302)
         response.set_cookie (key    = self.impersonator_cookie_key,
                              value  = token,
+                             samesite = "Strict",
                              secure = config.in_production)
         response.set_cookie (key    = "redirect_to",
                              value  = "/admin/users",
+                             samesite = "Strict",
                              secure = config.in_production)
 
         # Create a new session for the user to be impersonated as.
@@ -2119,6 +2124,7 @@ class WebServer:
                                                   override_mfa=True)
         response.set_cookie (key    = self.cookie_key,
                              value  = new_token,
+                             samesite = "Strict",
                              secure = config.in_production)
         return response
 
