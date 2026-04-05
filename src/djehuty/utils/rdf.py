@@ -18,6 +18,7 @@ QUERY_PATTERN    = re.compile(
     r"(?P<queryType>(CONSTRUCT|SELECT|ASK|DESCRIBE|INSERT|DELETE|CREATE|CLEAR|DROP|LOAD|COPY|MOVE|ADD))",
     re.VERBOSE | re.IGNORECASE,
 )
+SPARQL_ORDER_ALLOWLIST = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
 def query_type (query):
     """
@@ -156,16 +157,11 @@ def sparql_bound_filter (name):
 def sparql_suffix (order, order_direction, limit=None, offset=None):
     """Returns a query suffix including order, limit and offset."""
 
-    if order_direction is None:
-        order_direction = "DESC"
-    else:
-        order_direction = order_direction.upper()
+    if order is None or not SPARQL_ORDER_ALLOWLIST.match(order):
+        return ""
 
-    query = ""
-    if order and order_direction:
-        if order[0] != '?':
-            order = f"?{order}"
-        query += f"ORDER BY {order_direction}({order})"
+    order_direction = (order_direction or "DESC").upper()
+    query = f"ORDER BY {order_direction}(?{order})"
 
     if limit is not None:
         query += f"\nLIMIT {limit}"
