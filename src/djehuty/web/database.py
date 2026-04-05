@@ -359,7 +359,7 @@ class SparqlInterface:
                 else:
                     filter_list = []
                     for key, value in element.items():
-                        if value == "":
+                        if value == "" or rdf.is_unsafe_sparql_name (key):
                             continue
                         escaped_value = rdf.escape_string_value (value.lower())
                         filter_list.append(f"CONTAINS(LCASE(?{key}), {escaped_value})\n")

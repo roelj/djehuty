@@ -20,6 +20,13 @@ QUERY_PATTERN    = re.compile(
 )
 SPARQL_ORDER_ALLOWLIST = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
+def is_unsafe_sparql_name (value, allow_none=False):
+    """Returns True if VALUE contains syntactic characters used in SPARQL."""
+    if value is None:
+        return not allow_none
+
+    return not bool(SPARQL_ORDER_ALLOWLIST.match(value))
+
 def query_type (query):
     """
     Returns two values. The first value is 'update' for state-modifying
@@ -157,7 +164,7 @@ def sparql_bound_filter (name):
 def sparql_suffix (order, order_direction, limit=None, offset=None):
     """Returns a query suffix including order, limit and offset."""
 
-    if order is None or not SPARQL_ORDER_ALLOWLIST.match(order):
+    if is_unsafe_sparql_name (order, allow_none=False):
         return ""
 
     order_direction = (order_direction or "DESC").upper()
