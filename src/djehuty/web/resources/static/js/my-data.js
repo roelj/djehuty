@@ -17,4 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById(`${table}-loader`).remove();
 	}
     });
+
+    document.querySelectorAll(".delete-draft-dataset").forEach(function (element) {
+	element.addEventListener("click", function (event) {
+	    delete_dataset (element.id.replace("dataset-", ""), event);
+	});
+    });
+
 });

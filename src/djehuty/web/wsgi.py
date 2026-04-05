@@ -107,7 +107,6 @@ class WebServer:
             R("/my/dashboard",                                                   self.ui_dashboard),
             R("/my/datasets",                                                    self.ui_my_data),
             R("/my/datasets/<dataset_id>/edit",                                  self.ui_edit_dataset),
-            R("/my/datasets/<dataset_id>/delete",                                self.ui_delete_dataset),
             R("/my/datasets/<dataset_uuid>/private_links",                       self.ui_dataset_private_links),
             R("/my/datasets/<dataset_uuid>/private_link/<link_id>/delete",       self.ui_dataset_delete_private_link),
             R("/my/datasets/<dataset_uuid>/private_link/new",                    self.ui_dataset_new_private_link),
@@ -2349,34 +2348,6 @@ class WebServer:
 
         except IndexError:
             return self.error_403 (request)
-
-    def ui_delete_dataset (self, request, dataset_id):
-        """Implements /my/datasets/<id>/delete."""
-        if not self.accepts_html (request):
-            return self.error_406 ("text/html")
-
-        account_uuid, error_response = self.__depositor_account_uuid (request)
-        if error_response is not None:
-            return error_response
-
-        try:
-            dataset = self.__dataset_by_id_or_uri (dataset_id,
-                                                   account_uuid=account_uuid,
-                                                   is_published=False)
-
-            if dataset is None:
-                return self.error_403 (request, (f"account:{account_uuid} attempted "
-                                                 f"to delete dataset:{dataset_id}."))
-
-            container_uuid = dataset["container_uuid"]
-            if self.db.delete_dataset_draft (container_uuid, dataset["uuid"], account_uuid, dataset["account_uuid"]):
-                return redirect ("/my/datasets", code=303)
-
-            return self.error_404 (request)
-        except (IndexError, KeyError):
-            pass
-
-        return self.error_500 ()
 
     def ui_dataset_private_links (self, request, dataset_uuid):
         """Implements /my/datasets/<uuid>/private_links."""

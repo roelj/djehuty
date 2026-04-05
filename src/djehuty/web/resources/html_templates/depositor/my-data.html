@@ -2,6 +2,7 @@
 {% block headers %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/jquery.dataTables.min.js"></script>
+<script src="/static/js/utils.js"></script>
 <script src="/static/js/my-data.js"></script>
 <link href="/static/css/jquery.dataTables.min.css" rel="stylesheet">
 <style nonce="{{nonce}}">
@@ -45,7 +46,7 @@
       <td>{{article.defined_type_name | default("undefined", False)}}</td>
       <td>{{article.storage_used}}</td>
       <td>{{article.created_date | truncate(10,False,'')}}</td>
-      <td>{% if not article.is_shared_with_me or (article.is_shared_with_me and article.is_supervisor) %}<a href="/my/datasets/{{article.uuid}}/private_links" class="fas fa-link" title="Private links"></a><a href="/my/datasets/{{article.container_uuid}}/delete" class="fas fa-trash-can" title="Remove"></a>{% endif %}</td>
+      <td>{% if not article.is_shared_with_me or (article.is_shared_with_me and article.is_supervisor) %}<a href="/my/datasets/{{article.uuid}}/private_links" class="fas fa-link" title="Private links"></a><a id="dataset-{{article.container_uuid}}" href="#" class="delete-draft-dataset fas fa-trash-can" title="Remove"></a>{% endif %}</td>
     </tr>
   {% endfor %}</tbody>
 </table>
