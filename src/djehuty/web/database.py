@@ -336,12 +336,15 @@ class SparqlInterface:
             # turn into list for loop purposes
             search_for = [search_for]
         if dict in list(map(type, search_for)):
+            allowed_operators = {"&&", "||", "(", ")"}
             filters += "FILTER ("
             last_used_field = None
             for element in search_for:
                 if (isinstance (element, dict)
                     and len(element.items()) == 1
                     and next(iter(element)) == "operator"):
+                    if element['operator'] not in allowed_operators:
+                        continue
                     if element['operator'] == "(":
                         filters += " ( "
                         continue
@@ -370,6 +373,7 @@ class SparqlInterface:
 
             # Post-construction heuristical query fixing
             # It's undocumented because it needs to be replaced.
+            filters = filters.replace("FILTER ()", "")
             filters = filters.replace("FILTER ( || ", "FILTER (")
             filters = filters.replace(")CONTAINS", ") || CONTAINS")
             filters = filters.replace(")\nCONTAINS", ") || CONTAINS")
