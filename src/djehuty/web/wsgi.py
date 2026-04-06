@@ -108,7 +108,6 @@ class WebServer:
             R("/my/datasets",                                                    self.ui_my_data),
             R("/my/datasets/<dataset_id>/edit",                                  self.ui_edit_dataset),
             R("/my/datasets/<dataset_uuid>/private_links",                       self.ui_dataset_private_links),
-            R("/my/datasets/<dataset_uuid>/private_link/<link_id>/delete",       self.ui_dataset_delete_private_link),
             R("/my/datasets/<dataset_uuid>/private_link/new",                    self.ui_dataset_new_private_link),
             R("/my/datasets/new",                                                self.ui_new_dataset),
             R("/my/datasets/<dataset_id>/new-version-draft",                     self.ui_new_version_draft_dataset),
@@ -2939,26 +2938,6 @@ class WebServer:
 
         self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
         return response
-
-    def ui_dataset_delete_private_link (self, request, dataset_uuid, link_id):
-        """Implements /my/datasets/<uuid>/private_link/<pid>/delete."""
-        if not self.accepts_html (request):
-            return self.error_406 ("text/html")
-
-        account_uuid = self.account_uuid_from_request (request)
-        if account_uuid is None:
-            return self.error_authorization_failed (request)
-
-        if not validator.is_valid_uuid (dataset_uuid):
-            return self.error_404 (request)
-
-        dataset = self.db.datasets (dataset_uuid = dataset_uuid,
-                                    account_uuid = account_uuid,
-                                    is_published = None,
-                                    is_latest    = None,
-                                    limit        = 1)[0]
-
-        return self.__delete_private_link (request, dataset, account_uuid, link_id)
 
     def ui_collection_delete_private_link (self, request, collection_uuid, link_id):
         """Implements /my/collections/<id>/private_link/<pid>/delete."""

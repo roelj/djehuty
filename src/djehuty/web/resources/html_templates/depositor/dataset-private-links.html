@@ -1,4 +1,18 @@
 {% extends "layout.html" %}
+{% block headers %}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/utils.js"></script>
+<script nonce="{{nonce}}">
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-private-link").forEach(function (element) {
+        element.addEventListener("click", function (event) {
+            delete_dataset_private_link (element.dataset.datasetUuid,
+                                         element.dataset.linkId, event);
+        });
+    });
+});
+</script>
+{% endblock %}
 {% block submenu %}
 <ul>
   {%- if show_back %}
@@ -23,7 +37,7 @@
       <td>{{link.purpose}}</td>
       <td>{{link.whom}}</td>
       <td>{{"Expired" if link.is_expired else link.expires_date }}</td>
-      <td><a href="/my/datasets/{{dataset.uuid}}/private_link/{{link.id_string}}/delete" class="fas fa-trash-can" title="Remove"></a></td>
+      <td><a href="#" class="delete-private-link fas fa-trash-can" title="Remove" data-dataset-uuid="{{dataset.container_uuid}}" data-link-id="{{link.id_string}}"></a></td>
     </tr>
     {%- endfor %}
   </tbody>
