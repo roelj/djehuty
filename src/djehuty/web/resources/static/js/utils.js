@@ -95,6 +95,24 @@ function delete_dataset (dataset_uuid, event) {
     }
 }
 
+function delete_collection (collection_uuid, event) {
+    stop_event_propagation (event);
+    if (confirm("Deleting this draft collection is unrecoverable. "+
+                "Do you want to continue?"))
+    {
+        jQuery.ajax({
+            type:        "DELETE",
+            url:         `/v2/account/collections/${collection_uuid}`
+        }).done(function () { window.location.pathname = "/my/collections"; })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+		if (jqXHR.status == 403) {
+                    show_message ("failure", "<p>No permission to remove collection.</p>");
+		} else {
+                    show_message ("failure", "<p>Failed to remove collection.</p>");
+		}
+            });
+    }
+}
 
 function toggle_collaborators(dataset_uuid, may_edit_metadata, event) {
     stop_event_propagation(event);

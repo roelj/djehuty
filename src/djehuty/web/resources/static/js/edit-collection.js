@@ -379,21 +379,6 @@ function remove_tag (tag, collection_id) {
       .fail(function () { show_message ("failure", `<p>Failed to remove ${tag}.</p>`); });
 }
 
-function delete_collection (collection_id, event) {
-    stop_event_propagation (event);
-    if (confirm("Deleting this draft collection is unrecoverable. "+
-                "Do you want to continue?"))
-    {
-        jQuery.ajax({
-            type:        "DELETE",
-            url:         `/v2/account/collections/${collection_id}`
-        }).done(function () { window.location.pathname = "/my/collections"; })
-          .fail(function () {
-              show_message ("failure", "<p>Failed to delete collection.</p>");
-          });
-    }
-}
-
 function gather_form_data () {
     let categories   = jQuery("input[name='categories']:checked");
     let category_ids = [];

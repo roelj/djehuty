@@ -115,7 +115,6 @@ class WebServer:
             R("/my/datasets/submitted-for-review",                               self.ui_dataset_submitted),
             R("/my/collections",                                                 self.ui_my_collections),
             R("/my/collections/<collection_id>/edit",                            self.ui_edit_collection),
-            R("/my/collections/<collection_id>/delete",                          self.ui_delete_collection),
             R("/my/collections/<collection_uuid>/private_links",                 self.ui_collection_private_links),
             R("/my/collections/<collection_uuid>/private_link/<link_id>/delete", self.ui_collection_delete_private_link),
             R("/my/collections/<collection_uuid>/private_link/new",              self.ui_collection_new_private_link),
@@ -2553,39 +2552,6 @@ class WebServer:
             return self.error_500()
 
         return redirect (f"/my/collections/{container_uuid}/edit", code=302)
-
-    def ui_delete_collection (self, request, collection_id):
-        """Implements /my/collections/<id>/delete."""
-        if not self.accepts_html (request):
-            return self.error_406 ("text/html")
-
-        account_uuid, error_response = self.__depositor_account_uuid (request)
-        if error_response is not None:
-            return error_response
-
-        try:
-            collection = self.__collection_by_id_or_uri(
-                collection_id,
-                account_uuid   = account_uuid,
-                is_published = False)
-
-            # Either accessing another account's collection or
-            # trying to remove a published collection.
-            if collection is None:
-                return self.error_403 (request, (f"account:{account_uuid} attempted "
-                                                 f"to delete collection:{collection_id}."))
-
-            result = self.db.delete_collection_draft (
-                container_uuid = collection["container_uuid"],
-                account_uuid   = account_uuid)
-
-            if result is not None:
-                return redirect ("/my/collections", code=303)
-
-        except (IndexError, KeyError):
-            pass
-
-        return self.error_500 ()
 
     def ui_edit_session (self, request, session_uuid):
         """Implements /my/sessions/<id>/edit."""

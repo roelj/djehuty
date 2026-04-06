@@ -2,6 +2,7 @@
 {% block headers %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/jquery.dataTables.min.js"></script>
+<script src="/static/js/utils.js"></script>
 <link href="/static/css/jquery.dataTables.min.css" rel="stylesheet">
 <style nonce="{{nonce}}">
 .number-of-articles { color: #707070; }
@@ -13,6 +14,11 @@ jQuery(document).ready(function () {
     jQuery(".hide-for-javascript").removeClass("hide-for-javascript");
     jQuery("#table-unpublished-collections-loader").remove();
     jQuery("#table-published-collections-loader").remove();
+    document.querySelectorAll(".delete-draft-collection").forEach(function (element) {
+        element.addEventListener("click", function (event) {
+            delete_collection (element.id.replace("collection-", ""), event);
+        });
+    });
 });
 </script>
 {% endblock %}
@@ -47,7 +53,7 @@ jQuery(document).ready(function () {
         <a href="/my/collections/{{collection.container_uuid}}/edit">{{collection.title}}</a>
         <span class="number-of-articles">({{collection.number_of_datasets | default("0", False)}})</span></td>
       <td>{{collection.created_date | truncate(10,False,'')}}</td>
-      <td><a href="/my/collections/{{collection.uuid}}/private_links" class="fas fa-link" title="Private links"></a>{% if not collection.is_public %}&nbsp;<a href="/my/collections/{{collection.container_uuid}}/delete" class="fas fa-trash-can" title="Remove"></a>{% endif %}</td>
+      <td><a href="/my/collections/{{collection.uuid}}/private_links" class="fas fa-link" title="Private links"></a>{% if not collection.is_public %}&nbsp;<a id="collection-{{collection.container_uuid}}" href="#" class="delete-draft-collection fas fa-trash-can" title="Remove"></a>{% endif %}</td>
     </tr>
   {% endfor %}</tbody>
 </table>
