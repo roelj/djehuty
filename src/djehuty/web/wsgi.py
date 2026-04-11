@@ -1003,6 +1003,19 @@ class WebServer:
             doi += f'.v{version}'
         return doi
 
+    def __item_by_id_or_uri (self, identifier, account_uuid=None,
+                             is_published=True, is_latest=False,
+                             is_under_review=None, version=None,
+                             use_cache=True, item_type="dataset"):
+        if item_type == "dataset":
+            return self.__dataset_by_id_or_uri (identifier, account_uuid, is_published, is_latest,
+                                                is_under_review, version, use_cache)
+        elif item_type == "collection":
+            return self.__collection_by_id_or_uri (identifier, account_uuid, is_published,
+                                                   is_latest, version, use_cache)
+
+        return None
+
     def __dataset_by_id_or_uri (self, identifier, account_uuid=None,
                                 is_published=True, is_latest=False,
                                 is_under_review=None, version=None,
@@ -5596,44 +5609,43 @@ class WebServer:
 
         return self.error_500 ()
 
-    def api_private_dataset_private_links (self, request, dataset_id):
-        """Implements /v2/account/articles/<id>/private_links."""
-
+    def __api_private_item_private_links (self, request, item_id, item_type):
+        """"""
         account_uuid = self.default_authenticated_error_handling (request,
                                                                   ["GET", "POST"],
                                                                   "application/json")
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        dataset = self.__dataset_by_id_or_uri (dataset_id,
-                                               account_uuid = account_uuid,
-                                               is_published = False)
+        item = self.__item_by_id_or_uri (item_id,
+                                         account_uuid = account_uuid,
+                                         is_published = False)
 
-        if dataset is None:
+        if item is None:
             return self.error_404 (request)
 
         if request.method in ("GET", "HEAD"):
-            if value_or (dataset, "is_shared_with_me", False):
+            if value_or (item, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} attempted "
-                                                 f"to view private links on dataset:{dataset_id}."))
+                                                 f"to view private links on {item_type}:{item_id}."))
 
-            links = self.db.private_links (item_uri   = dataset["uri"],
+            links = self.db.private_links (item_uri   = item["uri"],
                                            account_uuid = account_uuid)
 
             return self.default_list_response (links, formatter.format_private_links_record)
 
         if request.method == 'POST':
             parameters = request.get_json()
-            if value_or (dataset, "is_shared_with_me", False):
+            if value_or (item, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} "
                                                  "attempted to modify private links of "
-                                                 f"dataset:{dataset_id}."))
+                                                 f"{item_type}:{item_id}."))
 
             errors = []
             record = {
-                "item_uuid": dataset["uuid"],
+                "item_uuid": item["uuid"],
                 "account_uuid": account_uuid,
-                "item_type": "dataset",
+                "item_type": item_type,
                 "id_string": secrets.token_urlsafe(),
                 "expires_date": validator.date_value (parameters, "expires_date", error_list=errors),
                 "read_only": validator.boolean_value (parameters, "read_only", error_list=errors),
@@ -5651,13 +5663,17 @@ class WebServer:
             link_uri = self.db.insert_private_link (**record)
             if link_uri is None:
                 return self.error_500 (("Creating a private link failed for "
-                                        f"{dataset['uuid']}"))
+                                        f"{item['uuid']}"))
 
             return self.response(json.dumps({
-                "location": f"{config.base_url}/private_datasets/{record['id_string']}"
+                "location": f"{config.base_url}/private_{item_type}s/{record['id_string']}"
             }))
 
         return self.error_500 ()
+
+    def api_private_dataset_private_links (self, request, dataset_id):
+        """Implements /v2/account/articles/<id>/private_links."""
+        return self.__api_private_item_private_links (request, dataset_id, "dataset")
 
     def api_private_dataset_private_links_details (self, request, dataset_id, link_id):
         """Implements /v2/account/articles/<id>/private_links/<link_id>."""
