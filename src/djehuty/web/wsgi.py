@@ -5605,15 +5605,14 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
+        dataset = self.__dataset_by_id_or_uri (dataset_id,
+                                               account_uuid = account_uuid,
+                                               is_published = False)
+
+        if dataset is None:
+            return self.error_404 (request)
+
         if request.method in ("GET", "HEAD"):
-
-            dataset = self.__dataset_by_id_or_uri (dataset_id,
-                                                   account_uuid = account_uuid,
-                                                   is_published = False)
-
-            if dataset is None:
-                return self.error_404 (request)
-
             if value_or (dataset, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} attempted "
                                                  f"to view private links on dataset:{dataset_id}."))
@@ -5625,54 +5624,38 @@ class WebServer:
 
         if request.method == 'POST':
             parameters = request.get_json()
-            try:
-                dataset      = self.__dataset_by_id_or_uri (dataset_id,
-                                                            is_published = False,
-                                                            account_uuid = account_uuid)
-                if dataset is None:
-                    return self.error_404 (request)
+            if value_or (dataset, "is_shared_with_me", False):
+                return self.error_403 (request, (f"collaborator account:{account_uuid} "
+                                                 "attempted to modify private links of "
+                                                 f"dataset:{dataset_id}."))
 
-                if value_or (dataset, "is_shared_with_me", False):
-                    return self.error_403 (request, (f"collaborator account:{account_uuid} "
-                                                     "attempted to modify private links of "
-                                                     f"dataset:{dataset_id}."))
+            errors = []
+            record = {
+                "item_uuid": dataset["uuid"],
+                "account_uuid": account_uuid,
+                "item_type": "dataset",
+                "id_string": secrets.token_urlsafe(),
+                "expires_date": validator.date_value (parameters, "expires_date", error_list=errors),
+                "read_only": validator.boolean_value (parameters, "read_only", error_list=errors),
+                "is_active": True
+            }
 
-                id_string = secrets.token_urlsafe()
-                expires_date = validator.date_value (parameters, "expires_date", False)
+            # Returning only one error complies with the original API specification.
+            if errors:
+                return self.error_400 (request, errors[0]["message"], errors[0]["code"])
 
-                # expires_date validates to YYYY-MM-DD but we need a full timestamp.
-                if expires_date:
-                    expires_date = expires_date + "T00:00:00Z"
+            # expires_date validates to YYYY-MM-DD but we need a full timestamp.
+            if record["expires_date"]:
+                record["expires_date"] = f"{record['expires_date']}T00:00:00Z"
 
-                link_uri  = self.db.insert_private_link (
-                    dataset["uuid"],
-                    account_uuid,
-                    item_type    = "dataset",
-                    expires_date = expires_date,
-                    read_only    = validator.boolean_value (parameters, "read_only", False),
-                    id_string    = id_string,
-                    is_active    = True)
+            link_uri = self.db.insert_private_link (**record)
+            if link_uri is None:
+                return self.error_500 (("Creating a private link failed for "
+                                        f"{dataset['uuid']}"))
 
-                if link_uri is None:
-                    return self.error_500 (("Creating a private link failed for "
-                                            f"{dataset['uuid']}"))
-
-                links    = self.db.private_links (item_uri   = dataset["uri"],
-                                                  account_uuid = account_uuid)
-                links    = list(map (lambda item: URIRef(item["uri"]), links))
-                links    = links + [ URIRef(link_uri) ]
-
-                if not self.db.update_item_list (dataset["uuid"], account_uuid,
-                                                 links, "private_links"):
-                    return self.error_500 (("Updating private links failed for "
-                                            f"{dataset['container_uuid']}."))
-
-                return self.response(json.dumps({
-                    "location": f"{config.base_url}/private_datasets/{id_string}"
-                }))
-
-            except validator.ValidationException as error:
-                return self.error_400 (request, error.message, error.code)
+            return self.response(json.dumps({
+                "location": f"{config.base_url}/private_datasets/{record['id_string']}"
+            }))
 
         return self.error_500 ()
 
