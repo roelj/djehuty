@@ -252,6 +252,8 @@ class WebServer:
             R("/v2/account/collections/<collection_id>/categories/<category_id>", self.api_private_delete_collection_category),
             R("/v2/account/collections/<collection_id>/articles",                self.api_private_collection_datasets),
             R("/v2/account/collections/<collection_id>/articles/<dataset_id>",   self.api_private_collection_dataset_delete),
+            R("/v2/account/collections/<collection_id>/private_links",           self.api_private_collection_private_links),
+            R("/v2/account/collections/<collection_id>/private_links/<link_id>", self.api_private_collection_private_links_details),
             R("/v2/account/collections/<collection_id>/reserve_doi",             self.api_private_collection_reserve_doi),
             R("/v2/account/collections/<collection_id>/funding",                 self.api_private_collection_funding),
             R("/v2/account/collections/<collection_id>/funding/<funding_id>",    self.api_private_collection_funding_delete),
@@ -5676,6 +5678,10 @@ class WebServer:
         """Implements /v2/account/articles/<id>/private_links."""
         return self.__api_private_item_private_links (request, dataset_id, "dataset")
 
+    def api_private_collection_private_links (self, request, collection_id):
+        """Implements /v2/account/collections/<id>/private_links."""
+        return self.__api_private_item_private_links (request, collection_id, "collection")
+
     def __api_private_item_private_links_details (self, request, item_id, link_id, item_type):
         """Generalized procedure to list or add private links."""
 
@@ -5751,6 +5757,10 @@ class WebServer:
     def api_private_dataset_private_links_details (self, request, dataset_id, link_id):
         """Implements /v2/account/articles/<id>/private_links/<link_id>."""
         return self.__api_private_item_private_links_details (request, dataset_id, link_id, "dataset")
+
+    def api_private_collection_private_links_details (self, request, collection_id, link_id):
+        """Implements /v2/account/collections/<id>/private_links/<link_id>."""
+        return self.__api_private_item_private_links_details (request, collection_id, link_id, "collection")
 
     def __datacite_reserve_doi (self, doi=None):
         """
