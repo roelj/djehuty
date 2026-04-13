@@ -41,6 +41,13 @@ from djehuty.utils.constants import datetime_format, iiif_supported_formats, fil
 from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
 from djehuty.web.config import config
 
+## Attempt to load the 'djehuty.config' module to find out the local path
+## for the documentation.
+try:
+    from djehuty.config import DOCUMENTATION_DIRECTORY
+except (ImportError, ModuleNotFoundError):
+    DOCUMENTATION_DIRECTORY=None
+
 ## Error handling for loading python3-saml is done in 'ui'.
 ## So if it fails here, we can safely assume we don't need it.
 try:
@@ -55,13 +62,6 @@ try:
     import pyvips
 except (OSError, ImportError, ModuleNotFoundError):
     pass
-
-## Attempt to load the 'djehuty.config' module to find out the local path
-## for the documentation.
-try:
-    from djehuty.config import DOCUMENTATION_DIRECTORY
-except (ImportError, ModuleNotFoundError):
-    DOCUMENTATION_DIRECTORY=None
 
 def R (uri_path, endpoint):  # pylint: disable=invalid-name
     """
