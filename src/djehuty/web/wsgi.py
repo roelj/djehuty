@@ -5619,7 +5619,8 @@ class WebServer:
 
         item = self.__item_by_id_or_uri (item_id,
                                          account_uuid = account_uuid,
-                                         is_published = False)
+                                         is_published = False,
+                                         item_type    = item_type)
 
         if item is None:
             return self.error_404 (request)
@@ -5675,8 +5676,8 @@ class WebServer:
         """Implements /v2/account/articles/<id>/private_links."""
         return self.__api_private_item_private_links (request, dataset_id, "dataset")
 
-    def api_private_dataset_private_links_details (self, request, dataset_id, link_id):
-        """Implements /v2/account/articles/<id>/private_links/<link_id>."""
+    def __api_private_item_private_links_details (self, request, item_id, link_id, item_type):
+        """Generalized procedure to list or add private links."""
 
         account_uuid = self.default_authenticated_error_handling (request,
                                                                   ["GET", "PUT", "DELETE"],
@@ -5684,36 +5685,36 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        dataset = self.__dataset_by_id_or_uri (dataset_id,
-                                               account_uuid = account_uuid,
-                                               is_published = False)
+        item = self.__item_by_id_or_uri (item_id,
+                                         account_uuid = account_uuid,
+                                         is_published = False,
+                                         item_type    = item_type)
 
-        if dataset is None:
+        if item is None:
             return self.error_404 (request)
 
         if request.method in ("GET", "HEAD"):
 
-            if value_or (dataset, "is_shared_with_me", False):
+            if value_or (item, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} attempted "
-                                                 f"to view a private link of dataset:{dataset_id}."))
+                                                 f"to view a private link of {item_type}:{item_id}."))
 
-            links = self.db.private_links (
-                        item_uri   = dataset["uri"],
-                        id_string  = link_id,
-                        account_uuid = account_uuid)
+            links = self.db.private_links (item_uri   = item["uri"],
+                                           id_string  = link_id,
+                                           account_uuid = account_uuid)
 
             return self.default_list_response (links, formatter.format_private_links_record)
 
         if request.method == 'PUT':
 
-            if value_or (dataset, "is_shared_with_me", False):
+            if value_or (item, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} attempted "
-                                                 f"to modify a private link of dataset:{dataset_id}."))
+                                                 f"to modify a private link of {item_type}:{item_id}."))
 
             parameters = request.get_json()
             try:
                 result = self.db.update_private_link (
-                    dataset["uri"],
+                    item["uri"],
                     account_uuid,
                     link_id,
                     expires_date = validator.string_value (parameters, "expires_date", 0, 255, False),
@@ -5723,7 +5724,7 @@ class WebServer:
                     return self.error_500()
 
                 return self.response(json.dumps({
-                    "location": f"{config.base_url}/private_datasets/{link_id}"
+                    "location": f"{config.base_url}/private_{item_type}s/{link_id}"
                 }))
 
             except validator.ValidationException as error:
@@ -5731,12 +5732,12 @@ class WebServer:
 
         if request.method == 'DELETE':
 
-            if value_or (dataset, "is_shared_with_me", False):
+            if value_or (item, "is_shared_with_me", False):
                 return self.error_403 (request, (f"collaborator account:{account_uuid} "
                                                  "attempted to remove a private link "
-                                                 f"of dataset:{dataset_id}."))
+                                                 f"of {item_type}:{item_id}."))
 
-            result = self.db.delete_private_links (dataset["container_uuid"],
+            result = self.db.delete_private_links (item["container_uuid"],
                                                    account_uuid,
                                                    link_id)
 
@@ -5746,6 +5747,10 @@ class WebServer:
             return self.respond_204()
 
         return self.error_500 ()
+
+    def api_private_dataset_private_links_details (self, request, dataset_id, link_id):
+        """Implements /v2/account/articles/<id>/private_links/<link_id>."""
+        return self.__api_private_item_private_links_details (request, dataset_id, link_id, "dataset")
 
     def __datacite_reserve_doi (self, doi=None):
         """
