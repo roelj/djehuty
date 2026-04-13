@@ -10,8 +10,7 @@ WHERE {
                        djht:index               ?order_index .
     ?item_uri          djht:container           ?container .
     ?container         rdf:type/rdfs:subClassOf djht:Container .
-    ?link              rdf:type                 djht:PrivateLink ;
-                       djht:id                   ?id_string .
+    ?link              rdf:type                 djht:PrivateLink .
     OPTIONAL { ?link   djht:is_active            ?is_active . }
     OPTIONAL { ?link   djht:whom                 ?whom . }
     OPTIONAL { ?link   djht:purpose              ?purpose . }
@@ -21,7 +20,10 @@ WHERE {
     {%- endif %}
   }
   {%- if id_string is not none %}
-  FILTER(?id_string = "{{id_string | safe}}"^^xsd:string)
+  ?link                djht:id                   "{{id_string | safe}}"^^xsd:string .
+  BIND("{{id_string | safe}}"^^xsd:string AS ?id_string)
+  {% else %}
+  ?link                djht:id                   ?id_string .
   {%- endif %}
   {%- if item_uri is not none %}
   FILTER(?item_uri = <{{item_uri}}>)
