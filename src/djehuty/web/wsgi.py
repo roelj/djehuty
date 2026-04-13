@@ -1010,7 +1010,7 @@ class WebServer:
         if item_type == "dataset":
             return self.__dataset_by_id_or_uri (identifier, account_uuid, is_published, is_latest,
                                                 is_under_review, version, use_cache)
-        elif item_type == "collection":
+        if item_type == "collection":
             return self.__collection_by_id_or_uri (identifier, account_uuid, is_published,
                                                    is_latest, version, use_cache)
 
@@ -3493,8 +3493,8 @@ class WebServer:
 
         if os.path.exists (documentation_file_path):
             return send_file (documentation_file_path, request.environ, mimetype=mimetype)
-        else:
-            return self.error_404 (request, f"Cannot find '{documentation_file_path}'.")
+
+        return self.error_404 (request, f"Cannot find '{documentation_file_path}'.")
 
     def ui_categories (self, request, category_id):
         """Implements /categories/<id>."""
@@ -5610,7 +5610,7 @@ class WebServer:
         return self.error_500 ()
 
     def __api_private_item_private_links (self, request, item_id, item_type):
-        """"""
+        """Generalized procedure to list or add private links."""
         account_uuid = self.default_authenticated_error_handling (request,
                                                                   ["GET", "POST"],
                                                                   "application/json")
@@ -8457,7 +8457,7 @@ class WebServer:
             self.log.error ("Proxying to Git failed with exit code %d", error.returncode)
             self.log.error ("The command was:\n---\n%s\n---", error.cmd)
             return self.error_500()
-        except validator.ValidationException as error:
+        except validator.ValidationException:
             return self.error_500 (("Proxying to Git failed due to "
                                     f"Git-Protocol value: '{raw_git_protocol}'"))
 
