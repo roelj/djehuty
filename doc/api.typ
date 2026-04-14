@@ -2262,6 +2262,137 @@ HTTP response of the example:
 HTTP/1.1 204 NO CONTENT
 ```
 
+=== `/v2/account/collections/<collection-id>/private_links` (`GET`)
+
+This API endpoint lists the private links associated with the collection
+identified by `collection-id`.
+
+Example usage:
+#let output = ```bash
+curl --header "Authorization: token YOUR_TOKEN_HERE" \
+     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links | jq
+```
+#render_code_output(output)
+
+Output of the example:
+```json
+[
+  {
+    "id": "xk84wQ0Vxn5Xf44cAjPlg4Bjw-sbrHoia_SgboWF6eo",
+    "is_active": true,
+    "expires_date": null
+  },
+  {
+    "id": "EYgjp5RGul2maCblF6Mlx0lfFombnPLLYniTS7hLD2E",
+    "is_active": true,
+    "expires_date": "2027-01-01T00:00:00"
+  }
+]
+```
+
+=== `/v2/account/collections/<collection-id>/private_links` (`POST`)
+
+This API endpoint can be used to append a private link to the collection
+identified by `collection-id`.
+
+The following parameter can be used:
+
+#table(
+  columns: (auto, auto, auto, 1fr),
+  table.header([*Parameter*], [*Data type*], [*Required*], [*Description*]),
+  [`expires_date`], [`string`], [No], [The format of the date string should be `YYYY-MM-DD`.],
+)
+
+Example usage:
+#let output = ```bash
+curl --request POST \
+     --header "Authorization: token YOUR_TOKEN_HERE" \
+     --data '{ "expires_date": "2032-01-01", "read_only": false }' \
+     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links | jq
+```
+#render_code_output(output)
+
+Output of the example:
+#let output = ```json
+{ /* Example output has been shortened. */
+  "location": "<djehutybaseurl>/private_collections/Jk2I..."
+}
+```
+#render_code_output(output)
+
+=== `/v2/account/collections/<collection-id>/private_links/<link-id>` (`GET`)
+
+This API endpoint can be used to view the details of a private link for
+the collection identified by `collection-id`.
+
+Example usage:
+#let output = ```bash
+curl --header "Authorization: token YOUR_TOKEN_HERE" \
+     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
+```
+#render_code_output(output)
+
+Output of the example:
+```json
+[
+  {
+    "id": "Jk2Iw1cOKqQ0EJbx01feLKcJOukIcBCDJ20HFbe9F8g",
+    "is_active": true,
+    "expires_date": "2032-01-01T00:00:00"
+  }
+]
+```
+
+=== `/v2/account/collections/<collection-id>/private_links/<link-id>` (`PUT`)
+
+This API endpoint can be used to update the expiry date of a private link
+and whether the private link is active or not for the collection identified
+by `collection-id`.
+
+The following parameter can be used:
+
+#table(
+  columns: (auto, auto, auto, 1fr),
+  table.header([*Parameter*], [*Data type*], [*Required*], [*Description*]),
+  [`expires_date`], [`string`],  [No], [The format of the date string should be `YYYY-MM-DD`.],
+  [`is_active`],    [`boolean`], [No], [Defaults to `false`.],
+)
+
+Example usage:
+#let output = ```bash
+curl --request PUT \
+     --header "Authorization: token YOUR_TOKEN_HERE" \
+     --data '{ "expires_date": "2034-01-01", "is_active": true }' \
+     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
+```
+#render_code_output(output)
+
+Output of the example:
+#let output = ```json
+{ /* Example output has been shortened. */
+  "location": "<djehutybaseurl>/private_collections/Jk2I..."
+}
+```
+#render_code_output(output)
+
+=== `/v2/account/collections/<collection-id>/private_links/<link-id>` (`DELETE`)
+
+This API endpoint can be used to remove a private link for the collection identified
+by `collection-id`.
+
+Example usage:
+#let output = ```bash
+curl --request DELETE \
+     --header "Authorization: token YOUR_TOKEN_HERE" \
+     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I...
+```
+#render_code_output(output)
+
+HTTP response of the example:
+```
+HTTP/1.1 204 NO CONTENT
+```
+
 === `/v2/account/collections/<collection-id>/reserve_doi` (`POST`)
 
 This API endpoint can be used to obtain the DOI before the collection is
