@@ -33,6 +33,9 @@ dependencies    = [
 [project.scripts]
 djehuty = "djehuty.ui:main"
 
+[tool.uv.dev-dependencies]
+dev = ["pylint"]
+
 [tool.pylint."messages control"]
 disable = [
     "line-too-long",
