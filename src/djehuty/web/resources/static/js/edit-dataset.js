@@ -1223,48 +1223,170 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
             autoProcessQueue:  false,
             autoQueue:         true,
             ignoreHiddenFiles: false,
-            disablePreviews:   false,
+            disablePreviews:   true,
+            dictDefaultMessage: "",
             init: function() {
-                $(window).on('beforeunload', function() {
-                    if (fileUploader.getUploadingFiles().length > 0 ||
-                        fileUploader.getQueuedFiles().length > 0) {
-                        // Custom message cannot be used in most browsers
-                        // since it was used for scam. Therefore, pop-up message
-                        // depends on user's browser.
-                        return 1;
+                let dropzone_message = null;
+                let dz_button = this.element.querySelector(".dz-message .dz-button");
+                if (dz_button) {
+                    let h4 = document.createElement("h4");
+                    h4.id = "file-upload-message";
+                    h4.textContent = "Drop files here to upload";
+                    dz_button.appendChild(h4);
+                    dropzone_message = h4;
+                }
+                let upload_completed = 0;
+                this.on("addedfile", function(file) {
+                    let rel_path = file._folderRelativePath || (file.webkitRelativePath !== "" ? file.webkitRelativePath : null);
+                    if (rel_path) { file.upload.filename = rel_path; }
+                });
+                this.on("complete", function(file) {
+                    if (file._fsEntry && !file._retried && file.status === Dropzone.ERROR) { return; }
+                    upload_completed += 1;
+                    let remaining = fileUploader.getUploadingFiles().length + fileUploader.getQueuedFiles().length;
+                    if (remaining === 0) {
+                        upload_completed = 0;
+                        if (dropzone_message) { dropzone_message.textContent = "Drop files here to upload"; }
                     }
                 });
+                function upload_message (percentage) {
+                    if (!dropzone_message) { return; }
+                    let total        = upload_completed + fileUploader.getUploadingFiles().length + fileUploader.getQueuedFiles().length;
+                    let current      = upload_completed + fileUploader.getUploadingFiles().length;
+                    let width        = total.toString().length;
+                    let current_file = current.toString().padStart(width, "0");
+                    let total_files  = total.toString().padStart(width, "0");
+                    let percentage_str = (percentage + "%").padStart(4, "0");
+                    dropzone_message.textContent = `Uploading file ${current_file} of ${total_files} (${percentage_str})`;
+                }
+                this.on("sending", function() { upload_message (0); });
+                this.on("uploadprogress", function(file, progress) { upload_message (Math.floor(progress)); });
+                jQuery(window).on('beforeunload', function() {
+                    if (fileUploader.getUploadingFiles().length > 0 || fileUploader.getQueuedFiles().length > 0) { return 1; }
+                });
             },
-            accept: function(file, done) {
-                done();
-                fileUploader.processQueue();
-            },
+            accept:   function(file, done) { done(); fileUploader.processQueue(); },
             complete: function (file) {
-                if (fileUploader.getUploadingFiles().length === 0 &&
-                    fileUploader.getQueuedFiles().length === 0) {
+                if (fileUploader.getUploadingFiles().length === 0 && fileUploader.getQueuedFiles().length === 0) {
                     let rejected_files = fileUploader.getRejectedFiles();
                     for (let rejected of rejected_files) {
-                        if (rejected.status == "error") {
+                        if (rejected.status == "error" && !rejected._fsEntry) {
                             show_message ("failure", `<p>Failed to upload '${rejected.upload.filename}'.</p>`);
                         }
                     }
                     render_files_for_dataset (dataset_uuid, fileUploader);
-                } else {
-                    fileUploader.processQueue();
-                }
+                } else { fileUploader.processQueue(); }
                 fileUploader.removeFile(file);
             },
-            error: function(file, message) {
+            error: function(file, message, xhr) {
+                if (xhr && xhr.status === 0 && file._fsEntry && !file._retried) {
+                    file._fsEntry.file(function (original) {
+                        let reader = new FileReader();
+                        reader.onload = function (evt) {
+                            let copy = new File([evt.target.result], original.name,
+                                               { type: original.type,
+                                                 lastModified: original.lastModified });
+                            copy._folderRelativePath = file._folderRelativePath;
+                            copy._retried            = true;
+                            fileUploader.addFile(copy);
+                        };
+                        reader.onerror = function () {
+                            show_message("failure",
+                                `<p>Failed to upload ${file.upload.filename}: could not read file.</p>`);
+                        };
+                        reader.readAsArrayBuffer(original);
+                    }, function () {
+                        show_message("failure",
+                            `<p>Failed to upload ${file.upload.filename}: file entry expired.</p>`);
+                    });
+                    return;
+                }
+                let text = (message && message.message) ? message.message : message;
                 show_message ("failure",
-                              (`<p>Failed to upload ${file.upload.filename}:` +
-                               ` ${message.message}</p>`));
+                              (`<p>Failed to upload ${file.upload.filename}: ${text}</p>`));
             }
         });
         if (!permissions.data_edit) { fileUploader.disable(); }
 
-        jQuery("input[name='record_type']").change(function () {
-            toggle_record_type ();
-        });
+        function collect_files_from_entry (entry, path_prefix) {
+            if (entry.isFile) {
+                return new Promise(function (resolve, reject) {
+                    entry.file(function (file) {
+                        let rel_path = path_prefix ? path_prefix + "/" + file.name : file.name;
+                        file._folderRelativePath = rel_path;
+                        file._fsEntry            = entry;
+                        resolve([file]);
+                    }, reject);
+                });
+            }
+
+            return new Promise(function (resolve, reject) {
+                let reader  = entry.createReader();
+                let results = [];
+                function read_batch () {
+                    reader.readEntries(function (entries) {
+                        if (entries.length === 0) {
+                            let sub_path = path_prefix ? path_prefix + "/" + entry.name : entry.name;
+                            Promise.all(results.map(function (e) {
+                                return collect_files_from_entry(e, sub_path);
+                            })).then(function (arrays) {
+                                resolve(arrays.flat());
+                            }).catch(reject);
+                        } else {
+                            results = results.concat(Array.from(entries));
+                            read_batch();
+                        }
+                    }, reject);
+                }
+                read_batch();
+            });
+        }
+
+        document.getElementById("dropzone-field").addEventListener("drop",
+            function (event) {
+                if (!permissions.data_edit) { return; }
+
+                let items = event.dataTransfer && event.dataTransfer.items;
+                if (!items) { return; }
+                let entries = Array.from(items).map(function (item) {
+                    return item.webkitGetAsEntry ? item.webkitGetAsEntry() : null;
+                }).filter(Boolean);
+
+                let has_directory = entries.some(function (e) { return e.isDirectory; });
+                if (!has_directory) { return; }  // plain files — let Dropzone handle it
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                let dir_names = new Set(
+                    entries.filter(function (e) { return e.isDirectory; })
+                           .map(function (e) { return e.name; })
+                );
+                let filtered_entries = entries.filter(function (e) {
+                    return e.isDirectory || !dir_names.has(e.name);
+                });
+
+                Promise.all(filtered_entries.map(function (entry) {
+                    return collect_files_from_entry(entry, "");
+                })).then(function (arrays) {
+                    let all_files = arrays.flat();
+                    if (all_files.length === 0) {
+                        show_message("failure", "<p>No files found in the dropped folder.</p>");
+                        return;
+                    }
+                    let orig_accept = fileUploader.options.accept;
+                    fileUploader.options.accept = function(file, done) { done(); };
+                    all_files.forEach(function (file) { fileUploader.addFile(file); });
+                    fileUploader.options.accept = orig_accept;
+                    fileUploader.processQueue();
+                }).catch(function (error) {
+                    show_message("failure", "<p>Failed to read the dropped folder.</p>");
+                    console.error("Folder drop error:", error);
+                });
+            },
+            true // Run before Dropzone listener
+        );
+
+        jQuery("input[name='record_type']").change(function () { toggle_record_type (); });
         jQuery("#git-branches").on("change", function (event) {
             set_default_git_branch (dataset_uuid, event);
         });
@@ -1363,23 +1485,22 @@ function toggle_embargo_until (event) {
 }
 
 function perform_upload (files, current_file, dataset_uuid) {
+    if (typeof files.item === "function" && !Array.isArray(files)) { files = Array.from(files); }
     let total_files = files.length;
     let index = current_file - 1;
     let data  = new FormData();
 
     if (files[index] === undefined || files[index] == null) {
         show_message ("failure", "<p>Uploading file(s) failed due to a web browser incompatibility.</p>");
-        jQuery("#file-upload h4").text("Uploading failed.");
         return;
-    } else if (files[index].webkitRelativePath !== undefined &&
-               files[index].webkitRelativePath != "") {
-        data.append ("file", files[index], files[index].webkitRelativePath);
-    } else if (files[index].name !== undefined) {
-        data.append ("file", files[index], files[index].name);
+    }
+    let file     = files[index];
+    let rel_path = file.webkitRelativePath;
+    if (rel_path !== undefined && rel_path !== "") {
+        data.append ("file", file, rel_path);
+    } else if (file.name !== undefined) {
+        data.append ("file", file, file.name);
     } else {
-        jQuery("#file-upload h4").text("Click here to open file dialog");
-        jQuery("#file-upload p").text("Because the drag and drop functionality"+
-                                      " does not work for your web browser.");
         show_message ("failure", "<p>Uploading file(s). Please try selecting " +
                                  "files with the file chooser instead of " +
                                  "using the drag-and-drop.</p>");
@@ -1392,9 +1513,8 @@ function perform_upload (files, current_file, dataset_uuid) {
             xhr.upload.addEventListener("progress", function (evt) {
                 if (evt.lengthComputable) {
                     let completed = Number.parseInt(evt.loaded / evt.total * 100);
-                    jQuery("#file-upload h4").text(`Uploading at ${completed}% (${current_file}/${total_files})`);
                     if (completed === 100) {
-                        jQuery("#file-upload h4").text(`Computing MD5 ... (${current_file}/${total_files})`);
+                        show_message ("notice", `<p>Computing MD5 ... ${current_file}/${total_files}.</p>`);
                     }
                 }
             }, false);
@@ -1406,7 +1526,6 @@ function perform_upload (files, current_file, dataset_uuid) {
         processData: false,
         contentType: false
     }).done(function () {
-        jQuery("#file-upload h4").text("Drag files here");
         if (current_file < total_files) {
             return perform_upload (files, current_file + 1, dataset_uuid);
         } else {
