@@ -716,6 +716,7 @@ def read_configuration_file (server, config_file, logger, config_files):
 
         config.base_url     = config_value (xml_root, "base-url", None, config.base_url)
         config.documentation_url = config_value (xml_root, "documentation-url", None, config.documentation_url)
+        config.ontology_url = config_value (xml_root, "ontology-url", None, config.ontology_url)
         config.storage      = config_value (xml_root, "storage-root", None, config.storage)
         config.state_graph  = config_value (xml_root, "rdf-store/state-graph", None, config.state_graph)
 

@@ -16,6 +16,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.alternative_port            = None
         self.base_url                    = None
         self.documentation_url           = "/doc"
+        self.ontology_url                = "https://ontologies.data.4tu.nl/djehuty/0.0.1/"
         self.log_file                    = None
         self.use_reloader                = None
         self.use_debugger                = None

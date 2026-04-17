@@ -18,6 +18,7 @@ configuration file, for which an example is available at
   [`alternative-port`],       [A fall-back port to bind on when `port` is already in use.],
   [`base-url`],               [The URL on which the instance will be available to the outside world.],
   [`documentation-url`],      [The URL on which the documentation will be available to the outside world.],
+  [`ontology-url`],           [The URL for the internal ontology.],
   [`allow-crawlers`],         [Set to 1 to allow crawlers in the `robots.txt`, otherwise set to 0.],
   [`production`],             [Performs extra checks before starting. Enable this when running a production instance.],
   [`live-reload`],            [When set to 1, it reloads Python code on-the-fly. We recommend to set it to 0 when running in production.],

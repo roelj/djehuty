@@ -10,7 +10,7 @@ import os.path
 import logging
 import json
 from datetime import datetime
-from rdflib import Dataset, Graph, Literal, RDF, RDFS, XSD, URIRef
+from rdflib import Dataset, Graph, Namespace, Literal, RDF, RDFS, XSD, URIRef
 from rdflib.plugins.stores import sparqlstore, memory
 from rdflib.store import CORRUPTED_STORE, NO_STORE
 from jinja2 import Environment, FileSystemLoader
@@ -91,6 +91,7 @@ class SparqlInterface:
             self.log.info ("Using external RDF store.")
             sys.addaudithook (rdflib_network_audit_hook)
 
+        self.ontology = Namespace(config.ontology_url)
         self.sparql_is_up = True
         return None
 
@@ -156,12 +157,15 @@ class SparqlInterface:
         template   = self.jinja.get_template (f"{name}.sparql")
         parameters = {
             "state_graph":           config.state_graph,
+            "ontology_url":          config.ontology_url,
             "disable_collaboration": config.disable_collaboration
         }
         if args is None:
             args = {}
 
-        return template.render ({ **args, **parameters })
+        result = template.render ({ **args, **parameters })
+        self.__log_query (result)
+        return result
 
     def __run_logged_query (self, query):
         """Passthrough for '__run_query' that handles the audit log feature."""
@@ -1149,11 +1153,11 @@ class SparqlInterface:
         if uri is None:
             uri = rdf.unique_node ("container")
             account_uri = URIRef(rdf.uuid_to_uri (account_uuid, "account"))
-            rdf.add (graph, uri, RDF.type,            rdf.DJHT[item_class], "uri")
-            rdf.add (graph, uri, rdf.DJHT["account"], account_uri, "uri")
+            rdf.add (graph, uri, RDF.type, self.ontology[item_class], "uri")
+            rdf.add (graph, uri, self.ontology["account"], account_uri, "uri")
 
             ## The item_id is a left-over from the Figshare days.
-            rdf.add (graph, uri, rdf.DJHT[f"{item_type}_id"], item_id, datatype=XSD.integer)
+            rdf.add (graph, uri, self.ontology[f"{item_type}_id"], item_id, datatype=XSD.integer)
 
         return uri
 
@@ -1166,14 +1170,14 @@ class SparqlInterface:
         """
         if records:
             blank_node = rdf.blank_node ()
-            rdf.add (graph, uri, rdf.DJHT[name], blank_node, "uri")
+            rdf.add (graph, uri, self.ontology[name], blank_node, "uri")
 
             previous_blank_node = None
             for index, item in enumerate(records):
                 if insert_procedure:
                     item = insert_procedure (**item)
 
-                rdf.add (graph, blank_node, rdf.DJHT["index"], index, XSD.integer)
+                rdf.add (graph, blank_node, self.ontology["index"], index, XSD.integer)
                 if isinstance (item, URIRef):
                     rdf.add (graph, blank_node, RDF.first, item, "uri")
                 else:
@@ -1208,7 +1212,7 @@ class SparqlInterface:
         rdf.add (rdf_store, blank_node, RDF.first, URIRef(item_uri), "url")
         rdf.add (rdf_store, blank_node, RDF.rest, RDF.nil, "url")
         if index is not None:
-            rdf.add (rdf_store, blank_node, rdf.DJHT["index"], index, XSD.integer)
+            rdf.add (rdf_store, blank_node, self.ontology["index"], index, XSD.integer)
 
         if self.add_triples_from_graph (rdf_store):
             return blank_node
@@ -1355,51 +1359,51 @@ class SparqlInterface:
 
         doi = conv.normalize_doi (doi)
         resource_doi = conv.normalize_doi (resource_doi)
-        rdf.add (graph, uri, RDF.type,                   rdf.DJHT["Dataset"], "uri")
-        rdf.add (graph, uri, rdf.DJHT["title"],          title,          XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["container"],      container,      "uri")
-        rdf.add (graph, uri, rdf.DJHT["description"],    description,    XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["defined_type"],   defined_type)
-        rdf.add (graph, uri, rdf.DJHT["defined_type_name"], defined_type_name, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["funding"],        funding,        XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["license"],        license_url,    "url")
-        rdf.add (graph, uri, rdf.DJHT["language"],       language,       XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["doi"],            doi,            XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["handle"],         handle,         XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_doi"],   resource_doi,   XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_title"], resource_title, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["group_id"],       group_id)
-        rdf.add (graph, uri, rdf.DJHT["publisher"],      publisher,      XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["derived_from"],   derived_from,   XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["data_link"],      data_link,      XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["thumb"],          thumb,          XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["thumb_origin"],   thumb_origin,   XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["association_criteria"], association_criteria, XSD.string)
+        rdf.add (graph, uri, RDF.type,                        self.ontology["Dataset"], "uri")
+        rdf.add (graph, uri, self.ontology["title"],          title,          XSD.string)
+        rdf.add (graph, uri, self.ontology["container"],      container,      "uri")
+        rdf.add (graph, uri, self.ontology["description"],    description,    XSD.string)
+        rdf.add (graph, uri, self.ontology["defined_type"],   defined_type)
+        rdf.add (graph, uri, self.ontology["defined_type_name"], defined_type_name, XSD.string)
+        rdf.add (graph, uri, self.ontology["funding"],        funding,        XSD.string)
+        rdf.add (graph, uri, self.ontology["license"],        license_url,    "url")
+        rdf.add (graph, uri, self.ontology["language"],       language,       XSD.string)
+        rdf.add (graph, uri, self.ontology["doi"],            doi,            XSD.string)
+        rdf.add (graph, uri, self.ontology["handle"],         handle,         XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_doi"],   resource_doi,   XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_title"], resource_title, XSD.string)
+        rdf.add (graph, uri, self.ontology["group_id"],       group_id)
+        rdf.add (graph, uri, self.ontology["publisher"],      publisher,      XSD.string)
+        rdf.add (graph, uri, self.ontology["derived_from"],   derived_from,   XSD.string)
+        rdf.add (graph, uri, self.ontology["data_link"],      data_link,      XSD.string)
+        rdf.add (graph, uri, self.ontology["thumb"],          thumb,          XSD.string)
+        rdf.add (graph, uri, self.ontology["thumb_origin"],   thumb_origin,   XSD.string)
+        rdf.add (graph, uri, self.ontology["association_criteria"], association_criteria, XSD.string)
 
         current_time = datetime.strftime (datetime.now(), datetime_format)
-        rdf.add (graph, uri, rdf.DJHT["created_date"],   current_time, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["modified_date"],  current_time, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["is_public"],      is_public)
-        rdf.add (graph, uri, rdf.DJHT["is_active"],      is_active)
-        rdf.add (graph, uri, rdf.DJHT["is_latest"],      is_latest)
-        rdf.add (graph, uri, rdf.DJHT["is_editable"],    is_editable)
-        rdf.add (graph, uri, rdf.DJHT["version"],        version)
+        rdf.add (graph, uri, self.ontology["created_date"],   current_time, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["modified_date"],  current_time, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["is_public"],      is_public)
+        rdf.add (graph, uri, self.ontology["is_active"],      is_active)
+        rdf.add (graph, uri, self.ontology["is_latest"],      is_latest)
+        rdf.add (graph, uri, self.ontology["is_editable"],    is_editable)
+        rdf.add (graph, uri, self.ontology["version"],        version)
 
-        rdf.add (graph, uri, rdf.DJHT["embargo_type"], embargo_type, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["embargo_until_date"], embargo_until_date, XSD.date)
-        rdf.add (graph, uri, rdf.DJHT["embargo_title"], embargo_title, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["embargo_reason"], embargo_reason, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["eula"],           eula, XSD.string)
+        rdf.add (graph, uri, self.ontology["embargo_type"],   embargo_type, XSD.string)
+        rdf.add (graph, uri, self.ontology["embargo_until_date"], embargo_until_date, XSD.date)
+        rdf.add (graph, uri, self.ontology["embargo_title"],  embargo_title, XSD.string)
+        rdf.add (graph, uri, self.ontology["embargo_reason"], embargo_reason, XSD.string)
+        rdf.add (graph, uri, self.ontology["eula"],           eula, XSD.string)
 
         # Reserve a UUID for a Git repository.
         if git_uuid is None:
             git_uuid = str(uuid.uuid4())
 
-        rdf.add (graph, uri, rdf.DJHT["git_uuid"], git_uuid, XSD.string)
+        rdf.add (graph, uri, self.ontology["git_uuid"], git_uuid, XSD.string)
 
         # Add the dataset to its container.
-        rdf.add (graph, container, rdf.DJHT["draft"],       uri,         "uri")
-        rdf.add (graph, container, rdf.DJHT["account"],     account_uri, "uri")
+        rdf.add (graph, container, self.ontology["draft"],       uri,         "uri")
+        rdf.add (graph, container, self.ontology["account"],     account_uri, "uri")
 
         self.cache.invalidate_by_prefix ("datasets")
 
@@ -1422,12 +1426,12 @@ class SparqlInterface:
         account_uri  = rdf.uuid_to_uri (account_uuid, "account")
         current_time = datetime.strftime (datetime.now(), datetime_format)
 
-        rdf.add (graph, uri, RDF.type, rdf.DJHT["QuotaRequest"], "uri")
-        rdf.add (graph, uri, rdf.DJHT["account"], account_uri, "uri")
-        rdf.add (graph, uri, rdf.DJHT["requested_size"], requested_size, XSD.integer)
-        rdf.add (graph, uri, rdf.DJHT["reason"], reason, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["created_date"], current_time, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["status"], rdf.DJHT["QuotaRequestUnresolved"], "uri")
+        rdf.add (graph, uri, RDF.type, self.ontology["QuotaRequest"], "uri")
+        rdf.add (graph, uri, self.ontology["account"], account_uri, "uri")
+        rdf.add (graph, uri, self.ontology["requested_size"], requested_size, XSD.integer)
+        rdf.add (graph, uri, self.ontology["reason"], reason, XSD.string)
+        rdf.add (graph, uri, self.ontology["created_date"], current_time, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["status"], self.ontology["QuotaRequestUnresolved"], "uri")
 
         if self.add_triples_from_graph (graph):
             return rdf.uri_to_uuid (uri)
@@ -1440,7 +1444,7 @@ class SparqlInterface:
 
         status_uri = None
         if status is not None:
-            status_uri = rdf.DJHT[f"QuotaRequest{status.capitalize()}"]
+            status_uri = self.ontology[f"QuotaRequest{status.capitalize()}"]
 
         query = self.__query_from_template ("update_quota_request", {
             "quota_request_uuid": quota_request_uuid,
@@ -1458,7 +1462,7 @@ class SparqlInterface:
 
         status_uri = None
         if status is not None:
-            status_uri = rdf.urify_value (rdf.DJHT[f"QuotaRequest{status.capitalize()}"])
+            status_uri = rdf.urify_value (self.ontology[f"QuotaRequest{status.capitalize()}"])
 
         query = self.__query_from_template ("quota_requests", {
             "status": status_uri,
@@ -1581,23 +1585,23 @@ class SparqlInterface:
         full_name  = conv.strip_string (full_name)
         email      = conv.strip_string (email)
 
-        rdf.add (graph, author_uri, RDF.type,                   rdf.DJHT["Author"], "uri")
-        rdf.add (graph, author_uri, rdf.DJHT["id"],             author_id)
-        rdf.add (graph, author_uri, rdf.DJHT["institution_id"], institution_id)
-        rdf.add (graph, author_uri, rdf.DJHT["group_id"],       group_id)
-        rdf.add (graph, author_uri, rdf.DJHT["is_active"],      is_active)
-        rdf.add (graph, author_uri, rdf.DJHT["is_public"],      is_public)
-        rdf.add (graph, author_uri, rdf.DJHT["first_name"],     first_name,     XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["last_name"],      last_name,      XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["full_name"],      full_name,      XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["job_title"],      job_title,      XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["url_name"],       url_name,       XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["orcid_id"],       orcid_id,       XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["email"],          email,          XSD.string)
-        rdf.add (graph, author_uri, rdf.DJHT["created_by"],     rdf.uuid_to_uri (created_by, "account"), "uri")
+        rdf.add (graph, author_uri, RDF.type,                        self.ontology["Author"], "uri")
+        rdf.add (graph, author_uri, self.ontology["id"],             author_id)
+        rdf.add (graph, author_uri, self.ontology["institution_id"], institution_id)
+        rdf.add (graph, author_uri, self.ontology["group_id"],       group_id)
+        rdf.add (graph, author_uri, self.ontology["is_active"],      is_active)
+        rdf.add (graph, author_uri, self.ontology["is_public"],      is_public)
+        rdf.add (graph, author_uri, self.ontology["first_name"],     first_name,     XSD.string)
+        rdf.add (graph, author_uri, self.ontology["last_name"],      last_name,      XSD.string)
+        rdf.add (graph, author_uri, self.ontology["full_name"],      full_name,      XSD.string)
+        rdf.add (graph, author_uri, self.ontology["job_title"],      job_title,      XSD.string)
+        rdf.add (graph, author_uri, self.ontology["url_name"],       url_name,       XSD.string)
+        rdf.add (graph, author_uri, self.ontology["orcid_id"],       orcid_id,       XSD.string)
+        rdf.add (graph, author_uri, self.ontology["email"],          email,          XSD.string)
+        rdf.add (graph, author_uri, self.ontology["created_by"],     rdf.uuid_to_uri (created_by, "account"), "uri")
         if account_uuid is not None:
             account_uri = URIRef(rdf.uuid_to_uri(account_uuid, "account"))
-            rdf.add (graph, author_uri, rdf.DJHT["account"], account_uri, "uri")
+            rdf.add (graph, author_uri, self.ontology["account"], account_uri, "uri")
 
         if self.add_triples_from_graph (graph):
             return rdf.uri_to_uuid (author_uri)
@@ -1618,19 +1622,19 @@ class SparqlInterface:
         if common_name is None and first_name is not None and last_name is not None:
             common_name = f"{first_name} {last_name}"
 
-        rdf.add (graph, account_uri, RDF.type,               rdf.DJHT["Account"], "uri")
-        rdf.add (graph, account_uri, rdf.DJHT["active"],     1)
-        rdf.add (graph, account_uri, rdf.DJHT["first_name"], first_name, XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["last_name"],  last_name,  XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["full_name"],  common_name, XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["email"],      email,      XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["domain"],     domain,     XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["location"],   location,   XSD.string)
-        rdf.add (graph, account_uri, rdf.DJHT["biography"],  biography,  XSD.string)
+        rdf.add (graph, account_uri, RDF.type,                    self.ontology["Account"], "uri")
+        rdf.add (graph, account_uri, self.ontology["active"],     1)
+        rdf.add (graph, account_uri, self.ontology["first_name"], first_name, XSD.string)
+        rdf.add (graph, account_uri, self.ontology["last_name"],  last_name,  XSD.string)
+        rdf.add (graph, account_uri, self.ontology["full_name"],  common_name, XSD.string)
+        rdf.add (graph, account_uri, self.ontology["email"],      email,      XSD.string)
+        rdf.add (graph, account_uri, self.ontology["domain"],     domain,     XSD.string)
+        rdf.add (graph, account_uri, self.ontology["location"],   location,   XSD.string)
+        rdf.add (graph, account_uri, self.ontology["biography"],  biography,  XSD.string)
 
         # Legacy properties.
-        rdf.add (graph, account_uri, rdf.DJHT["institution_id"], 898)
-        rdf.add (graph, account_uri, rdf.DJHT["url_name"],       "_", XSD.string)
+        rdf.add (graph, account_uri, self.ontology["institution_id"], 898)
+        rdf.add (graph, account_uri, self.ontology["url_name"],       "_", XSD.string)
 
         if self.add_triples_from_graph (graph):
             self.cache.invalidate_by_prefix ("accounts")
@@ -1658,10 +1662,10 @@ class SparqlInterface:
                          submission=None, publisher_publication=None):
         """Procedure to add a timeline to the state graph."""
 
-        rdf.add (graph, item_uri, rdf.DJHT["revision_date"],          revision,     XSD.dateTime)
-        rdf.add (graph, item_uri, rdf.DJHT["posted_date"],            posted,       XSD.dateTime)
-        rdf.add (graph, item_uri, rdf.DJHT["publisher_publication_date"], publisher_publication, XSD.dateTime)
-        rdf.add (graph, item_uri, rdf.DJHT["submission_date"],        submission,   XSD.dateTime)
+        rdf.add (graph, item_uri, self.ontology["revision_date"],          revision,     XSD.dateTime)
+        rdf.add (graph, item_uri, self.ontology["posted_date"],            posted,       XSD.dateTime)
+        rdf.add (graph, item_uri, self.ontology["publisher_publication_date"], publisher_publication, XSD.dateTime)
+        rdf.add (graph, item_uri, self.ontology["submission_date"],        submission,   XSD.dateTime)
 
     def delete_associations (self, item_uuid, account_uuid, predicate):
         """Procedure to delete the list of PREDICATE of a dataset or collection."""
@@ -1697,14 +1701,14 @@ class SparqlInterface:
             account_uri = URIRef(rdf.uuid_to_uri (account_uuid, "account"))
             is_user_defined = True
 
-        rdf.add (graph, funding_uri, RDF.type,                    rdf.DJHT["Funding"], "uri")
-        rdf.add (graph, funding_uri, rdf.DJHT["id"],              funding_id)
-        rdf.add (graph, funding_uri, rdf.DJHT["title"],           title,           XSD.string)
-        rdf.add (graph, funding_uri, rdf.DJHT["grant_code"],      grant_code,      XSD.string)
-        rdf.add (graph, funding_uri, rdf.DJHT["funder_name"],     funder_name,     XSD.string)
-        rdf.add (graph, funding_uri, rdf.DJHT["is_user_defined"], is_user_defined)
-        rdf.add (graph, funding_uri, rdf.DJHT["url"],             url,             XSD.string)
-        rdf.add (graph, funding_uri, rdf.DJHT["created_by"],      account_uri,     "uri")
+        rdf.add (graph, funding_uri, RDF.type,                         self.ontology["Funding"], "uri")
+        rdf.add (graph, funding_uri, self.ontology["id"],              funding_id)
+        rdf.add (graph, funding_uri, self.ontology["title"],           title,           XSD.string)
+        rdf.add (graph, funding_uri, self.ontology["grant_code"],      grant_code,      XSD.string)
+        rdf.add (graph, funding_uri, self.ontology["funder_name"],     funder_name,     XSD.string)
+        rdf.add (graph, funding_uri, self.ontology["is_user_defined"], is_user_defined)
+        rdf.add (graph, funding_uri, self.ontology["url"],             url,             XSD.string)
+        rdf.add (graph, funding_uri, self.ontology["created_by"],      account_uri,     "uri")
 
         if self.add_triples_from_graph (graph):
             return rdf.uri_to_uuid (funding_uri)
@@ -1725,7 +1729,7 @@ class SparqlInterface:
 
         query = self.__query_from_template ("delete_item_from_list", {
             "subject":   subject,
-            "predicate": rdf.DJHT[predicate].n3(),
+            "predicate": self.ontology[predicate].n3(),
             "first":     first
         })
 
@@ -1739,7 +1743,7 @@ class SparqlInterface:
 
         query = self.__query_from_template ("delete_items_all_from_list", {
             "subject":   subject,
-            "predicate": rdf.DJHT[predicate].n3(),
+            "predicate": self.ontology[predicate].n3(),
         })
 
         return self.__run_logged_query (query)
@@ -1785,23 +1789,23 @@ class SparqlInterface:
         graph    = Graph()
         file_uri = rdf.unique_node ("file")
 
-        rdf.add (graph, file_uri, RDF.type,                  rdf.DJHT["File"], "uri")
-        rdf.add (graph, file_uri, rdf.DJHT["id"],            file_id)
-        rdf.add (graph, file_uri, rdf.DJHT["name"],          name,          XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["size"],          size)
-        rdf.add (graph, file_uri, rdf.DJHT["is_link_only"],  is_link_only)
-        rdf.add (graph, file_uri, rdf.DJHT["download_url"],  download_url,  XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["supplied_md5"],  supplied_md5,  XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["computed_md5"],  computed_md5,  XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["viewer_type"],   viewer_type,   XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["preview_state"], preview_state, XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["status"],        status,        XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["upload_url"],    upload_url,    XSD.string)
-        rdf.add (graph, file_uri, rdf.DJHT["upload_token"],  upload_token,  XSD.string)
+        rdf.add (graph, file_uri, RDF.type,                       self.ontology["File"], "uri")
+        rdf.add (graph, file_uri, self.ontology["id"],            file_id)
+        rdf.add (graph, file_uri, self.ontology["name"],          name,          XSD.string)
+        rdf.add (graph, file_uri, self.ontology["size"],          size)
+        rdf.add (graph, file_uri, self.ontology["is_link_only"],  is_link_only)
+        rdf.add (graph, file_uri, self.ontology["download_url"],  download_url,  XSD.string)
+        rdf.add (graph, file_uri, self.ontology["supplied_md5"],  supplied_md5,  XSD.string)
+        rdf.add (graph, file_uri, self.ontology["computed_md5"],  computed_md5,  XSD.string)
+        rdf.add (graph, file_uri, self.ontology["viewer_type"],   viewer_type,   XSD.string)
+        rdf.add (graph, file_uri, self.ontology["preview_state"], preview_state, XSD.string)
+        rdf.add (graph, file_uri, self.ontology["status"],        status,        XSD.string)
+        rdf.add (graph, file_uri, self.ontology["upload_url"],    upload_url,    XSD.string)
+        rdf.add (graph, file_uri, self.ontology["upload_token"],  upload_token,  XSD.string)
 
         current_time = datetime.strftime (datetime.now(), datetime_format)
-        rdf.add (graph, file_uri, rdf.DJHT["created_date"],  current_time,  XSD.dateTime)
-        rdf.add (graph, file_uri, rdf.DJHT["modified_date"], current_time,  XSD.dateTime)
+        rdf.add (graph, file_uri, self.ontology["created_date"],  current_time,  XSD.dateTime)
+        rdf.add (graph, file_uri, self.ontology["modified_date"], current_time,  XSD.dateTime)
 
         self.cache.invalidate_by_prefix ("datasets")
         if account_uuid:
@@ -1871,11 +1875,11 @@ class SparqlInterface:
         type_suffix = f"LogEntry{event_type[0].upper()}{event_type[1:]}"
         item_uri    = rdf.uuid_to_uri (item_uuid, "container")
 
-        rdf.add (graph, entry_uri, RDF.type, rdf.DJHT["LogEntry"], "uri")
-        rdf.add (graph, entry_uri, rdf.DJHT["ip_address"], ip_address, XSD.string)
-        rdf.add (graph, entry_uri, rdf.DJHT["created"], created_date, XSD.dateTime)
-        rdf.add (graph, entry_uri, rdf.DJHT[f"{item_type}"], item_uri, "url")
-        rdf.add (graph, entry_uri, rdf.DJHT["event_type"], rdf.DJHT[f"{type_suffix}"], "url")
+        rdf.add (graph, entry_uri, RDF.type, self.ontology["LogEntry"], "uri")
+        rdf.add (graph, entry_uri, self.ontology["ip_address"], ip_address, XSD.string)
+        rdf.add (graph, entry_uri, self.ontology["created"], created_date, XSD.dateTime)
+        rdf.add (graph, entry_uri, self.ontology[f"{item_type}"], item_uri, "url")
+        rdf.add (graph, entry_uri, self.ontology["event_type"], self.ontology[f"{type_suffix}"], "url")
         if self.add_triples_from_graph (graph, config.delay_inserting_log_entries):
             return True
 
@@ -1889,16 +1893,16 @@ class SparqlInterface:
         account_uri = URIRef(rdf.uuid_to_uri(account_uuid, "account"))
         group_uri   = URIRef(rdf.uuid_to_uri(group_uuid, "group"))
 
-        rdf.add (graph, member_uri, RDF.type, rdf.DJHT["Member"], "uri")
-        rdf.add (graph, member_uri, rdf.DJHT["metadata_read"], True, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["metadata_edit"], True, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["metadata_remove"], is_supervisor, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["data_read"], True, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["data_edit"], True, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["data_remove"], is_supervisor, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["is_supervisor"], is_supervisor, XSD.boolean)
-        rdf.add (graph, member_uri, rdf.DJHT["account"], account_uri, "uri")
-        rdf.add (graph, account_uri, rdf.DJHT["group"], group_uri, "uri")
+        rdf.add (graph, member_uri, RDF.type, self.ontology["Member"], "uri")
+        rdf.add (graph, member_uri, self.ontology["metadata_read"], True, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["metadata_edit"], True, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["metadata_remove"], is_supervisor, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["data_read"], True, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["data_edit"], True, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["data_remove"], is_supervisor, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["is_supervisor"], is_supervisor, XSD.boolean)
+        rdf.add (graph, member_uri, self.ontology["account"], account_uri, "uri")
+        rdf.add (graph, account_uri, self.ontology["group"], group_uri, "uri")
 
         existing_members = self.members (group_uuid)
         if not existing_members:
@@ -1922,13 +1926,13 @@ class SparqlInterface:
         graph = Graph()
         group_uri = rdf.unique_node("group")
 
-        rdf.add(graph, group_uri, rdf.DJHT["association_criteria"], domain, XSD.string)
-        rdf.add(graph, group_uri, rdf.DJHT["name"], name, XSD.string)
-        rdf.add(graph, group_uri, RDF.type, rdf.DJHT["InstitutionGroup"], "uri")
-        rdf.add(graph, group_uri, rdf.DJHT["is_inferred"], is_inferred, XSD.boolean)
-        rdf.add(graph, group_uri, rdf.DJHT["is_featured"], is_featured, XSD.boolean)
-        rdf.add(graph, group_uri, rdf.DJHT["id"], group_id, XSD.integer)
-        rdf.add(graph, group_uri, rdf.DJHT["parent_id"], parent_id, XSD.integer)
+        rdf.add(graph, group_uri, self.ontology["association_criteria"], domain, XSD.string)
+        rdf.add(graph, group_uri, self.ontology["name"], name, XSD.string)
+        rdf.add(graph, group_uri, RDF.type, self.ontology["InstitutionGroup"], "uri")
+        rdf.add(graph, group_uri, self.ontology["is_inferred"], is_inferred, XSD.boolean)
+        rdf.add(graph, group_uri, self.ontology["is_featured"], is_featured, XSD.boolean)
+        rdf.add(graph, group_uri, self.ontology["id"], group_id, XSD.integer)
+        rdf.add(graph, group_uri, self.ontology["parent_id"], parent_id, XSD.integer)
 
         if self.add_triples_from_graph (graph):
             return rdf.uri_to_uuid(group_uri)
@@ -1982,16 +1986,16 @@ class SparqlInterface:
         graph = Graph()
         collaborator_uri = rdf.unique_node("collaborator")
 
-        rdf.add (graph, collaborator_uri, RDF.type, rdf.DJHT["Collaborator"], "uri")
-        rdf.add (graph, collaborator_uri, rdf.DJHT["metadata_read"], metadata_read, XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["metadata_edit"], metadata_edit, XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["metadata_remove"], metadata_remove, XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["data_read"],     data_read,     XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["data_edit"],     data_edit,     XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["data_remove"],   data_remove,   XSD.boolean)
-        rdf.add (graph, collaborator_uri, rdf.DJHT["item"],          rdf.uuid_to_uri(dataset_uuid, "dataset"), "uri")
-        rdf.add (graph, collaborator_uri, rdf.DJHT["account"],       rdf.uuid_to_uri(collaborator_uuid, "account"), "uri")
-        rdf.add (graph, collaborator_uri, rdf.DJHT["added_by"],      rdf.uuid_to_uri(account_uuid, "account"), "uri")
+        rdf.add (graph, collaborator_uri, RDF.type, self.ontology["Collaborator"], "uri")
+        rdf.add (graph, collaborator_uri, self.ontology["metadata_read"], metadata_read, XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["metadata_edit"], metadata_edit, XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["metadata_remove"], metadata_remove, XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["data_read"],     data_read,     XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["data_edit"],     data_edit,     XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["data_remove"],   data_remove,   XSD.boolean)
+        rdf.add (graph, collaborator_uri, self.ontology["item"],          rdf.uuid_to_uri(dataset_uuid, "dataset"), "uri")
+        rdf.add (graph, collaborator_uri, self.ontology["account"],       rdf.uuid_to_uri(collaborator_uuid, "account"), "uri")
+        rdf.add (graph, collaborator_uri, self.ontology["added_by"],      rdf.uuid_to_uri(account_uuid, "account"), "uri")
 
         if self.add_triples_from_graph (graph):
             existing_collaborators = self.collaborators (dataset_uuid, include_inferred=False)
@@ -2053,14 +2057,14 @@ class SparqlInterface:
         graph    = Graph()
         link_uri = rdf.unique_node ("private_link")
 
-        rdf.add (graph, link_uri, RDF.type, rdf.DJHT["PrivateLink"], "uri")
-        rdf.add (graph, link_uri, rdf.DJHT["id"],           id_string,    XSD.string)
-        rdf.add (graph, link_uri, rdf.DJHT["read_only"],    read_only)
-        rdf.add (graph, link_uri, rdf.DJHT["is_active"],    is_active)
-        rdf.add (graph, link_uri, rdf.DJHT["expires_date"], expires_date, XSD.dateTime)
-        rdf.add (graph, link_uri, rdf.DJHT["whom"], whom,  XSD.string)
-        rdf.add (graph, link_uri, rdf.DJHT["anonymize"], anonymize,  XSD.boolean)
-        rdf.add (graph, link_uri, rdf.DJHT["purpose"], purpose,  XSD.string)
+        rdf.add (graph, link_uri, RDF.type, self.ontology["PrivateLink"], "uri")
+        rdf.add (graph, link_uri, self.ontology["id"],           id_string,    XSD.string)
+        rdf.add (graph, link_uri, self.ontology["read_only"],    read_only)
+        rdf.add (graph, link_uri, self.ontology["is_active"],    is_active)
+        rdf.add (graph, link_uri, self.ontology["expires_date"], expires_date, XSD.dateTime)
+        rdf.add (graph, link_uri, self.ontology["whom"], whom,  XSD.string)
+        rdf.add (graph, link_uri, self.ontology["anonymize"], anonymize,  XSD.boolean)
+        rdf.add (graph, link_uri, self.ontology["purpose"], purpose,  XSD.string)
 
         if self.add_triples_from_graph (graph):
             item_uri       = rdf.uuid_to_uri (item_uuid, item_type)
@@ -2120,7 +2124,7 @@ class SparqlInterface:
                               name, item_uri)
             return False
 
-        rdf.add (graph, item_uri, rdf.DJHT[name], value, XSD.string)
+        rdf.add (graph, item_uri, self.ontology[name], value, XSD.string)
         return True
 
     def dataset_is_under_review (self, dataset_uuid):
@@ -2268,7 +2272,7 @@ class SparqlInterface:
         graph         = Graph()
         container_uri = URIRef(rdf.uuid_to_uri (container_uuid, "container"))
         draft_uri     = URIRef(rdf.uuid_to_uri (draft_uuid, "collection"))
-        rdf.add (graph, container_uri, rdf.DJHT["draft"], draft_uri, "uri")
+        rdf.add (graph, container_uri, self.ontology["draft"], draft_uri, "uri")
 
         if self.add_triples_from_graph (graph):
             return draft_uuid
@@ -2427,7 +2431,7 @@ class SparqlInterface:
         graph         = Graph()
         container_uri = URIRef(rdf.uuid_to_uri (container_uuid, "container"))
         draft_uri     = URIRef(rdf.uuid_to_uri (draft_uuid, "dataset"))
-        rdf.add (graph, container_uri, rdf.DJHT["draft"], draft_uri, "uri")
+        rdf.add (graph, container_uri, self.ontology["draft"], draft_uri, "uri")
 
         if self.add_triples_from_graph (graph):
             return draft_uuid
@@ -2574,7 +2578,7 @@ class SparqlInterface:
         """Associate a dataset to a group."""
 
         graph = Graph()
-        rdf.add (graph, URIRef(dataset_uri), rdf.DJHT["association_criteria"], association_criteria, XSD.string)
+        rdf.add (graph, URIRef(dataset_uri), self.ontology["association_criteria"], association_criteria, XSD.string)
         if self.add_triples_from_graph (graph):
             self.cache.invalidate_by_prefix (f"datasets_{account_uuid}")
             self.log.info ("Associated <%s> to group '%s'", dataset_uri, association_criteria)
@@ -2779,38 +2783,38 @@ class SparqlInterface:
 
         doi = conv.normalize_doi (doi)
         resource_doi = conv.normalize_doi (resource_doi)
-        rdf.add (graph, uri, RDF.type,                   rdf.DJHT["Collection"], "uri")
-        rdf.add (graph, uri, rdf.DJHT["title"],          title,          XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["container"],      container,      "uri")
-        rdf.add (graph, uri, rdf.DJHT["collection_id"],  collection_id)
-        rdf.add (graph, uri, rdf.DJHT["account"],        account_uri)
-        rdf.add (graph, uri, rdf.DJHT["description"],    description,    XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["derived_from"],   derived_from,   XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["funding"],        funding,        XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["doi"],            doi,            XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["handle"],         handle,         XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["url"],            url,            XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["language"],       language,       XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_id"],    resource_id,    XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_doi"],   resource_doi,   XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_link"],  resource_link,  XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_title"], resource_title, XSD.string)
-        rdf.add (graph, uri, rdf.DJHT["resource_version"], resource_version)
-        rdf.add (graph, uri, rdf.DJHT["group_id"],       group_id)
-        rdf.add (graph, uri, rdf.DJHT["publisher"],      publisher,      XSD.string)
+        rdf.add (graph, uri, RDF.type,                        self.ontology["Collection"], "uri")
+        rdf.add (graph, uri, self.ontology["title"],          title,          XSD.string)
+        rdf.add (graph, uri, self.ontology["container"],      container,      "uri")
+        rdf.add (graph, uri, self.ontology["collection_id"],  collection_id)
+        rdf.add (graph, uri, self.ontology["account"],        account_uri)
+        rdf.add (graph, uri, self.ontology["description"],    description,    XSD.string)
+        rdf.add (graph, uri, self.ontology["derived_from"],   derived_from,   XSD.string)
+        rdf.add (graph, uri, self.ontology["funding"],        funding,        XSD.string)
+        rdf.add (graph, uri, self.ontology["doi"],            doi,            XSD.string)
+        rdf.add (graph, uri, self.ontology["handle"],         handle,         XSD.string)
+        rdf.add (graph, uri, self.ontology["url"],            url,            XSD.string)
+        rdf.add (graph, uri, self.ontology["language"],       language,       XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_id"],    resource_id,    XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_doi"],   resource_doi,   XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_link"],  resource_link,  XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_title"], resource_title, XSD.string)
+        rdf.add (graph, uri, self.ontology["resource_version"], resource_version)
+        rdf.add (graph, uri, self.ontology["group_id"],       group_id)
+        rdf.add (graph, uri, self.ontology["publisher"],      publisher,      XSD.string)
 
         current_time = datetime.strftime (datetime.now(), datetime_format)
-        rdf.add (graph, uri, rdf.DJHT["created_date"],   current_time, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["modified_date"],  current_time, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["is_public"],      is_public)
-        rdf.add (graph, uri, rdf.DJHT["is_active"],      is_active)
-        rdf.add (graph, uri, rdf.DJHT["is_latest"],      is_latest)
-        rdf.add (graph, uri, rdf.DJHT["is_editable"],    is_editable)
-        rdf.add (graph, uri, rdf.DJHT["version"],        version)
+        rdf.add (graph, uri, self.ontology["created_date"],   current_time, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["modified_date"],  current_time, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["is_public"],      is_public)
+        rdf.add (graph, uri, self.ontology["is_active"],      is_active)
+        rdf.add (graph, uri, self.ontology["is_latest"],      is_latest)
+        rdf.add (graph, uri, self.ontology["is_editable"],    is_editable)
+        rdf.add (graph, uri, self.ontology["version"],        version)
 
         # Add the collection to its container.
-        rdf.add (graph, container, rdf.DJHT["draft"],    uri, "uri")
-        rdf.add (graph, container, rdf.DJHT["account"],  account_uri, "uri")
+        rdf.add (graph, container, self.ontology["draft"],    uri, "uri")
+        rdf.add (graph, container, self.ontology["account"],  account_uri, "uri")
 
         if self.add_triples_from_graph (graph):
             container_uuid = rdf.uri_to_uuid (container)
@@ -3063,18 +3067,18 @@ class SparqlInterface:
 
         status_uri = None
         if status is not None:
-            status_uri = rdf.DJHT["Review" + status.capitalize()]
+            status_uri = self.ontology["Review" + status.capitalize()]
 
         if assigned_to is not None:
             assigned_to = rdf.uuid_to_uri (assigned_to, "account")
 
-        rdf.add (graph, uri, RDF.type,                   rdf.DJHT["Review"], "uri")
-        rdf.add (graph, uri, rdf.DJHT["dataset"],        dataset_uri, "uri")
-        rdf.add (graph, uri, rdf.DJHT["request_date"],   request_date,  XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["reminder_date"],  reminder_date, XSD.dateTime)
-        rdf.add (graph, uri, rdf.DJHT["assigned_to"],    assigned_to,   "uri")
-        rdf.add (graph, uri, rdf.DJHT["status"],         status_uri,    "uri")
-        rdf.add (graph, dataset_uri, rdf.DJHT["is_under_review"], True, XSD.boolean)
+        rdf.add (graph, uri, RDF.type,                        self.ontology["Review"], "uri")
+        rdf.add (graph, uri, self.ontology["dataset"],        dataset_uri, "uri")
+        rdf.add (graph, uri, self.ontology["request_date"],   request_date,  XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["reminder_date"],  reminder_date, XSD.dateTime)
+        rdf.add (graph, uri, self.ontology["assigned_to"],    assigned_to,   "uri")
+        rdf.add (graph, uri, self.ontology["status"],         status_uri,    "uri")
+        rdf.add (graph, dataset_uri, self.ontology["is_under_review"], True, XSD.boolean)
 
         if self.add_triples_from_graph (graph):
             self.cache.invalidate_by_prefix ("reviews")
@@ -3338,23 +3342,23 @@ class SparqlInterface:
         link_uri     = rdf.unique_node ("session")
         account_uri  = URIRef(rdf.uuid_to_uri (account_uuid, "account"))
 
-        rdf.add (graph, link_uri, RDF.type, rdf.DJHT["Session"], "uri")
-        rdf.add (graph, link_uri, rdf.DJHT["account"],      account_uri, "uri")
-        rdf.add (graph, link_uri, rdf.DJHT["created_date"], current_time, XSD.dateTime)
-        rdf.add (graph, link_uri, rdf.DJHT["name"],         name,         XSD.string)
-        rdf.add (graph, link_uri, rdf.DJHT["token"],        token,        XSD.string)
-        rdf.add (graph, link_uri, rdf.DJHT["editable"],     editable,     XSD.boolean)
+        rdf.add (graph, link_uri, RDF.type, self.ontology["Session"], "uri")
+        rdf.add (graph, link_uri, self.ontology["account"],      account_uri, "uri")
+        rdf.add (graph, link_uri, self.ontology["created_date"], current_time, XSD.dateTime)
+        rdf.add (graph, link_uri, self.ontology["name"],         name,         XSD.string)
+        rdf.add (graph, link_uri, self.ontology["token"],        token,        XSD.string)
+        rdf.add (graph, link_uri, self.ontology["editable"],     editable,     XSD.boolean)
 
         mfa_token = None
         try:
             if config.privileges[account["email"].lower()]["needs_2fa"] and not override_mfa:
                 mfa_token = secrets.randbelow (1000000)
-                rdf.add (graph, link_uri, rdf.DJHT["mfa_token"], mfa_token, XSD.integer)
-                rdf.add (graph, link_uri, rdf.DJHT["mfa_tries"], 0,         XSD.integer)
+                rdf.add (graph, link_uri, self.ontology["mfa_token"], mfa_token, XSD.integer)
+                rdf.add (graph, link_uri, self.ontology["mfa_tries"], 0,         XSD.integer)
         except KeyError:
             pass
 
-        rdf.add (graph, link_uri, rdf.DJHT["active"], (mfa_token is None), XSD.boolean)
+        rdf.add (graph, link_uri, self.ontology["active"], (mfa_token is None), XSD.boolean)
 
         if self.add_triples_from_graph (graph):
             return token, mfa_token, rdf.uri_to_uuid (link_uri)
@@ -3562,13 +3566,13 @@ class SparqlInterface:
     def mark_state_graph_as_initialized (self):
         """Inserts the triplet that marks the graph as initialized."""
         query = (f'INSERT {{ GRAPH <{config.state_graph}> {{ <this> '
-                 f'<{rdf.DJHT["initialized"]}> "true"^^<{XSD.boolean}> }} }}')
+                 f'<{self.ontology["initialized"]}> "true"^^<{XSD.boolean}> }} }}')
         return self.__run_query (query)
 
     def state_graph_is_initialized (self):
         """"Returns True of the state-graph is already initialized."""
         query = (f'ASK {{ GRAPH <{config.state_graph}> {{ <this> '
-                 f'<{rdf.DJHT["initialized"]}> "true"^^<{XSD.boolean}> }} }}')
+                 f'<{self.ontology["initialized"]}> "true"^^<{XSD.boolean}> }} }}')
         return self.__run_query (query)
 
     def add_triples_from_graph (self, graph, only_log_query=False):
@@ -3688,34 +3692,34 @@ class SparqlInterface:
         license_uri  = URIRef (record["url"])
 
         ## Insert the license if it isn't in the graph.
-        if (license_uri, RDF.type, rdf.DJHT["License"]) not in store:
+        if (license_uri, RDF.type, self.ontology["License"]) not in store:
             license_name = conv.value_or_none (record,"name")
             license_type = conv.value_or_none (record,"type")
             license_id   = conv.value_or_none (record,"value")
             license_spdx = conv.value_or_none (record, "spdx")
-            rdf.add (store, license_uri, RDF.type, rdf.DJHT["License"], "url")
-            rdf.add (store, license_uri, rdf.DJHT["name"], license_name, XSD.string)
-            rdf.add (store, license_uri, rdf.DJHT["id"], license_id, XSD.integer)
+            rdf.add (store, license_uri, RDF.type, self.ontology["License"], "url")
+            rdf.add (store, license_uri, self.ontology["name"], license_name, XSD.string)
+            rdf.add (store, license_uri, self.ontology["id"], license_id, XSD.integer)
 
             if license_spdx is not None:
-                rdf.add (store, license_uri, rdf.DJHT["spdx"], license_spdx, "url")
+                rdf.add (store, license_uri, self.ontology["spdx"], license_spdx, "url")
 
             license_type_uri = None
             if license_type == "software":
-                license_type_uri = rdf.DJHT["SoftwareLicense"]
+                license_type_uri = self.ontology["SoftwareLicense"]
             elif license_type == "hardware":
-                license_type_uri = rdf.DJHT["HardwareLicense"]
+                license_type_uri = self.ontology["HardwareLicense"]
             elif license_type == "data":
-                license_type_uri = rdf.DJHT["DataLicense"]
+                license_type_uri = self.ontology["DataLicense"]
             elif license_type == "legacy":
-                license_type_uri = rdf.DJHT["LegacyLicense"]
+                license_type_uri = self.ontology["LegacyLicense"]
 
-            rdf.add (store, license_uri, rdf.DJHT["type"], license_type_uri, "url")
+            rdf.add (store, license_uri, self.ontology["type"], license_type_uri, "url")
             rdf.add (store, license_type_uri, RDFS.label,  license_type, XSD.string)
 
         ## Insert the link between URI and the license.
         if uri is not None:
-            rdf.add (store, uri, rdf.DJHT["license"], license_uri, "url")
+            rdf.add (store, uri, self.ontology["license"], license_uri, "url")
 
         return True
 
@@ -3732,8 +3736,8 @@ class SparqlInterface:
 
         try:
             query = ("SELECT ?uri WHERE { "
-                     f"?uri <{str(RDF.type)}> <{str(rdf.DJHT[record_type])}> ;"
-                     f" <{str(rdf.DJHT[identifier_name])}> {identifier} . }}")
+                     f"?uri <{str(RDF.type)}> <{str(self.ontology[record_type])}> ;"
+                     f" <{str(self.ontology[identifier_name])}> {identifier} . }}")
 
             results = store.query (query)
             return results.bindings[0]["uri"]
@@ -3750,13 +3754,13 @@ class SparqlInterface:
             return uri
 
         uri = rdf.unique_node ("category")
-        rdf.add (store, uri, RDF.type, rdf.DJHT["Category"], "url")
-        rdf.add (store, uri, rdf.DJHT["id"], category_id, XSD.integer)
-        rdf.add (store, uri, rdf.DJHT["title"],       conv.value_or (record, "title", None),       XSD.string)
-        rdf.add (store, uri, rdf.DJHT["parent_id"],   conv.value_or (record, "parent_id", None),   XSD.integer)
-        rdf.add (store, uri, rdf.DJHT["source_id"],   conv.value_or (record, "source_id", None),   XSD.integer)
-        rdf.add (store, uri, rdf.DJHT["taxonomy_id"], conv.value_or (record, "taxonomy_id", None), XSD.integer)
-        rdf.add (store, uri, rdf.DJHT["classification_code"], conv.value_or (record, "classification_code", None), XSD.string)
+        rdf.add (store, uri, RDF.type, self.ontology["Category"], "url")
+        rdf.add (store, uri, self.ontology["id"], category_id, XSD.integer)
+        rdf.add (store, uri, self.ontology["title"],       conv.value_or (record, "title", None),       XSD.string)
+        rdf.add (store, uri, self.ontology["parent_id"],   conv.value_or (record, "parent_id", None),   XSD.integer)
+        rdf.add (store, uri, self.ontology["source_id"],   conv.value_or (record, "source_id", None),   XSD.integer)
+        rdf.add (store, uri, self.ontology["taxonomy_id"], conv.value_or (record, "taxonomy_id", None), XSD.integer)
+        rdf.add (store, uri, self.ontology["classification_code"], conv.value_or (record, "classification_code", None), XSD.string)
 
         return uri
 
@@ -3764,43 +3768,43 @@ class SparqlInterface:
         """Procedure to insert triplets to augment the state graph."""
 
         store = Graph()
-        rdf.add (store, rdf.DJHT["DatasetContainer"],    RDFS.subClassOf, rdf.DJHT["Container"], "url")
-        rdf.add (store, rdf.DJHT["CollectionContainer"], RDFS.subClassOf, rdf.DJHT["Container"], "url")
+        rdf.add (store, self.ontology["DatasetContainer"],    RDFS.subClassOf, self.ontology["Container"], "url")
+        rdf.add (store, self.ontology["CollectionContainer"], RDFS.subClassOf, self.ontology["Container"], "url")
 
         ## Review states from Figshare.
-        rdf.add (store, rdf.DJHT["ReviewApproved"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
-        rdf.add (store, rdf.DJHT["ReviewApproved"],      RDFS.label, "approved", XSD.string)
-        rdf.add (store, rdf.DJHT["ReviewRejected"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
-        rdf.add (store, rdf.DJHT["ReviewRejected"],      RDFS.label, "rejected", XSD.string)
-        rdf.add (store, rdf.DJHT["ReviewClosed"],        RDF.type,   rdf.DJHT["ReviewType"], "url")
-        rdf.add (store, rdf.DJHT["ReviewClosed"],        RDFS.label, "closed", XSD.string)
+        rdf.add (store, self.ontology["ReviewApproved"],      RDF.type,   self.ontology["ReviewType"], "url")
+        rdf.add (store, self.ontology["ReviewApproved"],      RDFS.label, "approved", XSD.string)
+        rdf.add (store, self.ontology["ReviewRejected"],      RDF.type,   self.ontology["ReviewType"], "url")
+        rdf.add (store, self.ontology["ReviewRejected"],      RDFS.label, "rejected", XSD.string)
+        rdf.add (store, self.ontology["ReviewClosed"],        RDF.type,   self.ontology["ReviewType"], "url")
+        rdf.add (store, self.ontology["ReviewClosed"],        RDFS.label, "closed", XSD.string)
 
         ## We split "pending" into "assigned" and "unassigned" in Djehuty.
-        rdf.add (store, rdf.DJHT["ReviewAssigned"],      RDF.type,   rdf.DJHT["ReviewType"], "url")
-        rdf.add (store, rdf.DJHT["ReviewAssigned"],      RDFS.label, "assigned", XSD.string)
-        rdf.add (store, rdf.DJHT["ReviewUnassigned"],    RDF.type,   rdf.DJHT["ReviewType"], "url")
-        rdf.add (store, rdf.DJHT["ReviewUnassigned"],    RDFS.label, "unassigned", XSD.string)
+        rdf.add (store, self.ontology["ReviewAssigned"],      RDF.type,   self.ontology["ReviewType"], "url")
+        rdf.add (store, self.ontology["ReviewAssigned"],      RDFS.label, "assigned", XSD.string)
+        rdf.add (store, self.ontology["ReviewUnassigned"],    RDF.type,   self.ontology["ReviewType"], "url")
+        rdf.add (store, self.ontology["ReviewUnassigned"],    RDFS.label, "unassigned", XSD.string)
 
         ## Log event types.
-        rdf.add (store, rdf.DJHT["LogEntryCite"],        RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryCite"],        RDFS.label, "cite", XSD.string)
-        rdf.add (store, rdf.DJHT["LogEntryDownload"],    RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryDownload"],    RDFS.label, "download", XSD.string)
-        rdf.add (store, rdf.DJHT["LogEntryGitDownload"], RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryGitDownload"], RDFS.label, "git_download", XSD.string)
-        rdf.add (store, rdf.DJHT["LogEntryShare"],       RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryShare"],       RDFS.label, "share", XSD.string)
-        rdf.add (store, rdf.DJHT["LogEntryView"],        RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryView"],        RDFS.label, "view", XSD.string)
-        rdf.add (store, rdf.DJHT["LogEntryPrivateView"], RDF.type,   rdf.DJHT["LogEntryType"], "url")
-        rdf.add (store, rdf.DJHT["LogEntryPrivateView"], RDFS.label, "private_view", XSD.string)
+        rdf.add (store, self.ontology["LogEntryCite"],        RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryCite"],        RDFS.label, "cite", XSD.string)
+        rdf.add (store, self.ontology["LogEntryDownload"],    RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryDownload"],    RDFS.label, "download", XSD.string)
+        rdf.add (store, self.ontology["LogEntryGitDownload"], RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryGitDownload"], RDFS.label, "git_download", XSD.string)
+        rdf.add (store, self.ontology["LogEntryShare"],       RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryShare"],       RDFS.label, "share", XSD.string)
+        rdf.add (store, self.ontology["LogEntryView"],        RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryView"],        RDFS.label, "view", XSD.string)
+        rdf.add (store, self.ontology["LogEntryPrivateView"], RDF.type,   self.ontology["LogEntryType"], "url")
+        rdf.add (store, self.ontology["LogEntryPrivateView"], RDFS.label, "private_view", XSD.string)
 
         languages = self.__load_resource_file("languages.json")
         for language in languages:
             uri = rdf.unique_node ("language")
-            rdf.add (store, uri, RDF.type, rdf.DJHT["Language"], "url")
+            rdf.add (store, uri, RDF.type, self.ontology["Language"], "url")
             rdf.add (store, uri, RDFS.label, language["name"], XSD.string)
-            rdf.add (store, uri, rdf.DJHT["shortcode"], language["shortcode"], XSD.string)
+            rdf.add (store, uri, self.ontology["shortcode"], language["shortcode"], XSD.string)
 
         licenses = self.__load_resource_file ("licenses.json")
         for license_record in licenses:
