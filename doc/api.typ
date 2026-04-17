@@ -101,7 +101,7 @@
 #let chapter_text = [
 = Application Programming Interface <api-section>
 
-The application programming interface (API) provided by `djehuty` allows
+The application programming interface (API) provided by `seshat` allows
 for automating tasks otherwise done through the user interface. In addition
 to automation, the API can also be used to gather additional information,
 like statistics on Git repositories.
@@ -113,7 +113,7 @@ browser while performing the desired action using the web user interface.
 == Published datasets
 
 The `v2` API was designed by Figshare#footnote(link("https://figshare.com")).
-`djehuty` implements a backward-compatible version of it, with the
+`seshat` implements a backward-compatible version of it, with the
 following differences:
 
 + The `id` property is superseded by the `uuid` property.
@@ -147,7 +147,7 @@ datasets:
 
 Example usage:
 #let output = ```bash
-curl "<djehutybaseurl>/v2/articles?limit=100&published_since=2024-07-25" | jq
+curl "<seshatbaseurl>/v2/articles?limit=100&published_since=2024-07-25" | jq
 ```
 #render_code_output(output)
 
@@ -160,16 +160,16 @@ Output of the example:
     "title": "Measurement data of a Low Speed Field Test of Tractor Se...",
     "doi": "10.4121/4f8a9423-83fc-4263-9bb7-2aa83d73865d.v1",
     "handle": null,
-    "url": "<djehutybaseurl>/v2/articles/4f8a...865d",
+    "url": "<seshatbaseurl>/v2/articles/4f8a...865d",
     "published_date": "2024-07-26T10:39:57",
     "thumb": null,
     "defined_type": 3,
     "defined_type_name": "dataset",
     "group_id": 28589,
-    "url_private_api": "<djehutybaseurl>/v2/account/articles/4f8a...865d",
-    "url_public_api": "<djehutybaseurl>/v2/articles/4f8a...865d",
-    "url_private_html": "<djehutybaseurl>/my/datasets/4f8a...865d/edit",
-    "url_public_html": "<djehutybaseurl>/datasets/4f8a...865d/1",
+    "url_private_api": "<seshatbaseurl>/v2/account/articles/4f8a...865d",
+    "url_public_api": "<seshatbaseurl>/v2/articles/4f8a...865d",
+    "url_private_html": "<seshatbaseurl>/my/datasets/4f8a...865d/edit",
+    "url_public_html": "<seshatbaseurl>/datasets/4f8a...865d/1",
     ...
   }
 ]
@@ -187,8 +187,8 @@ Example usage:
 #let output = ```bash
 curl --request POST \
      --header "Content-Type: application/json"\
-     --data '{ "search_for": "djehuty" }'\
-     <djehutybaseurl>/v2/articles/search | jq
+     --data '{ "search_for": "seshat" }'\
+     <seshatbaseurl>/v2/articles/search | jq
 ```
 #render_code_output(output)
 
@@ -201,16 +201,16 @@ Output of the example:
     "title": "Source code of the 4TU.ResearchData repository",
     "doi": "10.4121/342efadc-66f8-4e9b-9d27-da7b28b849d2.v1",
     "handle": null,
-    "url": "<djehutybaseurl>/v2/articles/342e...49d2",
+    "url": "<seshatbaseurl>/v2/articles/342e...49d2",
     "published_date": "2023-03-20T11:29:10",
     "thumb": null,
     "defined_type": 9,
     "defined_type_name": "software",
     "group_id": 28586,
-    "url_private_api": "<djehutybaseurl>/v2/account/articles/342e...49d2",
-    "url_public_api": "<djehutybaseurl>/v2/articles/342e...49d2",
-    "url_private_html": "<djehutybaseurl>/my/datasets/342e...49d2/edit",
-    "url_public_html": "<djehutybaseurl>/datasets/342e...49d2/1",
+    "url_private_api": "<seshatbaseurl>/v2/account/articles/342e...49d2",
+    "url_public_api": "<seshatbaseurl>/v2/articles/342e...49d2",
+    "url_private_html": "<seshatbaseurl>/my/datasets/342e...49d2/edit",
+    "url_public_html": "<seshatbaseurl>/datasets/342e...49d2/1",
     ...
   }
 ]
@@ -224,7 +224,7 @@ identified by `dataset-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2 | jq
+curl <seshatbaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2 | jq
 ```
 #render_code_output(output)
 
@@ -243,7 +243,7 @@ Output of the example:
   "uuid": "342efadc-66f8-4e9b-9d27-da7b28b849d2",
   "title": "Source code of the 4TU.ResearchData repository",
   "doi": "10.4121/342efadc-66f8-4e9b-9d27-da7b28b849d2.v1",
-  "url": "<djehutybaseurl>/v2/articles/342e...49d2",
+  "url": "<seshatbaseurl>/v2/articles/342e...49d2",
   "published_date": "2023-03-20T11:29:10",
   "timeline": ...,
   ...
@@ -258,7 +258,7 @@ identified by `dataset-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2/versions | jq
+curl <seshatbaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2/versions | jq
 ```
 #render_code_output(output)
 
@@ -267,7 +267,7 @@ Output of the example:
 [
   {
     "version": 1,
-    "url": "<djehutybaseurl>/v2/articles/342e...49d2/versions/1"
+    "url": "<seshatbaseurl>/v2/articles/342e...49d2/versions/1"
   }
 ]
 ```
@@ -280,7 +280,7 @@ This API endpoint can be used to retrieve detailed metadata of the version
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/342e...49d2/versions/1 | jq
+curl <seshatbaseurl>/v2/articles/342e...49d2/versions/1 | jq
 ```
 #render_code_output(output)
 
@@ -293,7 +293,7 @@ This API endpoint can be used to retrieve embargo information of the version
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/c127...8fd7/versions/2/embargo | jq
+curl <seshatbaseurl>/v2/articles/c127...8fd7/versions/2/embargo | jq
 ```
 #render_code_output(output)
 
@@ -316,7 +316,7 @@ the dataset identified by `dataset-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2/files
+curl <seshatbaseurl>/v2/articles/342efadc-66f8-4e9b-9d27-da7b28b849d2/files
 ```
 #render_code_output(output)
 
@@ -326,11 +326,11 @@ Output of the example:
   {
     "id": null,
     "uuid": "d3e1c325-7fa9-4cb9-884e-0b9cd2059292",
-    "name": "djehuty-0.0.1.tar.gz",
+    "name": "seshat-0.0.1.tar.gz",
     "size": 3713709,
     "is_link_only": false,
     "is_incomplete": false,
-    "download_url": "<djehutybaseurl>/file/342e...49d2/d3e1...9292",
+    "download_url": "<seshatbaseurl>/file/342e...49d2/d3e1...9292",
     "supplied_md5": null,
     "computed_md5": "910e9b0f79a0af548f59b3d8a56c3bf4"
   }
@@ -346,7 +346,7 @@ by `dataset-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/articles/342e...49d2/files/d3e1...9292 | jq
+curl <seshatbaseurl>/v2/articles/342e...49d2/files/d3e1...9292 | jq
 ```
 #render_code_output(output)
 
@@ -355,11 +355,11 @@ Output of the example:
 { /* Example output has been shortened. */
   "id": null,
   "uuid": "d3e1c325-7fa9-4cb9-884e-0b9cd2059292",
-  "name": "djehuty-0.0.1.tar.gz",
+  "name": "seshat-0.0.1.tar.gz",
   "size": 3713709,
   "is_link_only": false,
   "is_incomplete": false,
-  "download_url": "<djehutybaseurl>/file/342e...49d2/d3e1...9292",
+  "download_url": "<seshatbaseurl>/file/342e...49d2/d3e1...9292",
   "supplied_md5": null,
   "computed_md5": "910e9b0f79a0af548f59b3d8a56c3bf4"
 }
@@ -392,7 +392,7 @@ The following parameters can be used:
 
 Example usage:
 #let output = ```bash
-curl "<djehutybaseurl>/v2/collections?limit=100&published_since=2024-07-25" | jq
+curl "<seshatbaseurl>/v2/collections?limit=100&published_since=2024-07-25" | jq
 ```
 #render_code_output(output)
 
@@ -405,7 +405,7 @@ Output of the example:
     "title": "PhD research 'Untangling the complexity of local water ...'",
     "doi": "10.4121/0fe9ab80-6e6a-4087-a509-ce09dddfa3d9.v1",
     "handle": "",
-    "url": "<djehutybaseurl>/v2/collections/0fe9...fa3d9",
+    "url": "<seshatbaseurl>/v2/collections/0fe9...fa3d9",
     "timeline": {
       "posted": "2024-08-13T14:09:52",
       "firstOnline": "2024-08-13T14:09:51",
@@ -437,7 +437,7 @@ Example usage:
 curl --request POST \
      --header "Content-Type: application/json"\
      --data '{ "search_for": "wingtips" }'\
-     <djehutybaseurl>/v2/collections/search | jq
+     <seshatbaseurl>/v2/collections/search | jq
 ```
 #render_code_output(output)
 
@@ -450,7 +450,7 @@ Output of the example:
     "title": "Flared Folding Wingtips - TU Delft",
     "doi": "10.4121/c.6070238.v1",
     "handle": "",
-    "url": "<djehutybaseurl>/v2/collections/3dfc...2782",
+    "url": "<seshatbaseurl>/v2/collections/3dfc...2782",
     "timeline": {
       "posted": "2023-04-05T15:05:04",
       "firstOnline": "2023-04-05T15:05:03",
@@ -470,7 +470,7 @@ identified by `collection-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/collections/3dfc4ef2-7f79-4d33-81a7-9c6ae09a2782 | jq
+curl <seshatbaseurl>/v2/collections/3dfc4ef2-7f79-4d33-81a7-9c6ae09a2782 | jq
 ```
 #render_code_output(output)
 
@@ -502,7 +502,7 @@ identified by `collection-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/collections/3dfc4ef2-7f79-4d33-81a7-9c6ae09a2782/versions | jq
+curl <seshatbaseurl>/v2/collections/3dfc4ef2-7f79-4d33-81a7-9c6ae09a2782/versions | jq
 ```
 #render_code_output(output)
 
@@ -511,15 +511,15 @@ Output of the example:
 [ /* Example output has been shortened. */
   {
     "version": 3,
-    "url": "<djehutybaseurl>/v2/collections/3dfc...2782/versions/3"
+    "url": "<seshatbaseurl>/v2/collections/3dfc...2782/versions/3"
   },
   {
     "version": 2,
-    "url": "<djehutybaseurl>/v2/collections/3dfc...2782/versions/2"
+    "url": "<seshatbaseurl>/v2/collections/3dfc...2782/versions/2"
   },
   {
     "version": 1,
-    "url": "<djehutybaseurl>/v2/collections/3dfc...2782/versions/1"
+    "url": "<seshatbaseurl>/v2/collections/3dfc...2782/versions/1"
   }
 ]
 ```
@@ -532,7 +532,7 @@ This API endpoint can be used to retrieve detailed metadata of the version
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/collections/3dfc...2782/versions/2 | jq
+curl <seshatbaseurl>/v2/collections/3dfc...2782/versions/2 | jq
 ```
 #render_code_output(output)
 
@@ -565,7 +565,7 @@ collection identified by `collection-id`.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/collections/3dfc...2782/articles | jq
+curl <seshatbaseurl>/v2/collections/3dfc...2782/articles | jq
 ```
 #render_code_output(output)
 
@@ -618,7 +618,7 @@ of categories. This API endpoint provides those categories.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/categories | jq
+curl <seshatbaseurl>/v2/categories | jq
 ```
 #render_code_output(output)
 
@@ -659,7 +659,7 @@ this API endpoint.
 
 Example usage:
 #let output = ```bash
-curl <djehutybaseurl>/v2/licenses | jq
+curl <seshatbaseurl>/v2/licenses | jq
 ```
 #render_code_output(output)
 
@@ -700,7 +700,7 @@ identified with the API token.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account | jq
+     <seshatbaseurl>/v2/account | jq
 ```
 #render_code_output(output)
 
@@ -735,7 +735,7 @@ Example usage:
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "search": "John Doe" }' \
-     <djehutybaseurl>/v2/account/authors/search | jq
+     <seshatbaseurl>/v2/account/authors/search | jq
 ```
 #render_code_output(output)
 
@@ -765,7 +765,7 @@ by `author-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/authors/5c75...94aa | jq
+     <seshatbaseurl>/v2/account/authors/5c75...94aa | jq
 ```
 #render_code_output(output)
 
@@ -791,7 +791,7 @@ Example usage:
 #let output = ```bash
 curl --header "Accept: application/json" \
      --header "Authorization: token ${API_TOKEN}" \
-     <djehutybaseurl>/v2/account/institution/accounts | jq
+     <seshatbaseurl>/v2/account/institution/accounts | jq
 ```
 #render_code_output(output)
 
@@ -819,7 +819,7 @@ Example usage:
 #let output = ```bash
 curl --header "Accept: application/json" \
      --header "Authorization: token ${API_TOKEN}" \
-     <djehutybaseurl>/v2/account/institution/users/485a...fec0 | jq
+     <seshatbaseurl>/v2/account/institution/users/485a...fec0 | jq
 ```
 #render_code_output(output)
 
@@ -848,13 +848,13 @@ This endpoint can be used to pass as a URL to `git clone`.
 
 Example usage:
 #let output = ```bash
-git clone <djehutybaseurl>/v3/datasets/de82...20b7.git
+git clone <seshatbaseurl>/v3/datasets/de82...20b7.git
 ```
 #render_code_output(output)
 
 Output of the example:
 ```bash
-Cloning into 'djehuty'...
+Cloning into 'seshat'...
 remote: Enumerating objects: 24850, done.
 remote: Counting objects: 100% (4171/4171), done.
 remote: Compressing objects: 100% (599/599), done.
@@ -884,7 +884,7 @@ of bytes of files identified to belong to that programming language.
 Example usage:
 #let output = ```bash
 curl --header "Accept: application/json" \
-     <djehutybaseurl>/v3/datasets/de82...20b7.git/languages
+     <seshatbaseurl>/v3/datasets/de82...20b7.git/languages
 ```
 #render_code_output(output)
 
@@ -906,7 +906,7 @@ deletions and commits per week per author.
 Example usage:
 #let output = ```bash
 curl --header "Accept: application/json" \
-     <djehutybaseurl>/v3/datasets/de82...20b7.git/contributors
+     <seshatbaseurl>/v3/datasets/de82...20b7.git/contributors
 ```
 #render_code_output(output)
 
@@ -953,7 +953,7 @@ The following parameters can be used:
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles | jq
+     <seshatbaseurl>/v2/account/articles | jq
 ```
 #render_code_output(output)
 
@@ -965,7 +965,7 @@ Output of the example:
   "title": "Example draft dataset",
   "doi": null,
   "handle": null,
-  "url": "<djehutybaseurl>/v2/articles/6ddd7a31-8ad8-4c20-95a3-e68fe716fa42",
+  "url": "<seshatbaseurl>/v2/articles/6ddd7a31-8ad8-4c20-95a3-e68fe716fa42",
   "published_date": null,
   ...
 }
@@ -1008,14 +1008,14 @@ Example usage:
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "title": "Example dataset" }' \
-     <djehutybaseurl>/v2/account/articles | jq
+     <seshatbaseurl>/v2/account/articles | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 { /* The UUID in this example has been shortened. */
-  "location": "<djehutybaseurl>/v2/account/articles/d7b3...995b1",
+  "location": "<seshatbaseurl>/v2/account/articles/d7b3...995b1",
   "warnings": []
 }
 ```
@@ -1028,7 +1028,7 @@ This API endpoint lists details of the dataset identified by `dataset-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
 ```
 #render_code_output(output)
 
@@ -1083,10 +1083,10 @@ The following parameters can be used:
   [`metadata_reason`],               [`string`],   [Reason why the dataset is metadata-only.],
   [`eula`],                          [`string`],   [An End-User-License-Agreement.],
   [`defined_type`],                  [`string`],   [Either `software` to indicate the dataset is software or `dataset` to indicate the dataset is data (not software).],
-  [`git_repository_name`],           [`string`],   [Title of the Git repository (for software datasets only). This is a djehuty-extension to the original API specification.],
-  [`git_code_hosting_url`],          [`string`],   [Link to the code hosting platform (e.g. Gitlab, or any other). This is a djehuty-extension to the original API specification.],
-  [`agreed_to_deposit_agreement`],   [`boolean`],  [Set to `true` when you agree to the repository's deposit agreement. This is a djehuty-extension to the original API specification.],
-  [`agreed_to_publish`],             [`boolean`],  [Set to `true` to indicate the dataset may be published. This is a djehuty-extension to the original API specification.],
+  [`git_repository_name`],           [`string`],   [Title of the Git repository (for software datasets only). This is a seshat-extension to the original API specification.],
+  [`git_code_hosting_url`],          [`string`],   [Link to the code hosting platform (e.g. Gitlab, or any other). This is a seshat-extension to the original API specification.],
+  [`agreed_to_deposit_agreement`],   [`boolean`],  [Set to `true` when you agree to the repository's deposit agreement. This is a seshat-extension to the original API specification.],
+  [`agreed_to_publish`],             [`boolean`],  [Set to `true` to indicate the dataset may be published. This is a seshat-extension to the original API specification.],
   [`categories`],                    [list of `string`s], [#categoryDescription],
 )
 
@@ -1095,7 +1095,7 @@ Example usage:
 curl --verbose --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "title": "Updated title" }'
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
 ```
 #render_code_output(output)
 
@@ -1112,7 +1112,7 @@ Example usage:
 #let output = ```bash
 curl --verbose --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1
 ```
 #render_code_output(output)
 
@@ -1137,7 +1137,7 @@ The following URL parameters can be used:
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
 ```
 #render_code_output(output)
 
@@ -1176,12 +1176,12 @@ curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe Jr" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
 ```
 #render_code_output(output)
 
@@ -1204,16 +1204,16 @@ curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
 
 curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe Jr" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/authors
 
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1 | jq
 ```
 #render_code_output(output)
 
@@ -1239,7 +1239,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/authors/6175...0b618
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/authors/6175...0b618
 ```
 #render_code_output(output)
 
@@ -1255,7 +1255,7 @@ This API endpoint lists the funding of the dataset identified by `dataset-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...95b1/funding | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...95b1/funding | jq
 ```
 #render_code_output(output)
 
@@ -1290,7 +1290,7 @@ curl --verbose --request POST \
                              "grant_code": "EXA-001", \
                              "funder_name": "Example", \
                              "url": "https://example.exa" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/funding
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/funding
 ```
 #render_code_output(output)
 
@@ -1313,7 +1313,7 @@ curl --verbose --request PUT \
                              "grant_code": "EXA-001",
                              "funder_name": "Example",
                              "url": "https://example.exa" }]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/funding
+     <seshatbaseurl>/v2/account/articles/d7b3daa5-45e2-47b0-9910-0f7fa6a995b1/funding
 ```
 #render_code_output(output)
 
@@ -1330,7 +1330,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/funding/d50e...7500
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/funding/d50e...7500
 ```
 #render_code_output(output)
 
@@ -1348,7 +1348,7 @@ described at @sec-v2-categories.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...95b1/categories | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...95b1/categories | jq
 ```
 #render_code_output(output)
 
@@ -1389,7 +1389,7 @@ curl --verbose --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "categories": [13551, 13558]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/categories
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/categories
 ```
 #render_code_output(output)
 
@@ -1410,7 +1410,7 @@ curl --verbose --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "categories": ["dd4dbaaf-0610-4d8d-8b07-e1eeb32dd11c"]}' \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/categories
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/categories
 ```
 #render_code_output(output)
 
@@ -1428,7 +1428,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/categories/5c61...b668
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/categories/5c61...b668
 ```
 #render_code_output(output)
 
@@ -1444,7 +1444,7 @@ This API endpoint lists the embargo status of the dataset identified by `dataset
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/embargo | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/embargo | jq
 ```
 #render_code_output(output)
 
@@ -1469,7 +1469,7 @@ Example usage:
 #let output = ```bash
 curl --verbose --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3d...995b1/embargo
+     <seshatbaseurl>/v2/account/articles/d7b3d...995b1/embargo
 ```
 #render_code_output(output)
 
@@ -1486,7 +1486,7 @@ This API endpoint lists files associated with the dataset identified by
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/files | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/files | jq
 ```
 #render_code_output(output)
 
@@ -1500,7 +1500,7 @@ Output of the example:
     "size": 3696,
     "is_link_only": false,
     "is_incomplete": false,
-    "download_url": "<djehutybaseurl>/file/d7b3...995b1/d112...c017a",
+    "download_url": "<seshatbaseurl>/file/d7b3...995b1/d112...c017a",
     "supplied_md5": null,
     "computed_md5": "c5b36584a0d62d28e9bf9e6892d9ebac"
   }
@@ -1514,7 +1514,7 @@ Output of the example:
   fill: luma(230),
   inset: 8pt,
   radius: 4pt,
-  [*Note:* This API endpoint is a djehuty extension to the original specification.]
+  [*Note:* This API endpoint is a seshat extension to the original specification.]
 )
 
 This API endpoint can be used to delete all files associated with the
@@ -1526,7 +1526,7 @@ curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "remove_all": true }' \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/files
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/files
 ```
 #render_code_output(output)
 
@@ -1543,7 +1543,7 @@ This API endpoint lists files associated with the dataset identified by
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/files | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/files | jq
 ```
 #render_code_output(output)
 
@@ -1557,7 +1557,7 @@ Output of the example:
     "size": 3696,
     "is_link_only": false,
     "is_incomplete": false,
-    "download_url": "<djehutybaseurl>/file/d7b3...995b1/d112...c017a",
+    "download_url": "<seshatbaseurl>/file/d7b3...995b1/d112...c017a",
     "supplied_md5": null,
     "computed_md5": "c5b36584a0d62d28e9bf9e6892d9ebac"
   }
@@ -1573,7 +1573,7 @@ identified by `dataset-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/private_links | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/private_links | jq
 ```
 #render_code_output(output)
 
@@ -1611,14 +1611,14 @@ Example usage:
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "expires_date": "2032-01-01", "read_only": false }' \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/private_links | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/private_links | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 { /* Example output has been shortened. */
-  "location": "<djehutybaseurl>/private_datasets/8G2fk..."
+  "location": "<seshatbaseurl>/private_datasets/8G2fk..."
 }
 ```
 #render_code_output(output)
@@ -1631,7 +1631,7 @@ the dataset identified by `dataset-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk... | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk... | jq
 ```
 #render_code_output(output)
 
@@ -1666,14 +1666,14 @@ Example usage:
 curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "expires_date": "2034-01-01", "is_active": true }' \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk... | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk... | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 { /* Example output has been shortened. */
-  "location": "<djehutybaseurl>/private_datasets/8G2fk..."
+  "location": "<seshatbaseurl>/private_datasets/8G2fk..."
 }
 ```
 #render_code_output(output)
@@ -1687,7 +1687,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk...
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/private_links/8G2fk...
 ```
 #render_code_output(output)
 
@@ -1705,7 +1705,7 @@ Example usage:
 #let output = ```bash
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/reserve_doi | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/reserve_doi | jq
 ```
 #render_code_output(output)
 
@@ -1732,7 +1732,7 @@ Example usage:
 #let output = ```bash
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/articles/d7b3...995b1/publish | jq
+     <seshatbaseurl>/v2/account/articles/d7b3...995b1/publish | jq
 ```
 #render_code_output(output)
 
@@ -1744,7 +1744,7 @@ HTTP/1.1 201 CREATED
 Output of the example:
 #let output = ```json
 { /* Example output has been shortened. */
-  "location": "<djehutybaseurl>/review/published/9ce6...3976"
+  "location": "<seshatbaseurl>/review/published/9ce6...3976"
 }
 ```
 #render_code_output(output)
@@ -1769,7 +1769,7 @@ The following parameters can be used:
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections | jq
+     <seshatbaseurl>/v2/account/collections | jq
 ```
 #render_code_output(output)
 
@@ -1782,7 +1782,7 @@ Output of the example:
     "title": "Test collection",
     "doi": null,
     "handle": "",
-    "url": "<djehutybaseurl>/v2/collections/fc03...eb6d",
+    "url": "<seshatbaseurl>/v2/collections/fc03...eb6d",
     "published_date": null,
     ...
   }
@@ -1824,14 +1824,14 @@ Example usage:
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "title": "Example collection" }' \
-     <djehutybaseurl>/v2/account/collections | jq
+     <seshatbaseurl>/v2/account/collections | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 {
-  "location": "<djehutybaseurl>/v2/account/collections/08b7...cfa8",
+  "location": "<seshatbaseurl>/v2/account/collections/08b7...cfa8",
   "warnings": []
 }
 ```
@@ -1844,7 +1844,7 @@ This API endpoint lists details of the collection identified by `collection-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/08b7...cfa8 | jq
+     <seshatbaseurl>/v2/account/collections/08b7...cfa8 | jq
 ```
 #render_code_output(output)
 
@@ -1892,7 +1892,7 @@ curl --verbose --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "title": "Updated title" }' \
-     <djehutybaseurl>/v2/account/collections/08b702d6-98a0-4081-9445-5aeae720cfa8 | jq
+     <seshatbaseurl>/v2/account/collections/08b702d6-98a0-4081-9445-5aeae720cfa8 | jq
 ```
 #render_code_output(output)
 
@@ -1909,7 +1909,7 @@ Example usage:
 #let output = ```bash
 curl --verbose --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/08b702d6-98a0-4081-9445-5aeae720cfa8
+     <seshatbaseurl>/v2/account/collections/08b702d6-98a0-4081-9445-5aeae720cfa8
 ```
 #render_code_output(output)
 
@@ -1931,7 +1931,7 @@ curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "search_for": "Example" }' \
-     <djehutybaseurl>/v2/account/collections/search | jq
+     <seshatbaseurl>/v2/account/collections/search | jq
 ```
 #render_code_output(output)
 
@@ -1942,7 +1942,7 @@ Output of the example:
     "id": null,
     "uuid": "08b702d6-98a0-4081-9445-5aeae720cfa8",
     "title": "Example collection",
-    "url": <djehutybaseurl>/v2/collections/08b7...cfa8
+    "url": <seshatbaseurl>/v2/collections/08b7...cfa8
     ...
   }
 ]
@@ -1966,7 +1966,7 @@ The following URL parameters can be used:
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4 | jq
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4 | jq
 ```
 #render_code_output(output)
 
@@ -2005,12 +2005,12 @@ curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe" }]}' \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe Jr" }]}' \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
 ```
 #render_code_output(output)
 
@@ -2033,16 +2033,16 @@ curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe" }]}' \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
 
 curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "authors": [{ "name": "John Doe Jr" }]}' \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors
 
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors | jq
+     <seshatbaseurl>/v2/account/collections/3760c457-d4f3-4d58-8b94-af089a97a9b4/authors | jq
 ```
 #render_code_output(output)
 
@@ -2068,7 +2068,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d//authors/5c75...94aa
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d//authors/5c75...94aa
 ```
 #render_code_output(output)
 
@@ -2085,7 +2085,7 @@ the collection identified by `collection-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/categories | jq
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/categories | jq
 ```
 #render_code_output(output)
 
@@ -2117,7 +2117,7 @@ curl --verbose --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "categories": [13551, 13558]}' \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/categories
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/categories
 ```
 #render_code_output(output)
 
@@ -2138,7 +2138,7 @@ curl --verbose --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --header "Content-Type: application/json" \
      --data '{ "categories": ["dd4dbaaf-0610-4d8d-8b07-e1eeb32dd11c"]}' \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/categories
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/categories
 ```
 #render_code_output(output)
 
@@ -2156,7 +2156,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/categories/13558
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/categories/13558
 ```
 #render_code_output(output)
 
@@ -2173,7 +2173,7 @@ the collection identified by `collection-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/articles | jq
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/articles | jq
 ```
 #render_code_output(output)
 
@@ -2214,7 +2214,7 @@ curl --verbose --request POST \
      --header "Content-Type: application/json" \
      --header "Accept: application/json" \
      --data '{ "articles": ["8050...10db", 14309234 ]}' \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/articles
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/articles
 ```
 #render_code_output(output)
 
@@ -2235,7 +2235,7 @@ curl --verbose --request PUT \
      --header "Content-Type: application/json" \
      --header "Accept: application/json" \
      --data '{ "articles": [ 14309234 ]}' \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/articles
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/articles
 ```
 #render_code_output(output)
 
@@ -2253,7 +2253,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/articles/8050...10db
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/articles/8050...10db
 ```
 #render_code_output(output)
 
@@ -2270,7 +2270,7 @@ identified by `collection-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links | jq
+     <seshatbaseurl>/v2/account/collections/f000...3c16/private_links | jq
 ```
 #render_code_output(output)
 
@@ -2308,14 +2308,14 @@ Example usage:
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "expires_date": "2032-01-01", "read_only": false }' \
-     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links | jq
+     <seshatbaseurl>/v2/account/collections/f000...3c16/private_links | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 { /* Example output has been shortened. */
-  "location": "<djehutybaseurl>/private_collections/Jk2I..."
+  "location": "<seshatbaseurl>/private_collections/Jk2I..."
 }
 ```
 #render_code_output(output)
@@ -2328,7 +2328,7 @@ the collection identified by `collection-id`.
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
+     <seshatbaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
 ```
 #render_code_output(output)
 
@@ -2363,14 +2363,14 @@ Example usage:
 curl --request PUT \
      --header "Authorization: token YOUR_TOKEN_HERE" \
      --data '{ "expires_date": "2034-01-01", "is_active": true }' \
-     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
+     <seshatbaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I... | jq
 ```
 #render_code_output(output)
 
 Output of the example:
 #let output = ```json
 { /* Example output has been shortened. */
-  "location": "<djehutybaseurl>/private_collections/Jk2I..."
+  "location": "<seshatbaseurl>/private_collections/Jk2I..."
 }
 ```
 #render_code_output(output)
@@ -2384,7 +2384,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I...
+     <seshatbaseurl>/v2/account/collections/f000...3c16/private_links/Jk2I...
 ```
 #render_code_output(output)
 
@@ -2402,7 +2402,7 @@ Example usage:
 #let output = ```bash
 curl --request POST \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/reserve_doi | jq
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/reserve_doi | jq
 ```
 #render_code_output(output)
 
@@ -2420,7 +2420,7 @@ This API endpoint lists the funding of the collection identified by `collection-
 Example usage:
 #let output = ```bash
 curl --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/funding | jq
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/funding | jq
 ```
 #render_code_output(output)
 
@@ -2455,7 +2455,7 @@ curl --verbose --request POST \
                              "grant_code": "EXA-001", \
                              "funder_name": "Example", \
                              "url": "https://example.exa" }]}' \
-     <djehutybaseurl>/v2/account/collections/fc03a4c3-cba4-4a88-a8a6-eb38924eeb6d/funding
+     <seshatbaseurl>/v2/account/collections/fc03a4c3-cba4-4a88-a8a6-eb38924eeb6d/funding
 ```
 #render_code_output(output)
 
@@ -2478,7 +2478,7 @@ curl --verbose --request PUT \
                              "grant_code": "EXA-001",
                              "funder_name": "Example",
                              "url": "https://example.exa" }]}' \
-     <djehutybaseurl>/v2/account/collections/fc03a4c3-cba4-4a88-a8a6-eb38924eeb6d/funding
+     <seshatbaseurl>/v2/account/collections/fc03a4c3-cba4-4a88-a8a6-eb38924eeb6d/funding
 ```
 #render_code_output(output)
 
@@ -2495,7 +2495,7 @@ Example usage:
 #let output = ```bash
 curl --request DELETE \
      --header "Authorization: token YOUR_TOKEN_HERE" \
-     <djehutybaseurl>/v2/account/collections/fc03...eb6d/funding/9b43...e6cd
+     <seshatbaseurl>/v2/account/collections/fc03...eb6d/funding/9b43...e6cd
 ```
 #render_code_output(output)
 

@@ -1,10 +1,10 @@
 [Unit]
-Description=Djehuty data and software repository system.
+Description=Seshat data and software repository system.
 StartLimitIntervalSec=500
 StartLimitBurst=5
 
 [Service]
-ExecStart=/usr/bin/djehuty web --config-file=/etc/djehuty/djehuty.xml
+ExecStart=/usr/bin/seshat web --config-file=/etc/seshat/seshat.xml
 Environment=LC_ALL=en_US.utf8
 StandardOutput=journal
 StandardError=journal

@@ -3,7 +3,7 @@ requires        = ["setuptools>=42"]
 build-backend   = "setuptools.build_meta"
 
 [project]
-name            = "djehuty"
+name            = "seshat"
 version         = "@VERSION@"
 license         = "AGPL-3.0-or-later"
 authors         = [{ name="Roel Janssen", email="rrejanssen@gmail.com" }]
@@ -31,7 +31,7 @@ dependencies    = [
 "Bug Tracker"   = "@GIT_URL@/issues"
 
 [project.scripts]
-djehuty = "djehuty.ui:main"
+seshat = "seshat.ui:main"
 
 [tool.uv.dev-dependencies]
 dev = ["pylint"]

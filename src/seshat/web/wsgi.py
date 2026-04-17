@@ -28,23 +28,23 @@ from rdflib import URIRef
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 from PIL import Image, ImageSequence, UnidentifiedImageError
-from djehuty.web import (
+from seshat.web import (
     database, email_handler, formatter, locks, s3, validator, xml_formatter, zipfly
 )
-from djehuty.utils.convenience import (
+from seshat.utils.convenience import (
     decimal_coords, deduplicate_list, html_to_plaintext, is_opendap_url,
     landing_page_url, limit_memory_for_subprocess, make_citation, normalize_doi,
     parses_to_int, pretty_print_size, self_or_value_or_none, split_author_name,
     split_string, value_or, value_or_none, decode_html
 )
-from djehuty.utils.constants import datetime_format, iiif_supported_formats, filetypes_by_extension
-from djehuty.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
-from djehuty.web.config import config
+from seshat.utils.constants import datetime_format, iiif_supported_formats, filetypes_by_extension
+from seshat.utils.rdf import uuid_to_uri, uri_to_uuid, uris_from_records
+from seshat.web.config import config
 
-## Attempt to load the 'djehuty.config' module to find out the local path
+## Attempt to load the 'seshat.config' module to find out the local path
 ## for the documentation.
 try:
-    from djehuty.config import DOCUMENTATION_DIRECTORY
+    from seshat.config import DOCUMENTATION_DIRECTORY
 except (ImportError, ModuleNotFoundError):
     DOCUMENTATION_DIRECTORY=None
 
@@ -77,7 +77,7 @@ class WebServer:
         config.base_url         = f"http://{address}:{port}"
         self.db               = database.SparqlInterface()  # pylint: disable=invalid-name
         self.email            = email_handler.EmailInterface()
-        self.cookie_key       = "djehuty_session"
+        self.cookie_key       = "seshat_session"
         self.impersonator_cookie_key = f"impersonator_{self.cookie_key}"
         self.log_access          = self.log_access_directly
         self.log                 = logging.getLogger(__name__)
@@ -97,7 +97,7 @@ class WebServer:
             R("/ping",                                                           self.ping),
             R("/doc",                                                            self.ui_doc),
             R("/doc/",                                                           self.ui_doc),
-            R("/doc/djehuty.pdf",                                                self.ui_doc),
+            R("/doc/seshat.pdf",                                                self.ui_doc),
             R("/robots.txt",                                                     self.robots_txt),
             R("/theme/colors.css",                                               self.colors_css),
             R("/theme/loader.svg",                                               self.loader_svg),
@@ -2325,7 +2325,7 @@ class WebServer:
             if error_response is not None:
                 return error_response
 
-            # Pre-Djehuty datasets may not have a Git UUID. We therefore
+            # Pre-Seshat datasets may not have a Git UUID. We therefore
             # assign one when needed.
             if "git_uuid" not in dataset:
                 if not self.__add_or_update_git_uuid_for_dataset (dataset, account_uuid):
@@ -3420,11 +3420,11 @@ class WebServer:
                                                email = email,
                                                error_message = error.message)
 
-            subject = "Feedback for Djehuty"
+            subject = "Feedback for Seshat"
             if record["type"] == "bug":
-                subject = "Bug report for Djehuty"
+                subject = "Bug report for Seshat"
             elif record["type"] == "missing":
-                subject = "Missing feature report for Djehuty"
+                subject = "Missing feature report for Seshat"
 
             self.__send_templated_email (
                 addresses,
@@ -3474,7 +3474,7 @@ class WebServer:
                                        show_latest_datasets = config.show_latest_datasets)
 
     def ui_doc (self, request):
-        """Implements /doc, /doc/ and /doc/djehuty.pdf."""
+        """Implements /doc, /doc/ and /doc/seshat.pdf."""
 
         if DOCUMENTATION_DIRECTORY is None:
             return self.error_404 (request, "Local documentation directory cannot be found.")
@@ -3487,9 +3487,9 @@ class WebServer:
         mimetype = "text/html"
         documentation_file_path = f"{DOCUMENTATION_DIRECTORY}/index.html"
         expects_pdf = self.accepts_content_type (request, "application/pdf", strict=True)
-        if expects_pdf or request.path == "/doc/djehuty.pdf":
+        if expects_pdf or request.path == "/doc/seshat.pdf":
             mimetype = "application/pdf"
-            documentation_file_path = f"{DOCUMENTATION_DIRECTORY}/djehuty.pdf"
+            documentation_file_path = f"{DOCUMENTATION_DIRECTORY}/seshat.pdf"
         elif not self.accepts_html (request):
             return self.error_406 (["text/html", "application/pdf"])
 
@@ -4023,7 +4023,7 @@ class WebServer:
     def __filesystem_location (self, file_info):
         """Procedure to gather the filesystem location from file metadata."""
 
-        # There are two ways to configure storage in Djehuty. The historical
+        # There are two ways to configure storage in Seshat. The historical
         # way one can configure primary-storage-root and secondary-storage-root.
         # In the 'new way', one lists the storage locations in the 'storage'
         # configuration option.
@@ -4054,8 +4054,8 @@ class WebServer:
         # Use primary-storage-root and secondary-storage-root -- the historical
         # way of configuring storage.
 
-        ## The filesystem_location property was introduced in Djehuty.
-        ## It isn't set for files deposited before Djehuty went into production.
+        ## The filesystem_location property was introduced in Seshat.
+        ## It isn't set for files deposited before Seshat went into production.
         if "filesystem_location" in file_info and os.path.isfile (file_info["filesystem_location"]):
             file_path = file_info["filesystem_location"]
 
@@ -6997,7 +6997,7 @@ class WebServer:
         if error_response is not None:
             return None
 
-        # Pre-Djehuty datasets may not have a Git UUID. We therefore
+        # Pre-Seshat datasets may not have a Git UUID. We therefore
         # assign one when needed.
         if "git_uuid" not in dataset:
             if not self.__add_or_update_git_uuid_for_dataset (dataset, account_uuid):

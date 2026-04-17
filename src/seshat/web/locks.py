@@ -2,7 +2,7 @@
 
 from enum import Enum
 from threading import Lock
-from djehuty.web.config import config
+from seshat.web.config import config
 
 try:
     import uwsgi

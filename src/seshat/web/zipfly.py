@@ -2,7 +2,7 @@
 This module is a purpose-simplified version of the 'zipfly' package.  We
 recommend to use the full version: https://pypi.org/project/zipfly.
 
-See the license comment in 'src/djehuty/web/zipfly.py' for the licensing
+See the license comment in 'src/seshat/web/zipfly.py' for the licensing
 conditions of 'zipfly'.
 """
 

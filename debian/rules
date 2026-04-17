@@ -4,5 +4,5 @@
 
 override_dh_auto_install:
 	dh_auto_install ${@}
-	install -D debian/djehuty/usr/local/bin/djehuty debian/djehuty/usr/bin/djehuty
-	rm -r debian/djehuty/usr/local/bin
+	install -D debian/seshat/usr/local/bin/seshat debian/seshat/usr/bin/seshat
+	rm -r debian/seshat/usr/local/bin

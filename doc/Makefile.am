@@ -7,7 +7,7 @@ AUTOMAKE_OPTIONS        = subdir-objects
 SUBDIRS                 = .
 
 docdir                  = ${pkgdatadir}
-doc_NAME                = djehuty
+doc_NAME                = seshat
 doc_PDF                 = $(doc_NAME).pdf
 doc_HTML                = index.html
 doc_TYPST               = $(doc_NAME).typ
@@ -35,7 +35,7 @@ EXTRA_DIST              = $(doc_TYPST) $(doc_HTML) $(doc_PDF)      \
                           introduction.typ                         \
                           knowledge-graph.typ                      \
                           news.typ                                 \
-                          running-djehuty.typ                      \
+                          running-seshat.typ                       \
                           references.bib                           \
                           figures/account.svg                      \
                           figures/author.svg                       \

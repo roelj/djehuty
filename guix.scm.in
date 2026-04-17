@@ -29,9 +29,9 @@
              (guix download)
              (guix packages))
 
-(define djehuty
+(define seshat
   (package
-   (name "djehuty")
+   (name "seshat")
    (version "@VERSION@")
    (source (origin
             (method url-fetch)
@@ -61,4 +61,4 @@ and software repository.")
 
 ;; Evaluate to the above recipe, so that the development
 ;; environment has everything to start from scratch.
-djehuty
+seshat

@@ -1,4 +1,4 @@
-Name:        djehuty
+Name:        seshat
 Version:     @VERSION@
 Release:     1%{?dist}
 Summary:     Data and software repository system

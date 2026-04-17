@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<djehuty>
+<seshat>
   <maintenance-mode>0</maintenance-mode>
-  <site-name>Djehuty example instance</site-name>
+  <site-name>Seshat example instance</site-name>
   <site-shorttag>example-shorttag</site-shorttag>
-  <site-description>Djehuty example instance</site-description>
+  <site-description>Seshat example instance</site-description>
   <support-email-address>support@example.com</support-email-address>
   <!-- <restrict-depositing-to-domain>example.com</restrict-depositing-to-domain> -->
   <colors>
@@ -16,13 +16,13 @@
   </colors>
   <small-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">djehuty</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">seshat</a>.
       </p>
     </div>
   </small-footer>
   <large-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">djehuty</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">seshat</a>.
       </p>
     </div>
   </large-footer>
@@ -39,7 +39,7 @@
   <storage-root>./data</storage-root>
   <cache-root clear-on-start="1">./data/cache</cache-root>
   <live-reload>1</live-reload>
-  <!-- <log-file>/var/log/djehuty.log</log-file> -->
+  <!-- <log-file>/var/log/seshat.log</log-file> -->
   <debug-mode>1</debug-mode>
   <production>0</production>
   <show-portal-summary>1</show-portal-summary>
@@ -53,7 +53,7 @@
   <rdf-store>
     <sparql-uri>http://localhost:8890/sparql</sparql-uri>
     <sparql-update-uri>http://localhost:8890/sparql</sparql-update-uri>
-    <state-graph>djehuty://local</state-graph>
+    <state-graph>seshat://local</state-graph>
   </rdf-store>
   <datacite>
     <api-url>https://api.datacite.org</api-url>
@@ -121,4 +121,4 @@
     <group domain="tudelft.nl">50000000000</group>
     <account email="you@example.com">25000000000</account>
   </quotas>
-</djehuty>
+</seshat>

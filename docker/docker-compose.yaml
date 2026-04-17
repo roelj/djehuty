@@ -1,16 +1,16 @@
 version: '3'
 services:
-  djehuty:
+  seshat:
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
-    image: djehuty:24.6
-    command: '/bin/djehuty web -c /djehuty-config.xml'
+    image: seshat:24.6
+    command: '/bin/seshat web -c /seshat-config.xml'
     read_only: true
     volumes:
-      - /opt/djehuty/data/:/data/
-      - /opt/djehuty/djehuty-config.xml:/djehuty-config.xml
+      - /opt/seshat/data/:/data/
+      - /opt/seshat/seshat-config.xml:/seshat-config.xml
     restart: always
     ports:
       - 9001:8080

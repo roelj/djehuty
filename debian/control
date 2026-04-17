@@ -1,6 +1,6 @@
-Source: djehuty
+Source: seshat
 Maintainer: Roel Janssen <rrejanssen@gmail.com>
-Homepage: https://djehuty.4tu.nl/
+Homepage: https://seshat.software/
 Vcs-Git: https://codeberg.org/roelj/djehuty.git
 Section: misc
 Priority: optional
@@ -18,7 +18,7 @@ Build-Depends: debhelper-compat (= 13),
  python3-setuptools,
  python3-venv
 
-Package: djehuty
+Package: seshat
 Architecture: any
 Depends: ${misc:Depends},
  ${python3:Depends},

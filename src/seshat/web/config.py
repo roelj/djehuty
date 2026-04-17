@@ -1,7 +1,7 @@
 """This module provides a program-wide configurable state."""
 
 class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
-    """This class implements the configurable properties for djehuty."""
+    """This class implements the configurable properties for seshat."""
 
     _instance = None
     def __new__ (cls):
@@ -73,7 +73,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.handle_index                = None
         self.small_footer                = (
             '<div id="footer-wrapper2"><p>This repository is powered by '
-            '<a href="https://codeberg.org/roelj/djehuty">djehuty</a>.'
+            '<a href="https://codeberg.org/roelj/djehuty">seshat</a>.'
             '</p></div>'
         )
         self.large_footer                = self.small_footer

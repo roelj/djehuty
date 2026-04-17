@@ -1,19 +1,19 @@
-#let djehutyversion = "@VERSION@"
-#let djehutybaseurl = "@BASE_URL@"
-#let djehutygiturl = "@GIT_URL@"
+#let seshatversion = "@VERSION@"
+#let seshatbaseurl = "@BASE_URL@"
+#let seshatgiturl = "@GIT_URL@"
 
 #let render_code_output(output) = raw(
   output.text
-      .replace("<djehutybaseurl>", djehutybaseurl)
-      .replace("<djehutygiturl>", djehutygiturl)
-      .replace("<djehutyversion>", djehutyversion),
+      .replace("<seshatbaseurl>", seshatbaseurl)
+      .replace("<seshatgiturl>", seshatgiturl)
+      .replace("<seshatversion>", seshatversion),
   block: true,
   lang: "json",
 )
 
 #let commitLink(hash) = {
   let short = hash.slice(0, 9)
-  link(djehutygiturl + "/commit/" + hash)[#raw(short)]
+  link(seshatgiturl + "/commit/" + hash)[#raw(short)]
 }
 
 #let render_chapter(chapter_text, chapter_title) = {

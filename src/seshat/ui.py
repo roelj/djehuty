@@ -9,19 +9,19 @@ import logging
 import os
 import importlib.metadata
 
-import djehuty.web.ui as web_ui
+import seshat.web.ui as web_ui
 
 def show_version ():
     """Show the program's version."""
 
     version = importlib.metadata.version (__package__ or __name__)
-    print(f"This is djehuty v{version}")
+    print(f"This is seshat v{version}")
     sys.exit(0)
 
 def show_help ():
     """Show a GNU-style help message."""
 
-    print("""This is djehuty.\n
+    print("""This is seshat.\n
 Available subcommands and options:
 
   web:
@@ -74,7 +74,7 @@ def main_inner ():
     ## ------------------------------------------------------------------------
     parser = argparse.ArgumentParser(
         usage    = '\n  %(prog)s [web] ...',
-        prog     = 'djehuty',
+        prog     = 'seshat',
         add_help = False)
 
     subparsers = parser.add_subparsers(dest='command', help='sub-command help')

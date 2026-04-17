@@ -3,7 +3,7 @@
 #let chapter_text = [
 = Contributing
 
-This chapter outlines how to set up an instance of `djehuty` with the goal
+This chapter outlines how to set up an instance of `seshat` with the goal
 of modifying its source code. Or in other words: this is the developer setup.
 
 == Setting up a development environment
@@ -11,42 +11,42 @@ of modifying its source code. Or in other words: this is the developer setup.
 First, we need to obtain the latest version of the source code:
 
 #let output = ```bash
-$ git clone <djehutygiturl>
+$ git clone <seshatgiturl>
 ```
 #render_code_output(output)
 
 Next, we need to create a somewhat isolated Python environment:
 
 ```bash
-$ python -m venv djehuty-env
-$ . djehuty-env/bin/activate
-[env]$ cd djehuty
+$ python -m venv seshat-env
+$ . seshat-env/bin/activate
+[env]$ cd seshat
 ```
 
-And finally, we can install `djehuty` in the virtual environment to make
-the `djehuty` command available:
+And finally, we can install `seshat` in the virtual environment to make
+the `seshat` command available:
 
 ```bash
 [env]$ autoreconf -if && ./configure
 [env]$ pip install --editable .
 ```
 
-If all went well, we will now be able to run `djehuty`:
+If all went well, we will now be able to run `seshat`:
 
 ```bash
-[env]$ djehuty --help
+[env]$ seshat --help
 ```
 
-== Configuring `djehuty`
+== Configuring `seshat`
 
-Invoking `djehuty web` starts the web interface of `djehuty`. On what
+Invoking `seshat web` starts the web interface of `seshat`. On what
 port it makes itself available can be configured in its configuration file.
 An example of a configuration file can be found in
-`etc/djehuty/djehuty-example-config.xml`. We will use the example
+`etc/seshat/seshat-example-config.xml`. We will use the example
 configuration as the basis to configure it for the development environment.
 
 ```bash
-[env]$ cp etc/djehuty/djehuty-example-config.xml config.xml
+[env]$ cp etc/seshat/seshat-example-config.xml config.xml
 ```
 
 In the remainder of the chapter we will assume a value of `127.0.0.1` for
@@ -54,18 +54,18 @@ In the remainder of the chapter we will assume a value of `127.0.0.1` for
 
 === Modifications to the example configuration for developers
 
-@chap-configuring-djehuty describes each configuration option for `djehuty`.
+@chap-configuring-seshat describes each configuration option for `seshat`.
 The remainder of sections here contain a fast-path through configuring
-`djehuty` for use in a development setup.
+`seshat` for use in a development setup.
 
 ==== Live reload
 
-The `djehuty` program can be configured to automatically reload itself when
+The `seshat` program can be configured to automatically reload itself when
 a change is detected by setting `live-reload` to `1`.
 
 ==== Configuring authentication with ORCID
 
-The `djehuty` program does not have Identity Provider (IdP) capabilities,
+The `seshat` program does not have Identity Provider (IdP) capabilities,
 so in order to log into the system we must configure an external IdP. With
 an #link("https://orcid.org")[ORCID] account comes the ability to set up an
 OAuth endpoint. Go to #link("https://orcid.org/developer-tools")[developer-tools]
@@ -102,49 +102,49 @@ the system in the `orcid` argument.
   </privileges>
 ```
 
-=== Invoking `djehuty`
+=== Invoking `seshat`
 
-Once we've configured `djehuty` for development use, we can start the web
+Once we've configured `seshat` for development use, we can start the web
 interface by running:
 
 ```bash
-[env]$ djehuty web --initialize --config-file=config.xml
+[env]$ seshat web --initialize --config-file=config.xml
 ```
 
 The `--initialize` option creates the internal account record and
-associates the specified ORCID with it. We only need to run `djehuty`
+associates the specified ORCID with it. We only need to run `seshat`
 with the `--initialize` option once.
 
-By now, we should be able to visit `djehuty` through a web browser at
+By now, we should be able to visit `seshat` through a web browser at
 #link("http://127.0.0.1:8080")[localhost:8080], unless configured differently.
 We should be able to log in through ORCID, and access all features of
-`djehuty`.
+`seshat`.
 
 == Navigating the source code
 
-In this section, we trace the path from invoking `djehuty` to responding
+In this section, we trace the path from invoking `seshat` to responding
 to a HTTP request.
 
 === Starting point
 
-Because `djehuty` is installable as a Python package, we can find the
-starting point for running `djehuty` in `pyproject.toml`. It reads:
+Because `seshat` is installable as a Python package, we can find the
+starting point for running `seshat` in `pyproject.toml`. It reads:
 
 ```
 [project.scripts]
-djehuty = djehuty.ui:main
+seshat = seshat.ui:main
 ```
 
-So, we start our tour at `src/djehuty/ui.py` in the procedure called `main`.
+So, we start our tour at `src/seshat/ui.py` in the procedure called `main`.
 
-=== How `djehuty` initializes
+=== How `seshat` initializes
 
 The `main` procedure calls `main_inner`, which handles the command-line
-arguments. When invoking `djehuty`, we usually invoke
-`djehuty *web*`, which is handled by the following snippet:
+arguments. When invoking `seshat`, we usually invoke
+`seshat *web*`, which is handled by the following snippet:
 
 ```python
-import djehuty.web.ui as web_ui
+import seshat.web.ui as web_ui
 ...
 if args.command == "web":
     web_ui.main (args.config_file, True, args.initialize,
@@ -153,10 +153,10 @@ if args.command == "web":
 ```
 
 So, the entry-point for the `web` subcommand is found in
-`src/djehuty/web/ui.py` at the `main` procedure.
+`src/seshat/web/ui.py` at the `main` procedure.
 
 This procedure essentially sets up an instance of `WebServer` (found in
-`src/djehuty/web/wsgi.py`) and uses `werkzeug`'s `run_simple` to start
+`src/seshat/web/wsgi.py`) and uses `werkzeug`'s `run_simple` to start
 the web server.
 
 === Translating URI paths to internal procedures
@@ -174,7 +174,7 @@ The `__respond` procedure calls `__dispatch_request`.
 
 In `__dispatch_request`, the requested URI is translated into the procedure
 name using the `url_map`. So, except for static resources in the
-`src/djehuty/web/resources` folder and pre-configured static pages, URIs are
+`src/seshat/web/resources` folder and pre-configured static pages, URIs are
 handled by a procedure in the `WebServer` instance.
 
 A mapping between a URI and the procedure that is executed to handle the
@@ -209,7 +209,7 @@ records = self.db.latest_datasets_portal(30)
 
 It then passes that information to the `__render_template`
 procedure which renders the `portal.html` in the
-`src/djehuty/web/resources/html_templates` folder. The
+`src/seshat/web/resources/html_templates` folder. The
 Jinja#footnote(link("https://jinja.palletsprojects.com/en/3.1.x/")) package
 is used to interpret the template.
 
@@ -233,11 +233,11 @@ self.db = database.SparqlInterface()
 And from there look up where `database` comes from:
 
 ```python
-from djehuty.web import database
+from seshat.web import database
 ```
 
 From which we can conclude that it can be found in
-`src/djehuty/web/database.py`.
+`src/seshat/web/database.py`.
 
 In the `repository_statistics` procedure, we find a call to
 `self.__query_from_template` followed by a call to `__run_query`
@@ -249,7 +249,7 @@ and retrieves the results by putting them in a list of Python dictionaries.
 The `self.__query_from_template` procedure takes one parameter, which is
 the name of the template file (minus the extension) that contains a SPARQL
 query. These templates can be found in the
-`src/djehuty/web/resources/sparql_templates` folder.
+`src/seshat/web/resources/sparql_templates` folder.
 ]
 
 #render_chapter(chapter_text, "Contributing")

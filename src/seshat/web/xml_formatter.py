@@ -4,8 +4,8 @@ and other XML formats.
 """
 
 from xml.etree import ElementTree
-from djehuty.utils.convenience import value_or, value_or_none
-from djehuty.web.config import config
+from seshat.utils.convenience import value_or, value_or_none
+from seshat.web.config import config
 
 class ElementMaker:
     '''

@@ -3,12 +3,12 @@
 #let chapter_text = [
 = Knowledge graph
 
-Djehuty processes its information using the Resource Description
+Seshat processes its information using the Resource Description
 Framework @Lassila-99-RDF. This chapter describes the parts that
-make up the data model of `djehuty`.
+make up the data model of `seshat`.
 
 This chapter dives into the structure of the data model, but does not
-describe every property. When running an instance of `djehuty`,
+describe every property. When running an instance of `seshat`,
 the "Exploratory" available in the "Admin panel" can be used to explore
 every property.
 
@@ -33,7 +33,7 @@ Throughout this chapter, abbreviated references to ontologies are used.
 
 In addition to abbreviating ontologies with their prefix we use another
 notational shortcut. To effectively communicate the structure of the RDF
-graph used by `djehuty` we introduce a couple of shorthand notations.
+graph used by `seshat` we introduce a couple of shorthand notations.
 
 === Notation for typed triples
 
@@ -133,7 +133,7 @@ in a version-unspecific way.
 
 == Authors
 
-`djehuty` keeps records of authors including their full name, ORCID,
+`seshat` keeps records of authors including their full name, ORCID,
 and e-mail address. Furthermore, each `djht:Account` has a linked
 `djht:Author` record.
 
@@ -144,7 +144,7 @@ and e-mail address. Furthermore, each `djht:Account` has a linked
 
 == Accounts
 
-`djehuty` uses an external identity provider, but stores an e-mail address,
+`seshat` uses an external identity provider, but stores an e-mail address,
 full name, and preferences for categories.
 
 #figure(
@@ -165,7 +165,7 @@ the details for this structure.
 
 == Categories
 
-Categories in `djehuty` are a controlled vocabulary based on the
+Categories in `seshat` are a controlled vocabulary based on the
 #link("https://www.abs.gov.au/Ausstats/abs@.nsf/Latestproducts/4AE1B46AE2048A28CA25741800044242")[Australian and New Zealand Standard Research Classification (ANZSRC)].
 The hierarchical structure is captured by using `id` and `parent_id` properties.
 

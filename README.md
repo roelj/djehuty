@@ -1,4 +1,4 @@
-djehuty
+seshat
 =========
 
 This software provides a general data and software repository system that
@@ -21,13 +21,13 @@ This project uses the GNU autotools build system.
 
 For development on GNU/Linux we recommend installing `git`, `autoconf`,
 `automake`, `make` and `typst` through your system's package manager, followed
-by creating a Python virtual environment for `djehuty`:
+by creating a Python virtual environment for `seshat`:
 
 ```bash
-git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
 autoreconf -if && ./configure
-python -m venv ../djehuty-env
-. ../djehuty-env/bin/activate
+python -m venv ../seshat-env
+. ../seshat-env/bin/activate
 pip install --upgrade pip
 pip install --editable .
 ```
@@ -38,21 +38,21 @@ Because the virtual environment isn't updated by your system's package
 manager, you can use the following snippet to update packages inside your
 virtual environment:
 ```bash
-pip freeze | grep -v "djehuty.git" | cut -d= -f1 | xargs -n1 pip install -U
+pip freeze | grep -v "seshat.git" | cut -d= -f1 | xargs -n1 pip install -U
 ```
 
 ### macOS X
 
 For development on Apple's macOS X, we recommend installing `python3`, `git`,
 `autoconf`, `automake`, and `make` through [homebrew](https://brew.sh/),
-followed by creating a Python virtual environment for `djehuty`:
+followed by creating a Python virtual environment for `seshat`:
 
 ```bash
 brew install python3 git autoconf automake make typst
-git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
 autoreconf -if && ./configure
-python3 -m venv ../djehuty-env
-. ../djehuty-env/bin/activate
+python3 -m venv ../seshat-env
+. ../seshat-env/bin/activate
 pip install --upgrade pip
 pip install --editable .
 ```
@@ -62,7 +62,7 @@ pip install --editable .
 Because the virtual environment isn't updated by homebrew, you can use the
 following snippet to update packages inside your virtual environment:
 ```bash
-pip freeze | grep -v "djehuty.git" | cut -d= -f1 | xargs -n1 pip install -U
+pip freeze | grep -v "seshat.git" | cut -d= -f1 | xargs -n1 pip install -U
 ```
 
 ### Microsoft Windows
@@ -77,18 +77,18 @@ pacman -Suy git autoconf automake make ${PREFIX}python \
             ${PREFIX}python-werkzeug ${PREFIX}python-defusedxml \
             ${PREFIX}python-pillow ${PREFIX}python-build \
             ${PREFIX}python-setuptools ${PREFIX}typst
-git clone https://codeberg.org/roelj/djehuty.git && cd djehuty/
+git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
 # If you chose a different PREFIX above, change /mingw64 accordingly below.
 # See: https://www.msys2.org/docs/environments
-/mingw64/bin/python -m venv --system-site-packages ../djehuty-env
-. ../djehuty-env/bin/activate
+/mingw64/bin/python -m venv --system-site-packages ../seshat-env
+. ../seshat-env/bin/activate
 autoreconf -if && ./configure
 pip install --editable .
 ```
 
 #### Keeping your development environment up-to-date
 
-The dependencies for `djehuty` are installed via `pacman`, so to update those
+The dependencies for `seshat` are installed via `pacman`, so to update those
 packages use the following snippet:
 ```bash
 pacman -Suy
@@ -99,12 +99,12 @@ See [Updating MSYS2](https://www.msys2.org/docs/updating/) for more details.
 ### Verify that the installation works
 Upon completing the installation, you should be able to run:
 ```bash
-djehuty --help
+seshat --help
 ```
 
 ## Setting up the database
 
-Djehuty needs a SPARQL 1.1 endpoint such as
+Seshat needs a SPARQL 1.1 endpoint such as
 [Virtuoso OSE](https://github.com/openlink/virtuoso-opensource) or
 [Jena Fuseki](https://jena.apache.org/documentation/fuseki2/) to
 store its state.
@@ -112,21 +112,21 @@ store its state.
 ## Run the web service
 
 To start the web service, we recommend copying the
-[example configuration](./etc/djehuty/djehuty-example-config.xml)
+[example configuration](./etc/seshat/seshat-example-config.xml)
 and go from there:
 
 ```python
-cp etc/djehuty/djehuty-example-config.xml djehuty.xml
+cp etc/seshat/seshat-example-config.xml seshat.xml
 ```
 
 ### First run
 
-Upon first run, `djehuty` needs to initialize the database with categories,
+Upon first run, `seshat` needs to initialize the database with categories,
 licences and accounts.  To do so, pass the `--initialize` option to the
-`djehuty web` command:
+`seshat web` command:
 
 ```bash
-djehuty web --initialize --config-file djehuty.xml
+seshat web --initialize --config-file seshat.xml
 ```
 
 ### Subsequent runs
@@ -134,5 +134,5 @@ djehuty web --initialize --config-file djehuty.xml
 After the database has been initialized, you can remove the `--initialize`
 option:
 ```bash
-djehuty web --config-file=djehuty.xml
+seshat web --config-file=seshat.xml
 ```

@@ -6,9 +6,9 @@ import os
 import json
 import unittest
 import requests
-from djehuty.utils import convenience as conv
+from seshat.utils import convenience as conv
 
-TOKEN    = os.getenv("DJEHUTY_TEST_TOKEN")
+TOKEN    = os.getenv("SESHAT_TEST_TOKEN")
 BASE_URL = "http://127.0.0.1:8080/v2"
 TIMEOUT  = 30
 

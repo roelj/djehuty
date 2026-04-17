@@ -6,9 +6,9 @@ import os
 import json
 import unittest
 import requests
-from djehuty.utils import convenience as conv
+from seshat.utils import convenience as conv
 
-TOKEN    = os.getenv("DJEHUTY_TEST_TOKEN")
+TOKEN    = os.getenv("SESHAT_TEST_TOKEN")
 BASE_URL = "http://127.0.0.1:8080/"
 API_BASE_URL = f"{BASE_URL}/v2"
 ARTICLE_IDS = [ 12694961, 12689147, 20089760 ]

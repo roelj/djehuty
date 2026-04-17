@@ -1,9 +1,9 @@
 """
 This module contains procedures to format a record from
-djehuty.database to be backward-compatible with Figshare.
+seshat.database to be backward-compatible with Figshare.
 """
 
-from djehuty.utils import convenience as conv
+from seshat.utils import convenience as conv
 
 def format_collaborator_record (record):
     """Record formatter for collaborators"""
@@ -438,7 +438,7 @@ def format_license_record (record):
         "value":         conv.value_or_none(record, "id"),
         "name":          conv.value_or_none(record, "name"),
         "url":           conv.value_or_none(record, "url"),
-        # Extension for Djehuty.
+        # Extension for Seshat.
         "type":          conv.value_or_none(record, "type"),
     }
 

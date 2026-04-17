@@ -4,8 +4,8 @@ import logging
 import uuid
 import os
 from datetime import datetime
-from djehuty.web.config import config
-from djehuty.utils.convenience import value_or
+from seshat.web.config import config
+from seshat.utils.convenience import value_or
 
 try:
     import boto3

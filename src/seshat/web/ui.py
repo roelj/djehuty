@@ -11,9 +11,9 @@ from datetime import datetime
 from defusedxml import ElementTree
 from werkzeug.serving import run_simple
 from rdflib.plugins.stores import berkeleydb
-from djehuty.web import wsgi
-from djehuty.utils import convenience
-from djehuty.web.config import config
+from seshat.web import wsgi
+from seshat.utils import convenience
+from seshat.web.config import config
 
 # Even though we don't use these imports in 'ui', the state of
 # SAML2_DEPENDENCY_LOADED is important to catch the situation
@@ -410,7 +410,7 @@ def refresh_group_configuration (server, logger, config_files):
     for config_file in config_files:
         tree = ElementTree.parse(config_file)
         xml_root = tree.getroot()
-        if xml_root.tag != "djehuty":
+        if xml_root.tag not in ("seshat", "djehuty"):
             continue
         groups = xml_root.find("groups")
         if not groups:
@@ -695,7 +695,7 @@ def read_configuration_file (server, config_file, logger, config_files):
                 logger.info ("Reading config file: %s", config_file)
 
         xml_root = tree.getroot()
-        if not xml_root or xml_root.tag != "djehuty":
+        if not xml_root or xml_root.tag not in ("seshat", "djehuty"):
             raise ConfigFileNotFound
 
         config_dir = os.path.dirname(config_file)
@@ -949,7 +949,7 @@ def read_configuration_file (server, config_file, logger, config_files):
 
     except ConfigFileNotFound as error:
         if not inside_reload:
-            logger.error ("%s does not look like a Djehuty configuration file.",
+            logger.error ("%s does not look like a Seshat configuration file.",
                            config_file)
         raise SystemExit from error
     except ElementTree.ParseError as error:
@@ -1114,7 +1114,7 @@ def main (config_file=None, run_internal_server=True, initialize=True,
         if run_internal_server:
             logger = logging.getLogger (__name__)
         else:
-            logger = logging.getLogger ("uwsgi:djehuty.web.ui")
+            logger = logging.getLogger ("uwsgi:seshat.web.ui")
 
         perform_export = full_rdf_export or public_rdf_export
         since_datetime = None
@@ -1359,17 +1359,17 @@ def application (env, start_response):
                         level=logging.INFO)
 
     ## Suppress start-up info messages.
-    logging.getLogger("uwsgi:djehuty.web.ui").setLevel(logging.WARNING)
+    logging.getLogger("uwsgi:seshat.web.ui").setLevel(logging.WARNING)
 
     if not UWSGI_DEPENDENCY_LOADED:
         start_response('500 Internal Server Error', [('Content-Type','text/html')])
         return [b"<p>Cannot find the <code>uwsgi</code> Python module.</p>"]
 
-    config_file = os.getenv ("DJEHUTY_CONFIG_FILE")
+    config_file = os.getenv ("SESHAT_CONFIG_FILE")
 
     if config_file is None:
         start_response('200 OK', [('Content-Type','text/html')])
-        return [b"<p>Please set the <code>DJEHUTY_CONFIG_FILE</code> environment variable.</p>"]
+        return [b"<p>Please set the <code>SESHAT_CONFIG_FILE</code> environment variable.</p>"]
 
     server = main (config_file=config_file, run_internal_server=False)
     return server (env, start_response)

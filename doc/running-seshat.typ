@@ -1,12 +1,12 @@
 #import "config.typ": *
 
 #let chapter_text = [
-= Configuring `djehuty` <chap-configuring-djehuty>
+= Configuring `seshat` <chap-configuring-seshat>
 
-Now that `djehuty` is installed, it's a good moment to look into its
+Now that `seshat` is installed, it's a good moment to look into its
 run-time configuration options. All configuration can be done through a
 configuration file, for which an example is available at
-`etc/djehuty/djehuty-example-config.xml`.
+`etc/seshat/seshat-example-config.xml`.
 
 == Essential options <sec-essential-options>
 
@@ -23,12 +23,12 @@ configuration file, for which an example is available at
   [`production`],             [Performs extra checks before starting. Enable this when running a production instance.],
   [`live-reload`],            [When set to 1, it reloads Python code on-the-fly. We recommend to set it to 0 when running in production.],
   [`debug-mode`],             [When set to 1, it will display backtraces and error messages in the web browser. When set to 0, it will only show backtraces and error messages in the web browser.],
-  [`use-x-forwarded-for`],    [When running `djehuty` behind a reverse-proxy server, use the HTTP header `X-Forwarded-For` to log IP address information. Set to 1 when `djehuty` should use the `X-Forwarded-For` HTTP header.],
-  [`static-resources-cache`], [When running `djehuty` behind a reverse-proxy server, it can write images, fonts, stylesheets and JavaScript resources to a folder so it can be served by the reverse-proxy server. Specify a filesystem directory to store the resources at.],
+  [`use-x-forwarded-for`],    [When running `seshat` behind a reverse-proxy server, use the HTTP header `X-Forwarded-For` to log IP address information. Set to 1 when `seshat` should use the `X-Forwarded-For` HTTP header.],
+  [`static-resources-cache`], [When running `seshat` behind a reverse-proxy server, it can write images, fonts, stylesheets and JavaScript resources to a folder so it can be served by the reverse-proxy server. Specify a filesystem directory to store the resources at.],
   [`disable-collaboration`],  [When set to 1, it disables the "collaborators" feature.],
   [`allowed-depositing-domains`], [When unset, any authenticated user may deposit data. Otherwise, this option limits the ability to deposit to users with an e-mail address of the listed domain names.],
-  [`cache-root`],             [`djehuty` can cache query responses to lower the load on the database server. Specify the directory where to store cache files. This element takes an attribute `clear-on-start`, and when set to 1, it will remove all cache files on start-up of `djehuty`.],
-  [`profile-images-root`],    [Users can upload a profile image in `djehuty`. This option should point to a filesystem directory where these profile images can be stored.],
+  [`cache-root`],             [`seshat` can cache query responses to lower the load on the database server. Specify the directory where to store cache files. This element takes an attribute `clear-on-start`, and when set to 1, it will remove all cache files on start-up of `seshat`.],
+  [`profile-images-root`],    [Users can upload a profile image in `seshat`. This option should point to a filesystem directory where these profile images can be stored.],
   [`disable-2fa`],            [Accounts with privileges receive a code by e-mail as a second factor when logging in. Setting this option to 1 disables the second factor authentication.],
   [`sandbox-message`],        [Display a message on the top of every page.],
   [`notice-message`],         [Display a message on the main page.],
@@ -37,7 +37,7 @@ configuration file, for which an example is available at
 
 == Configuring the Database
 
-The `djehuty` program stores its state in a SPARQL 1.1 compliant
+The `seshat` program stores its state in a SPARQL 1.1 compliant
 RDF store. Configuring the connection details is done in the
 `rdf-store` node.
 
@@ -51,15 +51,15 @@ RDF store. Configuring the connection details is done in the
     filesystem directory, it will use the BerkeleyDB back-end, for which
     the `berkeleydb` Python package needs to be installed.],
   [`sparql-update-uri`], [The URI at which the SPARQL 1.1 Update endpoint can be reached (in case it is different from the `sparql-uri`).],
-  [`seconds-to-wait-for-online`], [Number of seconds to retry in case the SPARQL endpoint is down when initializing. A retry is done every second, and after the configured amount, `djehuty` will give up.],
+  [`seconds-to-wait-for-online`], [Number of seconds to retry in case the SPARQL endpoint is down when initializing. A retry is done every second, and after the configured amount, `seshat` will give up.],
   [`read-only-mode`], [When set to `1`, no queries that change the state of the database shall be made. This is useful for running secondary instances to balance the load of specific endpoints. Defaults to `0`.],
 )
 
 == Audit trails and database reconstruction
 
-The `djehuty` program can keep an audit log of all database modifications
+The `seshat` program can keep an audit log of all database modifications
 made by itself from which a database state can be reconstructed. Whether
-`djehuty` keeps such an audit log can be configured with the
+`seshat` keeps such an audit log can be configured with the
 `enable-query-audit-log` configuration option.
 
 The database can receive a large amount of requests due to inserting log
@@ -84,7 +84,7 @@ specify the starting point to extract from can be specified as an argument.
 The following example displays its use:
 
 ```bash
-djehuty web --config-file=config.xml --extract-transactions-from-log="YYYY-MM-DD HH:MM:SS"
+seshat web --config-file=config.xml --extract-transactions-from-log="YYYY-MM-DD HH:MM:SS"
 ```
 
 This will create a file for each query in the folder specified in the
@@ -94,7 +94,7 @@ To replay the extracted transactions, use the `--apply-transactions`
 command-line option:
 
 ```bash
-djehuty web --config-file=config.xml --apply-transactions
+seshat web --config-file=config.xml --apply-transactions
 ```
 
 When a query cannot be executed, the command stops, allowing to fix or
@@ -109,13 +109,13 @@ re-run `--apply-transactions` to apply the log entries queries.
 == Configuring storage
 
 Storage locations can be configured with the `storage` node.
-When configuring multiple locations, `djehuty` attempts to find a
+When configuring multiple locations, `seshat` attempts to find a
 file by looking at the first configured location, and in case it cannot
 find the file there, it will look at the second configured location,
 and so on, until it has tried each storage location.
 
 This allows for moving files between storage systems transparently
-without requiring specific interactions with `djehuty` other than
+without requiring specific interactions with `seshat` other than
 having the files made available as a POSIX filesystem or in an S3 bucket.
 
 One use-case that suits this mechanism is letting uploads write to
@@ -132,7 +132,7 @@ less costly storage.
 === Configuring S3 buckets <sec-s3-buckets>
 
 Other than configuring storage locations on a POSIX filesystem,
-`djehuty` can be configured to serve files from an S3 bucket.
+`seshat` can be configured to serve files from an S3 bucket.
 To do so, the following parameters must be configured within a
 `s3-bucket` node.
 
@@ -160,7 +160,7 @@ as storage locations looks as following:
 </storage>
 ```
 
-There are a few scenarios in which `djehuty` downloads an S3 object
+There are a few scenarios in which `seshat` downloads an S3 object
 to perform some operation on: creating thumbnails and IIIF image
 transformations. To direct where these temporary files will be stored,
 the `s3-cache-root` can be configured.
@@ -173,8 +173,8 @@ the `s3-cache-root` can be configured.
 
 == Configuring an identity provider
 
-Ideally, `djehuty` makes use of an external identity provider.
-`djehuty` can use SAML2.0, ORCID, or an internal identity provider
+Ideally, `seshat` makes use of an external identity provider.
+`seshat` can use SAML2.0, ORCID, or an internal identity provider
 (for testing and development purposes only).
 
 This section will outline the configuration options for each
@@ -201,18 +201,18 @@ where the example shows `<!-- Configuration goes here. -->`.
   table.header([*Option*], [*Description*]),
   [`strict`],            [When set to 1, SAML responses must be signed. *Never disable 'strict' mode in a production environment.*],
   [`debug`],             [Increases logging verbosity for SAML-related messages.],
-  [`attributes`],        [In this section the attributes provided by the identity provider can be aligned to the attributes `djehuty` expects.],
-  [`service-provider`],  [The `djehuty` program fulfills the role of service provider. In this section the certificate and service provider metadata can be configured.],
+  [`attributes`],        [In this section the attributes provided by the identity provider can be aligned to the attributes `seshat` expects.],
+  [`service-provider`],  [The `seshat` program fulfills the role of service provider. In this section the certificate and service provider metadata can be configured.],
   [`identity-provider`], [In this section the certificate and single-sign-on URL of the identity provider can be configured.],
   [`sram`],              [In this section, SURF Research Access Management-specific attributes can be configured.],
 )
 
 ==== The `attributes` configuration
 
-To create account and author records and to authenticate a user, `djehuty`
+To create account and author records and to authenticate a user, `seshat`
 stores information provided by the identity provider. Each identity provider
 may provide this information using different attributes. Therefore, the
-translation from attributes used by `djehuty` and attributes given by the
+translation from attributes used by `seshat` and attributes given by the
 identity provider can be configured. The following attributes must be
 configured.
 
@@ -255,9 +255,9 @@ looks like this:
 ==== The `sram` configuration
 
 When using SURF Research Access Management (SRAM),
-`djehuty` can persuade SRAM to send an invitation to anyone
+`seshat` can persuade SRAM to send an invitation to anyone
 inside or outside the institution to join the SRAM collaboration
-that provides access to the `djehuty` instance. To do so,
+that provides access to the `seshat` instance. To do so,
 the following attributes must be configured.
 
 #table(
@@ -290,7 +290,7 @@ the following attributes must be configured.
 === ORCID
 
 #link("https://orcid.org")[ORCID.org] plays a key role in making researchers
-findable. Its identity provider service can be used by `djehuty` in two ways:
+findable. Its identity provider service can be used by `seshat` in two ways:
 
 + As primary identity provider to log in and deposit data;
 + As additional identity provider to couple an author record to its ORCID record.
@@ -322,7 +322,7 @@ Then the following parameters can be configured:
 
 == Configuring an e-mail server
 
-On various occassions, `djehuty` will attempt to send an e-mail to either
+On various occassions, `seshat` will attempt to send an e-mail to either
 an author, a reviewer or an administrator. To be able to do so, an e-mail
 server must be configured from which the instance may send e-mails.
 
@@ -334,16 +334,16 @@ items can be configured:
   table.header([*Option*], [*Description*]),
   [`server`],          [Address of the e-mail server without protocol specification.],
   [`port`],            [The port the e-mail server operates on.],
-  [`starttls`],        [When 1, `djehuty` attempts to use StartTLS.],
+  [`starttls`],        [When 1, `seshat` attempts to use StartTLS.],
   [`username`],        [The username to authenticate with to the e-mail server.],
   [`password`],        [The password to authenticate with to the e-mail server.],
   [`from`],            [The e-mail address used to send e-mail from.],
-  [`subject-prefix`],  [Text to prefix in the subject of all e-mails sent from the instance of `djehuty`. This can be used to distinguish a test instance from a production instance.],
+  [`subject-prefix`],  [Text to prefix in the subject of all e-mails sent from the instance of `seshat`. This can be used to distinguish a test instance from a production instance.],
 )
 
 == Configuring DOI registration
 
-When publishing a dataset or collection, `djehuty` can register a
+When publishing a dataset or collection, `seshat` can register a
 persistent identifier with DataCite. To enable this feature, configure it
 under the `datacite` node. The following parameters can be configured:
 
@@ -374,7 +374,7 @@ The following parameters can be configured:
 
 == Configuring IIIF support
 
-When publishing images, `djehuty` can enable the IIIF Image API for the
+When publishing images, `seshat` can enable the IIIF Image API for the
 images. It uses `libvips` and `pyvips` under the hood to perform image
 manipulation. The following parameters can be configured:
 
@@ -465,30 +465,30 @@ to `1`. Privileges are disabled by default, except for
 ```
 ]
 
-#render_chapter(chapter_text, "Configuring `djehuty`")
+#render_chapter(chapter_text, "Configuring `seshat`")
 #pagebreak-when-paged()
 
 #let chapter_text = [
-= Running `djehuty` <chap-running-djehuty>
+= Running `seshat` <chap-running-seshat>
 
-Before running `djehuty`, consider @chap-configuring-djehuty which provides
+Before running `seshat`, consider @chap-configuring-seshat which provides
 the configuration options to enable or disable features, where data will be
-stored and a way to adapt `djehuty` to your organization's style.
+stored and a way to adapt `seshat` to your organization's style.
 
-== Running `djehuty`
+== Running `seshat`
 
-Invoking `djehuty web` starts the web interface of `djehuty`. On what
+Invoking `seshat web` starts the web interface of `seshat`. On what
 port it makes itself available can be configured in its configuration file.
 
 ```
-djehuty web --config-file=your-djehuty-config.xml
+seshat web --config-file=your-seshat-config.xml
 ```
 
-== Running `djehuty` behind an `nginx` reverse-proxy
+== Running `seshat` behind an `nginx` reverse-proxy
 
-While `djehuty` itself does not support SSL/TLS, it is designed to
+While `seshat` itself does not support SSL/TLS, it is designed to
 work together with a reverse-proxy HTTP server like `nginx`. When
-`djehuty` starts, it will bind on a pre-configured address and port,
+`seshat` starts, it will bind on a pre-configured address and port,
 which in turn can be `proxy_pass`ed to using `nginx`.
 
 The following snippet shows how to configure `nginx`.
@@ -503,25 +503,25 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/example.domain/privkey.pem;
 
     location / {
-       # Set 'use-x-forwarded-for' in the djehuty configuration.
+       # Set 'use-x-forwarded-for' in the seshat configuration.
        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
        # The values for address and port depend on what is configured in the
-       # djehuty configuration file.
+       # seshat configuration file.
        proxy_pass http://127.0.0.1:8080;
        root /usr/share/nginx/html;
     }
 }
 ```
 
-To ensure `djehuty` receives the actual client IP address so it can log
+To ensure `seshat` receives the actual client IP address so it can log
 this information, one can set the `use-x-forwarded-for` option
 described in @sec-essential-options.
 
-== Running `djehuty` with feature isolation
+== Running `seshat` with feature isolation
 
 Some features are more prone to denial-of-service situations because they
 require more CPU, memory, or disk space to complete. To mitigate outages while
-using these features, multiple instances of `djehuty` can run simultaneous
+using these features, multiple instances of `seshat` can run simultaneous
 as long as all but one instance runs in `read-only-mode` in the `rdf-store`
 section.
 
@@ -534,18 +534,18 @@ connection can be established.
 === Isolating Git operations <sec-isolating-git-ops>
 
 To take advantage of the multi-instance deployment, we are going to use the `nginx`
-configuration file to let a second instance of `djehuty` handle all Git operations
+configuration file to let a second instance of `seshat` handle all Git operations
 by defining multiple `location` blocks in the `nginx` configuration.
 
 So we create two configuration files, differing only in the `port`,
 `log-file` and `rdf-store/read-only-mode` options.
 
-- `djehuty-primary.xml`: Set the `rdf-store/read-only-mode` to `0` and `port` to `8080`.
-- `djehuty-git.xml`: Set the `rdf-store/read-only-mode` to `1` and `port` to `8081`.
+- `seshat-primary.xml`: Set the `rdf-store/read-only-mode` to `0` and `port` to `8080`.
+- `seshat-git.xml`: Set the `rdf-store/read-only-mode` to `1` and `port` to `8081`.
 
 Setting two different log files makes it easier to track which request goes where.
 
-With both instances of `djehuty` running (one with the 'primary' and one 'git'
+With both instances of `seshat` running (one with the 'primary' and one 'git'
 configuration file), the accompanying `nginx` `server`-block configuration
 looks as following:
 
@@ -575,7 +575,7 @@ server {
        proxy_pass http://127.0.0.1:8081;
     }
 
-    # All other locations use the instance of Djehuty bound to port 8080.
+    # All other locations use the instance of Seshat bound to port 8080.
     location / {
        root /usr/share/nginx/html;
        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -597,4 +597,4 @@ The rest of the instructions are identical to isolating Git requests (see
 @sec-isolating-git-ops).
 ]
 
-#render_chapter(chapter_text, "Running `djehuty`")
+#render_chapter(chapter_text, "Running `seshat`")

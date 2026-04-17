@@ -94,7 +94,7 @@
 #context if target() == "paged" {
     page(numbering: none)[
         #align(center + horizon)[
-            #text(size: 28pt, weight: "bold")[`djehuty`]
+            #text(size: 28pt, weight: "bold")[`seshat`]
             #v(1em)
             #text(size: 16pt)[A data and software repository system]
             #v(2em)
@@ -116,8 +116,8 @@
 }
 #context if target() == "html" {
     html.elem("div", attrs: (class: "table-of-contents"))[
-        #html.elem("h2")[#html.elem("code")[djehuty]]
-        #html.elem("p")[This document is also available as #html.elem("a", attrs: (href: "djehuty.pdf"))[PDF].]
+        #html.elem("h2")[#html.elem("code")[seshat]]
+        #html.elem("p")[This document is also available as #html.elem("a", attrs: (href: "seshat.pdf"))[PDF].]
         #outline(
             title: none,
             indent: 1.5em,
@@ -133,7 +133,7 @@
 
 #include "introduction.typ"
 #pagebreak-when-paged()
-#include "running-djehuty.typ"
+#include "running-seshat.typ"
 #pagebreak-when-paged()
 #include "knowledge-graph.typ"
 #pagebreak-when-paged()

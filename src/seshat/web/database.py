@@ -14,10 +14,10 @@ from rdflib import Dataset, Graph, Namespace, Literal, RDF, RDFS, XSD, URIRef
 from rdflib.plugins.stores import sparqlstore, memory
 from rdflib.store import CORRUPTED_STORE, NO_STORE
 from jinja2 import Environment, FileSystemLoader
-from djehuty.web import cache
-from djehuty.utils import rdf, convenience as conv
-from djehuty.utils.constants import datetime_format
-from djehuty.web.config import config
+from seshat.web import cache
+from seshat.utils import rdf, convenience as conv
+from seshat.utils.constants import datetime_format
+from seshat.web.config import config
 
 def rdflib_network_audit_hook (name, arguments):
     """Event handler to audit making unexpected network connections."""
@@ -3779,7 +3779,7 @@ class SparqlInterface:
         rdf.add (store, self.ontology["ReviewClosed"],        RDF.type,   self.ontology["ReviewType"], "url")
         rdf.add (store, self.ontology["ReviewClosed"],        RDFS.label, "closed", XSD.string)
 
-        ## We split "pending" into "assigned" and "unassigned" in Djehuty.
+        ## We split "pending" into "assigned" and "unassigned" in Seshat.
         rdf.add (store, self.ontology["ReviewAssigned"],      RDF.type,   self.ontology["ReviewType"], "url")
         rdf.add (store, self.ontology["ReviewAssigned"],      RDFS.label, "assigned", XSD.string)
         rdf.add (store, self.ontology["ReviewUnassigned"],    RDF.type,   self.ontology["ReviewType"], "url")

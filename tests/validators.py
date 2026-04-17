@@ -3,7 +3,7 @@ This module tests the validator procedures.
 """
 
 import unittest
-from djehuty.web import validator
+from seshat.web import validator
 
 class TestValidatorFunctionality(unittest.TestCase):
     """Class to test the validator procedures."""

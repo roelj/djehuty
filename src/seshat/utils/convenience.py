@@ -7,7 +7,7 @@ import re
 import logging
 from html.parser import HTMLParser
 from html import escape, unescape
-from djehuty.utils.constants import allowed_html_tags
+from seshat.utils.constants import allowed_html_tags
 
 RLIMIT_AVAILABLE = False  # pylint: disable=invalid-name
 try:

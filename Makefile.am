@@ -13,8 +13,8 @@ EXTRA_DIST              =                   \
   LICENSE                                   \
   MANIFEST.in                               \
   README.md                                 \
-  etc/djehuty.service                       \
-  etc/djehuty/djehuty-example-config.xml    \
+  etc/seshat.service                        \
+  etc/seshat/seshat-example-config.xml      \
   debian/changelog                          \
   debian/control                            \
   debian/rules                              \
@@ -33,15 +33,15 @@ EXTRA_DIST              =                   \
 dist-rpm: dist
 	mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 	rm -f rpmbuild/SOURCES/*
-	ln -s $(abs_top_srcdir)/djehuty-@VERSION@.tar.gz rpmbuild/SOURCES/djehuty-@VERSION@.tar.gz
-	rpmbuild --define "_topdir $(abs_top_srcdir)/rpmbuild" -ba $(abs_top_srcdir)/rpmbuild/SPECS/djehuty.spec
+	ln -s $(abs_top_srcdir)/seshat-@VERSION@.tar.gz rpmbuild/SOURCES/seshat-@VERSION@.tar.gz
+	rpmbuild --define "_topdir $(abs_top_srcdir)/rpmbuild" -ba $(abs_top_srcdir)/rpmbuild/SPECS/seshat.spec
 
 dist-deb: dist
 	mkdir -p debbuild
 	rm -rf debbuild/*
-	ln -s $(abs_top_srcdir)/djehuty-@VERSION@.tar.gz debbuild/djehuty_@VERSION@.orig.tar.gz
-	cd debbuild && tar -zxf djehuty_@VERSION@.orig.tar.gz && \
-        cd djehuty-@VERSION@/ && debuild -us -uc
+	ln -s $(abs_top_srcdir)/seshat-@VERSION@.tar.gz debbuild/seshat_@VERSION@.orig.tar.gz
+	cd debbuild && tar -zxf seshat_@VERSION@.orig.tar.gz && \
+        cd seshat-@VERSION@/ && debuild -us -uc
 
 if HAVE_DOCKER
 dist-docker: dist
@@ -85,14 +85,14 @@ uninstall-local:
 	rm -rf $(DESTDIR)$(pkgpythondir)
 
 lint:
-	@pylint src/djehuty/* > pylint.log || true
+	@pylint src/seshat/* > pylint.log || true
 	@printf "Wrote 'pylint.log'.\n"
 
 coverity-report:
 	@cov-build --dir cov-int --no-command --fs-capture-search .
 
 publish-pypi: dist-pypi
-	@PYTHON@ -m twine upload --repository pypi dist/djehuty-@VERSION@.tar.gz dist/djehuty-@VERSION@-py3-none-any.whl
+	@PYTHON@ -m twine upload --repository pypi dist/seshat-@VERSION@.tar.gz dist/seshat-@VERSION@-py3-none-any.whl
 
 publish-test-pypi: dist-pypi
-	@PYTHON@ -m twine upload --repository testpypi dist/djehuty-@VERSION@.tar.gz dist/djehuty-@VERSION@-py3-none-any.whl
+	@PYTHON@ -m twine upload --repository testpypi dist/seshat-@VERSION@.tar.gz dist/seshat-@VERSION@-py3-none-any.whl

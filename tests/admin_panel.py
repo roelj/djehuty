@@ -5,9 +5,9 @@ This module tests browsing the admin features.
 import os
 import unittest
 import requests
-from djehuty.utils import rdf
+from seshat.utils import rdf
 
-TOKEN    = os.getenv("DJEHUTY_TEST_TOKEN")
+TOKEN    = os.getenv("SESHAT_TEST_TOKEN")
 BASE_URL = "http://127.0.0.1:8080"
 TIMEOUT  = 30
 
@@ -38,7 +38,7 @@ class TestAdminFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/admin/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session=zz{TOKEN}",
+                    "Cookie": f"seshat_session=zz{TOKEN}",
                     "Accept": "text/html"
                 },
                 timeout = TIMEOUT)
@@ -50,7 +50,7 @@ class TestAdminFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/admin/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session={TOKEN}",
+                    "Cookie": f"seshat_session={TOKEN}",
                     "Accept": "text/html"
                 },
                 timeout = TIMEOUT)
@@ -62,7 +62,7 @@ class TestAdminFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/admin/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session={TOKEN}",
+                    "Cookie": f"seshat_session={TOKEN}",
                     "Accept": "application/json"
                 },
                 timeout = TIMEOUT)
@@ -74,7 +74,7 @@ class TestAdminFunctionality(unittest.TestCase):
         response = requests.get(
             url  = f"{BASE_URL}/admin/12345asdfg",
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "text/html"
             },
             timeout = TIMEOUT)
@@ -89,7 +89,7 @@ class TestAdminFunctionality(unittest.TestCase):
         response = requests.get(
             url  = f"{BASE_URL}/v3/explore/types",
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "application/json"
             },
             timeout = TIMEOUT)
@@ -102,7 +102,7 @@ class TestAdminFunctionality(unittest.TestCase):
             url  = f"{BASE_URL}/v3/explore/properties",
             params = { "uri": rdf.DJHT["Dataset"] },
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "application/json"
             },
             timeout = TIMEOUT)
@@ -118,7 +118,7 @@ class TestAdminFunctionality(unittest.TestCase):
                 "property": rdf.DJHT["container"]
             },
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "application/json"
             },
             timeout = TIMEOUT)
@@ -138,7 +138,7 @@ class TestAdminFunctionality(unittest.TestCase):
         response = requests.get(
             url  = f"{BASE_URL}/admin/maintenance/clear-cache",
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "text/html"
             },
             timeout = TIMEOUT)

@@ -1,4 +1,4 @@
-AC_INIT(djehuty, 25.6)
+AC_INIT(seshat, 25.6)
 AM_INIT_AUTOMAKE([foreign tar-ustar])
 AM_PATH_PYTHON([3.9])
 AC_CONFIG_FILES([
@@ -6,7 +6,7 @@ AC_CONFIG_FILES([
   Makefile
   src/Makefile
   pyproject.toml
-  rpmbuild/SPECS/djehuty.spec
+  rpmbuild/SPECS/seshat.spec
 ])
 
 dnl Check for presence of 'typst'.
@@ -16,7 +16,7 @@ AC_CHECK_PROG(TYPST, typst, typst)
 if test "x$TYPST" = "x"; then
   AC_MSG_WARN([Unable to create the user manual.])
 else
-  AC_CONFIG_FILES([doc/Makefile doc/config.typ src/djehuty/config.py])
+  AC_CONFIG_FILES([doc/Makefile doc/config.typ src/seshat/config.py])
 fi
 
 AM_CONDITIONAL([HAVE_TYPST], [test -n "$TYPST"])

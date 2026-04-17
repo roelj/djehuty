@@ -37,7 +37,7 @@ class TestDepositorFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/my/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session=zz{TOKEN}",
+                    "Cookie": f"seshat_session=zz{TOKEN}",
                     "Accept": "text/html"
                 },
                 timeout = TIMEOUT)
@@ -49,7 +49,7 @@ class TestDepositorFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/my/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session={TOKEN}",
+                    "Cookie": f"seshat_session={TOKEN}",
                     "Accept": "text/html"
                 },
                 timeout = TIMEOUT)
@@ -61,7 +61,7 @@ class TestDepositorFunctionality(unittest.TestCase):
             response = requests.get(
                 url  = f"{BASE_URL}/my/{page}",
                 headers = {
-                    "Cookie": f"djehuty_session={TOKEN}",
+                    "Cookie": f"seshat_session={TOKEN}",
                     "Accept": "application/json"
                 },
                 timeout = TIMEOUT)
@@ -73,7 +73,7 @@ class TestDepositorFunctionality(unittest.TestCase):
         response = requests.get(
             url  = f"{BASE_URL}/my/12345asdfg",
             headers = {
-                "Cookie": f"djehuty_session={TOKEN}",
+                "Cookie": f"seshat_session={TOKEN}",
                 "Accept": "text/html"
             },
             timeout = TIMEOUT)
