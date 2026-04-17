@@ -723,8 +723,10 @@ function render_git_branches_for_dataset (dataset_uuid, event) {
         } else {
             jQuery("#git-branches").append('<option value="" disabled="disabled" selected="selected">No branches found</option>');
         }
-    }).fail(function () {
-        show_message ("failure", "<p>Failed to retrieve Git branches.</p>");
+    }).fail(function (jqXHR) {
+	if (jqXHR.status !== 404) {
+            show_message ("failure", "<p>Failed to retrieve Git branches.</p>");
+	}
         jQuery("#git-branches").empty();
         jQuery("#git-branches").append('<option value="" disabled="disabled" selected="selected">No branches found</option>');
     });
@@ -761,10 +763,12 @@ function render_git_files_for_dataset (dataset_uuid, event) {
         }
         jQuery("#git-files-label").show();
         jQuery("#git-files-wrapper").show();
-    }).fail(function () {
+    }).fail(function (jqXHR) {
         jQuery("#git-files-label").hide();
         jQuery("#git-files-wrapper").hide();
-        show_message ("failure", "<p>Failed to retrieve Git file details.</p>");
+	if (jqXHR.status !== 404) {
+            show_message ("failure", "<p>Failed to retrieve Git file details.</p>");
+	}
     });
 }
 
