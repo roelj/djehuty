@@ -43,9 +43,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/html_templates/colors.css                            \
     seshat/web/resources/html_templates/dataset_access_request.html           \
     seshat/web/resources/html_templates/dataset.html                          \
-    seshat/web/resources/html_templates/depositor/collection-private-links.html \
     seshat/web/resources/html_templates/depositor/dashboard.html              \
-    seshat/web/resources/html_templates/depositor/dataset-private-links.html  \
     seshat/web/resources/html_templates/depositor/edit-collection.html        \
     seshat/web/resources/html_templates/depositor/edit-dataset.html           \
     seshat/web/resources/html_templates/depositor/edit-session.html           \
@@ -53,6 +51,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/html_templates/depositor/my-collections.html         \
     seshat/web/resources/html_templates/depositor/my-data.html                \
     seshat/web/resources/html_templates/depositor/new_private_link.html       \
+    seshat/web/resources/html_templates/depositor/private-links.html          \
     seshat/web/resources/html_templates/depositor/profile.html                \
     seshat/web/resources/html_templates/depositor/published-collection.html   \
     seshat/web/resources/html_templates/depositor/submitted-for-review.html   \

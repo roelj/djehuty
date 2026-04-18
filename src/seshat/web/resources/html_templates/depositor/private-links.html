@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block headers %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
-<script src="/static/js/utils.js"></script>
+<script src="/static/js/utils.js?cache=1776522604"></script>
 <script nonce="{{nonce}}">
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".delete-private-link").forEach(function (element) {
         element.addEventListener("click", function (event) {
-            delete_dataset_private_link (element.dataset.datasetUuid,
+            delete_{{item_type}}_private_link (element.dataset.{{item_type}}Uuid,
                                          element.dataset.linkId, event);
         });
     });
@@ -16,16 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
 {% block submenu %}
 <ul>
   {%- if show_back %}
-  <li><a href="/my/datasets">&#8592; Go back</a>
+  <li><a href="/my/{{item_type}}s">&#8592; Go back</a>
   {%- endif %}
-  <li class="create-button"><a href="/my/datasets/{{dataset.uuid}}/private_link/new">Create new private link</a>
+  <li class="create-button"><a href="/my/{{item_type}}s/{{item.uuid}}/private_link/new">Create new private link</a>
 </ul>
 {% endblock %}
 {% block body %}
 <h1>Private links</h1>
-<p>Manage private links for <strong>{{dataset.title}}</strong>.</p>
-<p><strong>Note</strong>: Private links give access to a dataset including
-  access to the files within the dataset, regardless of the embargo,
+<p>Manage private links for <strong>{{item.title}}</strong>.</p>
+<p><strong>Note</strong>: Private links give access to a {{item_type}} including
+  access to the files within the {{item_type}}, regardless of the embargo,
   restricted access, or closed access settings.</p>
 {%- if private_links %}
 <table id="private-links-table" class="corporate-identity-table">
@@ -33,16 +33,16 @@ document.addEventListener("DOMContentLoaded", function () {
   <tbody>
     {%- for link in private_links %}
     <tr>
-      <td><a href="/private_datasets/{{link.id_string}}">{{link.id_string}}</a></td>
+      <td><a href="/private_{{item_type}}s/{{link.id_string}}">{{link.id_string}}</a></td>
       <td>{{link.purpose}}</td>
       <td>{{link.whom}}</td>
       <td>{{"Expired" if link.is_expired else link.expires_date }}</td>
-      <td><a href="#" class="delete-private-link fas fa-trash-can" title="Remove" data-dataset-uuid="{{dataset.container_uuid}}" data-link-id="{{link.id_string}}"></a></td>
+      <td><a href="#" class="delete-private-link fas fa-trash-can" title="Remove" data-{{item_type}}-uuid="{{item.container_uuid}}" data-link-id="{{link.id_string}}"></a></td>
     </tr>
     {%- endfor %}
   </tbody>
 </table>
 {%- else %}
-<div class="center"><a href="/my/datasets/{{dataset.uuid}}/private_link/new" class="button corporate-identity-standard-button">Create new private link</a></div>
+<div class="center"><a href="/my/{{item_type}}s/{{item.uuid}}/private_link/new" class="button corporate-identity-standard-button">Create new private link</a></div>
 {%- endif %}
 {% endblock %}

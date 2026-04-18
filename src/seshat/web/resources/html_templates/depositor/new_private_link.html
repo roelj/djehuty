@@ -19,14 +19,14 @@
 {% endblock %}
 {% block submenu %}
 <ul>
-  <li><a href="/my/datasets/{{dataset_uuid}}/private_links">&#8592; Go back</a>
+  <li><a href="/my/{{item_type}}s/{{item_uuid}}/private_links">&#8592; Go back</a>
   <li class="create-button"><label id="submit-button-label" for="submit-link">Activate private link</a>
 </ul>
 {% endblock %}
 {% block body %}
 <h1>Create new private link</h1>
 <p>Fields marked with <span class="required-field">&#8727;</span> are required.</p>
-<form action="/my/datasets/{{dataset_uuid}}/private_link/new" method="post">
+<form action="/my/{{item_type}}s/{{item_uuid}}/private_link/new" method="post">
   <label for="expires_date">Longevity</label><span class="required-field">&#8727;</span>
   <div id="expires_date" class="options-wrapper">
     <input type="radio" name="expires_date" id="days1" value="1 day" checked="checked" /><!--
@@ -46,7 +46,7 @@
   <input type="text" id="whom" name="whom" value="" placeholder="Example: Peer-reviewers of a journal" />
 
   <input type="checkbox" name="anonymize_link" id="anonymize_link">
-  <label class="no-head" for="anonymize_link">Hide authors and affiliation when accessing the dataset through this private link.</label>
+  <label class="no-head" for="anonymize_link">Hide authors and affiliation when accessing the {{item_type}} through this private link.</label>
   <input type="submit" id="submit-link" value="Create link" />
 </form>
 {% endblock %}

@@ -133,6 +133,24 @@ function delete_dataset_private_link (dataset_uuid, link_id, event) {
     }
 }
 
+function delete_collection_private_link (collection_uuid, link_id, event) {
+    stop_event_propagation (event);
+    if (confirm("Deleting this private link is unrecoverable. "+
+                "Do you want to continue?"))
+    {
+        jQuery.ajax({
+            type:        "DELETE",
+            url:         `/v2/account/collections/${collection_uuid}/private_links/${link_id}`
+        }).done(function () { location.reload(); })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+              if (jqXHR.status == 403) {
+                  show_message ("failure", "<p>No permission to remove private link.</p>");
+              } else {
+                  show_message ("failure", "<p>Failed to remove private link.</p>");
+              }
+          });
+    }
+}
 
 function toggle_collaborators(dataset_uuid, may_edit_metadata, event) {
     stop_event_propagation(event);

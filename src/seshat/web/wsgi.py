@@ -2399,8 +2399,9 @@ class WebServer:
         show_back = (show_back is None or show_back != "no")
 
         return self.__render_template (request,
-                                       "depositor/dataset-private-links.html",
-                                       dataset       = dataset,
+                                       "depositor/private-links.html",
+                                       item          = dataset,
+                                       item_type     = "dataset",
                                        show_back     = show_back,
                                        private_links = links)
 
@@ -2436,9 +2437,10 @@ class WebServer:
         show_back = (show_back is None or show_back != "no")
 
         return self.__render_template (request,
-                                       "depositor/collection-private-links.html",
+                                       "depositor/private-links.html",
                                        show_back     = show_back,
-                                       collection    = collection,
+                                       item          = collection,
+                                       item_type     = "collection",
                                        private_links = links)
 
     def ui_my_collections (self, request):
@@ -2848,8 +2850,8 @@ class WebServer:
         except (validator.ValidationException, KeyError) as error:
             return self.error_400(request, error.message, error.code)
 
-    def ui_dataset_new_private_link (self, request, dataset_uuid):
-        """Implements /my/datasets/<uuid>/private_link/new."""
+    def __ui_item_new_private_link (self, request, item_uuid, item_type):
+        """Implements /my/<item_type>s/<uuid>/private_link/new."""
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
@@ -2857,26 +2859,33 @@ class WebServer:
         if account_uuid is None:
             return self.error_authorization_failed (request)
 
-        if not validator.is_valid_uuid (dataset_uuid):
+        if not validator.is_valid_uuid (item_uuid):
             return self.error_404 (request)
 
-        dataset = None
+        item = None
         try:
-            dataset = self.db.datasets (dataset_uuid = dataset_uuid,
-                                        account_uuid = account_uuid,
-                                        is_published = None,
-                                        is_latest    = None,
-                                        limit        = 1)[0]
+            if item_type == "dataset":
+                item = self.db.datasets (dataset_uuid = item_uuid,
+                                         account_uuid = account_uuid,
+                                         is_published = None,
+                                         is_latest    = None,
+                                         limit        = 1)[0]
+            elif item_type == "collection":
+                item = self.db.collections (collection_uuid = item_uuid,
+                                            account_uuid = account_uuid,
+                                            is_published = None,
+                                            is_latest    = None,
+                                            limit        = 1)[0]
         except IndexError:
             pass
 
-        if dataset is None:
+        if item is None:
             return self.error_403 (request, (f"account:{account_uuid} attempted to create "
-                                             f"private link for dataset:{dataset_uuid}."))
+                                             f"private link for {item_type}:{item_uuid}."))
 
         if request.method in ("GET", "HEAD"):
             return self.__render_template (request, "depositor/new_private_link.html",
-                                           dataset_uuid=dataset_uuid)
+                                           item_type=item_type, item_uuid=item_uuid)
 
         if request.method == "POST":
             try:
@@ -2901,42 +2910,23 @@ class WebServer:
                     delta = current_time + feed_expire_time
 
                 self.locks.lock (locks.LockTypes.PRIVATE_LINKS)
-                self.db.insert_private_link (dataset["uuid"], account_uuid, whom=whom,
+                self.db.insert_private_link (item["uuid"], account_uuid, whom=whom,
                                              purpose=purpose, expires_date=delta,
-                                             anonymize=anonymize, item_type="dataset")
+                                             anonymize=anonymize, item_type=item_type)
                 self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
-                return redirect (f"/my/datasets/{dataset_uuid}/private_links", code=302)
+                return redirect (f"/my/{item_type}s/{item_uuid}/private_links", code=302)
             except validator.ValidationException as error:
                 return self.error_400 (request, error.message, error.code)
 
         return self.error_405 (["GET", "HEAD", "POST"])
 
+    def ui_dataset_new_private_link (self, request, dataset_uuid):
+        """Implements /my/datasets/<uuid>/private_link/new."""
+        return self.__ui_item_new_private_link (request, dataset_uuid, "dataset")
+
     def ui_collection_new_private_link (self, request, collection_uuid):
-        """Implements /my/collections/<id>/private_link/new."""
-        if not self.accepts_html (request):
-            return self.error_406 ("text/html")
-
-        account_uuid = self.account_uuid_from_request (request)
-        if account_uuid is None:
-            return self.error_authorization_failed (request)
-
-        if not validator.is_valid_uuid (collection_uuid):
-            return self.error_404 (request)
-
-        collection = self.db.collections (collection_uuid = collection_uuid,
-                                          account_uuid = account_uuid,
-                                          is_published = None,
-                                          is_latest    = None,
-                                          limit        = 1)[0]
-
-        if collection is None:
-            return self.error_403 (request, (f"account:{account_uuid} attempted to create "
-                                             f"private link for collection:{collection_uuid}."))
-
-        self.locks.lock (locks.LockTypes.PRIVATE_LINKS)
-        self.db.insert_private_link (collection["uuid"], account_uuid, item_type="collection")
-        self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
-        return redirect (f"/my/collections/{collection_uuid}/private_links", code=302)
+        """Implements /my/collections/<uuid>/private_link/new."""
+        return self.__ui_item_new_private_link (request, collection_uuid, "collection")
 
     def __delete_private_link (self, request, item, account_uuid, private_link_id):
         """Deletes the private link for ITEM and responds appropriately."""
@@ -3575,7 +3565,8 @@ class WebServer:
 
             self.__log_event (request, collection["container_uuid"], "collection", "view")
             return self.ui_collection (request, collection["container_uuid"],
-                                       collection=collection, private_view=True)
+                                       collection=collection, private_view=True,
+                                       anonymize=value_or(collection, "anonymize", False))
         except IndexError:
             pass
 
@@ -3797,7 +3788,7 @@ class WebServer:
         return self.ui_collection (request, collection_id, version)
 
     def ui_collection (self, request, collection_id, version=None,
-                       collection=None, private_view=False):
+                       collection=None, private_view=False, anonymize=False):
         """Implements /collections/<id>."""
 
         handler = self.default_error_handling (request, "GET", "text/html")
@@ -3892,6 +3883,7 @@ class WebServer:
                                        datasets=datasets,
                                        statistics=statistics,
                                        private_view=private_view,
+                                       anonymize=anonymize,
                                        page_title=f"{collection['title']} (collection)")
 
     def ui_author (self, request, author_uuid):

@@ -13,7 +13,7 @@ SELECT DISTINCT ?account_uuid ?resource_id ?resource_doi ?resource_title
                 ?container_uuid (?collection AS ?uri) ?uuid
                 ?geolocation ?latitude ?longitude ?total_downloads
                 ?total_views ?total_shares ?total_cites ?container_doi
-                ?private_link_is_expired
+                ?private_link_is_expired ?anonymize
 WHERE {
   GRAPH <{{state_graph}}> {
     ?container_uri      rdf:type                 djht:CollectionContainer .
@@ -38,6 +38,7 @@ WHERE {
     {%- if private_link_id_string is not none %}
     ?collection         djht:private_links/rdf:rest*/rdf:first ?private_link .
     ?private_link       djht:id                   ?private_link_id_string .
+    OPTIONAL { ?private_link djht:anonymize       ?anonymize . }
     {%- endif %}
 
     OPTIONAL {
