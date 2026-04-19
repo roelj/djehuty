@@ -232,10 +232,9 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/images/datatables/sort_desc.png               \
     seshat/web/resources/static/images/datatables/sort_desc_disabled.png      \
     seshat/web/resources/static/images/ext-link.png                           \
-    seshat/web/resources/static/images/favicon.ico                            \
-    seshat/web/resources/static/images/favicon.png                            \
     seshat/web/resources/static/images/handle-logo.png                        \
     seshat/web/resources/static/images/logo.png                               \
+    seshat/web/resources/static/images/logo.svg                               \
     seshat/web/resources/static/images/orcid.svg                              \
     seshat/web/resources/static/js/ace/ace.js                                 \
     seshat/web/resources/static/js/ace/ext-language_tools.js                  \
