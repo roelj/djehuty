@@ -225,7 +225,6 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/fonts/SourceSansPro-Regular.ttf               \
     seshat/web/resources/static/images/codeworks-badge.svg                    \
     seshat/web/resources/static/images/collection-thumb.svg                   \
-    seshat/web/resources/static/images/CoreTrustSeal.png                      \
     seshat/web/resources/static/images/dataset-thumb.svg                      \
     seshat/web/resources/static/images/datatables/sort_asc.png                \
     seshat/web/resources/static/images/datatables/sort_asc_disabled.png       \
@@ -237,9 +236,6 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/images/favicon.png                            \
     seshat/web/resources/static/images/handle-logo.png                        \
     seshat/web/resources/static/images/logo.png                               \
-    seshat/web/resources/static/images/logo-gray.svg                          \
-    seshat/web/resources/static/images/logo-other.png                         \
-    seshat/web/resources/static/images/nikhef-black.svg                       \
     seshat/web/resources/static/images/orcid.svg                              \
     seshat/web/resources/static/js/ace/ace.js                                 \
     seshat/web/resources/static/js/ace/ext-language_tools.js                  \
