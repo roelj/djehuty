@@ -5,7 +5,7 @@ SUBDIRS                 = src
 export TAR_OPTIONS      = --owner=0 --group=0 --numeric-owner
 
 # Only attempt to build the documentation when Typst is available.
-if HAVE_TYPST
+if HAVE_DOCS
 SUBDIRS                += doc
 endif
 
@@ -60,6 +60,7 @@ endif
 dist-pypi:
 	@PYTHON@ -m build
 
+if HAVE_PYTHON_BUILD
 source-dist:
 	@PYTHON@ -m build --skip-dependency-check --no-isolation --sdist \
            -C=--global-option=sdist                                \
@@ -73,13 +74,26 @@ binary-dist:
            -C=--global-option=--owner=root                         \
            -C=--global-option=--group=root                         \
            -C=--global-option=--formats=gztar
-
 all-local:
-	@PYTHON@ -m build --outdir $(shell readlink -f $(builddir))/build
+	@PYTHON@ -m build --skip-dependency-check --no-isolation   \
+           --outdir $(shell readlink -f $(builddir))/build
+
+else
+source-dist:
+	@PYTHON@ -c "import setuptools; setuptools.setup()" sdist
+binary-dist:
+	@PYTHON@ -c "import setuptools; setuptools.setup()" bdist_wheel
+all-local:
+	@PYTHON@ -c "import setuptools; setuptools.setup()"        \
+           sdist --dist-dir $(builddir)/build                      \
+           bdist_wheel --dist-dir $(builddir)/build
+endif
 
 install-exec-local:
 	@PYTHON@ -m pip install --prefix $(DESTDIR)$(prefix) \
-        --disable-pip-version-check                    \
+        --disable-pip-version-check                          \
+        --no-build-isolation                                 \
+        --no-deps                                            \
         --no-cache-dir .
 
 uninstall-local:

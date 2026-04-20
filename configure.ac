@@ -1,4 +1,4 @@
-AC_INIT(seshat, 25.6)
+AC_INIT(seshat, 26.4+rc1)
 AM_INIT_AUTOMAKE([foreign tar-ustar])
 AM_PATH_PYTHON([3.9])
 AC_CONFIG_FILES([
@@ -13,13 +13,23 @@ dnl Check for presence of 'typst'.
 dnl ---------------------------------------------------------------------------
 AC_CHECK_PROG(TYPST, typst, typst)
 
-if test "x$TYPST" = "x"; then
-  AC_MSG_WARN([Unable to create the user manual.])
-else
-  AC_CONFIG_FILES([doc/Makefile doc/config.typ src/seshat/config.py])
-fi
+have_typst=no
+test -n "$TYPST" && have_typst=yes
 
-AM_CONDITIONAL([HAVE_TYPST], [test -n "$TYPST"])
+have_prebuilt_docs=no
+test -f "$srcdir/doc/seshat.pdf" && test -f "$srcdir/doc/index.html" && have_prebuilt_docs=yes
+
+AS_IF([test "x$have_typst" = "xno"],
+  [AS_IF([test "x$have_prebuilt_docs" = "xyes"],
+    [AC_MSG_NOTICE([Using pre-built user manual.])],
+    [AC_MSG_WARN([Unable to create the user manual.])])])
+
+AS_IF([test "x$have_typst" = "xyes" || test "x$have_prebuilt_docs" = "xyes"],
+  [AC_CONFIG_FILES([doc/Makefile doc/config.typ src/seshat/config.py])])
+
+AM_CONDITIONAL([HAVE_TYPST], [test "x$have_typst" = "xyes"])
+AM_CONDITIONAL([HAVE_PREBUILT_DOCS], [test "x$have_prebuilt_docs" = "xyes"])
+AM_CONDITIONAL([HAVE_DOCS], [test "x$have_typst" = "xyes" || test "x$have_prebuilt_docs" = "xyes"])
 
 dnl Check for the presence of 'docker' or 'podman'.
 dnl ---------------------------------------------------------------------------
@@ -32,12 +42,10 @@ AM_CONDITIONAL([HAVE_DOCKER], [test -n "$DOCKER"])
 
 dnl Check for the Python 'build' module.
 dnl ---------------------------------------------------------------------------
-if test "x$PYTHON" != "x"; then
-   $PYTHON -m build --version > /dev/null 2> /dev/null
-   if test $? -ne 0; then
-      AC_MSG_WARN([Unable to build tarballs due to missing Python 'build' module.])
-   fi
-fi
+AC_CACHE_CHECK([for python build module], [ac_cv_have_python_build],
+  [AS_IF([$PYTHON -m build --version > /dev/null 2>&1],
+    [ac_cv_have_python_build=yes], [ac_cv_have_python_build=no])])
+AM_CONDITIONAL([HAVE_PYTHON_BUILD], [test "x$ac_cv_have_python_build" = "xyes"])
 
 dnl Package-specific configurable options
 dnl ---------------------------------------------------------------------------

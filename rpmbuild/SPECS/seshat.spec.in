@@ -5,14 +5,14 @@ Summary:     Data and software repository system
 Source0:     %{name}-%{version}.tar.gz
 License:     AGPL-3.0-or-later
 Group:       System Environment/Daemons
-BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildArch:   noarch
-Vendor:      Roel Janssen <r.r.e.janssen@tudelft.nl>
 Url:         @GIT_URL@
 BuildRequires: systemd-rpm-macros
 # RHEL8 defaults to Python 3.6
 %if 0%{?rhel} == 8
 %global python3_pkgversion 39
+%global __python3 /usr/bin/python3.9
+BuildRequires: python%{python3_pkgversion}
 %else
 # Only RHEL8 does not have a package for the 'build' module.
 BuildRequires: python%{python3_pkgversion}-build
@@ -20,12 +20,7 @@ BuildRequires: python%{python3_pkgversion}-build
 BuildRequires: python%{python3_pkgversion}-devel
 BuildRequires: python%{python3_pkgversion}-setuptools
 BuildRequires: python%{python3_pkgversion}-pip
-%if 0%{?fedora} >= 40
 BuildRequires: python%{python3_pkgversion}-wheel
-%else
-BuildRequires: python%{python3_pkgversion}-setuptools-wheel
-BuildRequires: python%{python3_pkgversion}-pip-wheel
-%endif
 BuildRequires: make
 Requires: git
 Requires: python%{python3_pkgversion}-requests
@@ -43,26 +38,58 @@ This package provides a data and software repository system.
 
 %prep
 %autosetup -p1 -n %{name}-%{version}
-# RHEL8 does not provide the 'build' module for Python.  Fortunately, it's
-# only required on build-time, not run-time, so we take a shortcut here.
-%if 0%{?rhel} == 8
-pip3.9 install build
-%endif
 
 %build
 %{configure}
 make
 
-
 %install
+%if 0%{?rhel} == 8 || 0%{?rhel} == 9
+cat > setup.cfg << EOF
+[metadata]
+name = %{name}
+version = %{version}
+url = %{url}
+
+[install]
+prefix = %{buildroot}/usr
+
+[options]
+package_dir =
+    = src
+packages =
+    seshat
+    seshat.web
+    seshat.utils
+
+[options.package_data]
+seshat =
+    web/resources/*
+    web/resources/html_templates/*
+    web/resources/html_templates/admin/*
+    web/resources/html_templates/admin/reports/*
+    web/resources/html_templates/depositor/*
+    web/resources/html_templates/email/*
+    web/resources/html_templates/review/*
+    web/resources/metadata_templates/*
+    web/resources/sparql_templates/*
+    web/resources/static/css/*
+    web/resources/static/fonts/*
+    web/resources/static/images/*
+    web/resources/static/images/datatables/*
+    web/resources/static/js/*
+    web/resources/static/js/ace/*
+
+[options.entry_points]
+console_scripts =
+    seshat = seshat.ui:main
+EOF
+%endif
 make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}%{_unitdir}
 cp etc/%{name}.service %{buildroot}%{_unitdir}/
 mkdir -p %{buildroot}/etc/%{name}
 cp etc/%{name}/%{name}-example-config.xml %{buildroot}/etc/%{name}/
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %license LICENSE
@@ -72,7 +99,7 @@ rm -rf %{buildroot}
 %{python3_sitelib}/%{name}-@VERSION@*
 %{_unitdir}/%{name}.service
 %dir /etc/%{name}
-%{_sysconfdir}/%{name}/%{name}-example-config.xml
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}-example-config.xml
 %{_bindir}/%{name}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{name}.pdf
@@ -88,6 +115,9 @@ rm -rf %{buildroot}
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon Apr 20 2026 Roel Janssen <rrejanssen@gmail.com> 26.4+rc1
+- Ensure RPM builds work without internet connection by providing an
+  alternative to the 'build' module.
 * Mon Mar 2 2026 Roel Janssen <rrejanssen@gmail.com> 25.6-1
 - Clean-up LaTeX legacy
 * Fri Jan 31 2025 Roel Janssen <r.r.e.janssen@tudelft.nl> 25.1-1

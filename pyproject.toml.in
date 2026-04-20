@@ -1,11 +1,11 @@
 [build-system]
-requires        = ["setuptools>=42"]
+requires        = ["setuptools>=42", "wheel"]
 build-backend   = "setuptools.build_meta"
 
 [project]
 name            = "seshat"
 version         = "@VERSION@"
-license         = "AGPL-3.0-or-later"
+license         = {text = "AGPL-3.0-or-later"}
 authors         = [{ name="Roel Janssen", email="rrejanssen@gmail.com" }]
 description     = "A data and software repository system"
 readme          = "README.md"

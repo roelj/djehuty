@@ -25,6 +25,10 @@ $(doc_HTML):
 	@printf "Generated $(doc_HTML).\n"
 
 all: $(doc_PDF) $(doc_HTML)
+else
+if HAVE_PREBUILT_DOCS
+dist_doc_DATA           += $(doc_PDF) $(doc_HTML)
+endif
 endif
 
 EXTRA_DIST              = $(doc_TYPST) $(doc_HTML) $(doc_PDF)      \
