@@ -8,4 +8,4 @@ include rpmbuild/SPECS/seshat.spec.in
 include debian/changelog debian/control debian/copyright debian/rules debian/source/format debian/source/include-binaries
 recursive-include src *.py
 recursive-include tests *.py
-recursive-include src/seshat/web/resources *.bib *.enw *.ris *.cff *.txt *.html *.xml *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.json *.sparql *.png *.ico
+recursive-include src/seshat/web/resources *.bib *.enw *.ris *.cff *.txt *.html *.xml *.css *.eot *.svg *.ttf *.woff *.woff2 *.js *.json *.sparql *.png

@@ -17,6 +17,7 @@ EXTRA_DIST              =                   \
   etc/seshat/seshat-example-config.xml      \
   debian/changelog                          \
   debian/control                            \
+  debian/copyright                          \
   debian/rules                              \
   debian/source/format                      \
   debian/source/include-binaries            \
