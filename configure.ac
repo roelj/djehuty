@@ -7,6 +7,7 @@ AC_CONFIG_FILES([
   src/Makefile
   pyproject.toml
   rpmbuild/SPECS/seshat.spec
+  doc/seshat.1
 ])
 
 dnl Check for presence of 'typst'.

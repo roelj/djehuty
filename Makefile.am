@@ -31,6 +31,8 @@ EXTRA_DIST              =                   \
   tests/ui_pages.py                         \
   tests/validators.py
 
+man_MANS = doc/seshat.1
+
 dist-rpm: dist
 	mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 	rm -f rpmbuild/SOURCES/*

@@ -104,6 +104,7 @@ cp etc/%{name}/%{name}-example-config.xml %{buildroot}/etc/%{name}/
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{name}.pdf
 %{_datadir}/%{name}/index.html
+%{_mandir}/man1/seshat.1*
 
 %post
 %systemd_post %{name}.service

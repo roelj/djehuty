@@ -1,0 +1,64 @@
+.TH SESHAT 1 "" "seshat @VERSION@" "User Commands"
+.SH NAME
+seshat \- data and software repository system
+.SH SYNOPSIS
+.B seshat
+.I subcommand
+.RI [ options ]
+.SH DESCRIPTION
+.B seshat
+is a data and software repository system.
+It provides a web interface for managing and publishing research data and software.
+.SH SUBCOMMANDS
+.SS web
+Start the seshat web server.
+.TP
+.BR \-h ", " \-\-help
+Show a help message.
+.TP
+.BR \-c ", " \-\-config\-file =\fIFILE\fR
+Load configuration from
+.IR FILE .
+.TP
+.BR \-i ", " \-\-initialize
+Populate the RDF store with default triples.
+.TP
+.BR \-e ", " \-\-extract\-transactions\-from\-log =\fIDATETIME\fR
+Extract transactions from the log file. Does not extract delayed transactions.
+The optional argument is a datetime to start from, in the format
+.IR "YYYY-MM-DD HH:MM:SS" .
+.TP
+.BR \-d ", " \-\-extract\-delayed\-transactions\-from\-log =\fIDATETIME\fR
+Similar to
+.BR \-e ,
+except this option only extracts delayed transactions from the log file.
+.TP
+.BR \-A ", " \-\-apply\-transactions =\fIDIR\fR
+Apply transactions extracted by the
+.B \-e
+option. The optional argument is the path to the folder containing the SPARQL
+transaction files. By default it will look in the pre-configured directory.
+.TP
+.BR \-f ", " \-\-full\-rdf\-export
+Export all metadata as RDF triples in N3 format.
+.RB "Note: This feature is in " BETA " state."
+.TP
+.BR \-p ", " \-\-public\-rdf\-export
+Export all publicly available metadata as RDF triples in N3 format.
+.RB "Note: This feature is in " BETA " state."
+.SH "GLOBAL OPTIONS"
+.TP
+.BR \-h ", " \-\-help
+Show a help message.
+.TP
+.BR \-v ", " \-\-version
+Show versioning information.
+.SH FILES
+.TP
+.I /etc/seshat/seshat-example-config.xml
+Example configuration file.
+.SH "SEE ALSO"
+The full documentation for
+.B seshat
+is available in
+.IR /usr/share/seshat/index.html .
