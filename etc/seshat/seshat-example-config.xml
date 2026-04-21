@@ -7,26 +7,26 @@
   <support-email-address>support@example.com</support-email-address>
   <!-- <restrict-depositing-to-domain>example.com</restrict-depositing-to-domain> -->
   <colors>
-    <primary-color>#f49120</primary-color>
-    <primary-color-hover>#d26000</primary-color-hover>
-    <primary-color-active>#9d4800</primary-color-active>
-    <primary-foreground-color>#000000</primary-foreground-color>
-    <privilege-button-color>#fce3bf</privilege-button-color>
-    <footer-background-color>#707070</footer-background-color>
+    <primary-color>#7060BB</primary-color>
+    <primary-color-hover>#8F80CC</primary-color-hover>
+    <primary-color-active>#574899</primary-color-active>
+    <privilege-button-color>#BDB5E8</privilege-button-color>
+    <footer-background-color>#312B63</footer-background-color>
+    <background-color>#F9F8FD</background-color>
   </colors>
   <small-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">seshat</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/seshat/seshat">seshat</a>.
       </p>
     </div>
   </small-footer>
   <large-footer>
     <div id="footer-wrapper2">
-      <p>This repository is powered by <a href="https://codeberg.org/roelj/djehuty">seshat</a>.
+      <p>This repository is powered by <a href="https://codeberg.org/seshat/seshat">seshat</a>.
       </p>
     </div>
   </large-footer>
-  <sandbox-message style="background: #784421; color: #fff;">
+  <sandbox-message style="background: #574899; color: #fff;">
     This is an instance launched with the example configuration. Please
     review and modify the configuration file.
   </sandbox-message>
@@ -87,38 +87,61 @@
     <from><!-- noreply@example.com --></from>
   </email>
   <privileges>
-    <account first_name="John" last_name="Doe" email="you@example.com" orcid="0000-0000-0000-0001">
+    <account first_name="Seshat" last_name="" email="seshat@seshat.software" orcid="XXXX-XXXX-XXXX-XXXX">
       <may-administer>1</may-administer>
       <may-run-sparql-queries>1</may-run-sparql-queries>
       <may-impersonate>1</may-impersonate>
-      <may-review>0</may-review>
-      <may-review-quotas>0</may-review-quotas>
+      <may-review>1</may-review>
+      <may-review-quotas>1</may-review-quotas>
+      <may-review-institution>1</may-review-institution>
+      <may-review-integrity>1</may-review-integrity>
+      <may-process-feedback>0</may-process-feedback>
+      <may-recalculate-statistics>1</may-recalculate-statistics>
+      <may-receive-email-notifications>1</may-receive-email-notifications>
+    </account>
+    <account first_name="Seshat" last_name="" email="feedback@seshat.software">
+      <may-process-feedback>1</may-process-feedback>
     </account>
   </privileges>
   <groups>
-    <group name="4TU.ResearchData" domain="4tu.nl" id="28585" parent_id="0" />
-    <group name="Delft University of Technology Students" domain="student.tudelft.nl" id="28628" parent_id="28586" is_featured="1" />
-    <group name="Delft University of Technology" domain="tudelft.nl" id="28586" parent_id="28585" is_featured="1"  />
-    <group name="Deltares" domain="deltares.nl" id="34907" parent_id="28598" />
-    <group name="Eindhoven University of Technology Students" domain="student.tue.nl" id="28631" parent_id="28589" is_featured="1" />
-    <group name="Eindhoven University of Technology" domain="tue.nl" parent_id="28585" id="28589" is_featured="1" />
-    <group name="Erasmus University Rotterdam" domain="eur.nl" id="34904" parent_id="28598" />
-    <group name="IHE Delft Institute for Water Education" domain="un-ihe.org" id="34910" parent_id="28598" />
-    <group name="Leiden University" domain="leidenuniv.nl" id="34895" parent_id="28598" />
-    <group name="Maastricht University" domain="maastrichtuniversity.nl" id="34919" parent_id="28598" />
-    <group name="NIOZ Royal Netherlands Institute for Sea Research" domain="nioz.nl" id="34892" parent_id="28598" />
-    <group name="Other institutions" domain="nogroup" id="28598" parent_id="28585" is_featured="1" />
-    <group name="Radboud University" domain="ru.nl" id="34913" parent_id="28598" />
-    <group name="University of Amsterdam Students" domain="student.uva.nl" id="35313" parent_id="34901" />
-    <group name="University of Amsterdam" domain="uva.nl" id="34901" parent_id="28598" />
-    <group name="University of Groningen" domain="rug.nl" id="34916" parent_id="28598" />
-    <group name="University of Twente Students" domain="student.utwente.nl" id="28634" parent_id="28592" is_featured="1" />
-    <group name="University of Twente" domain="utwente.nl" id="28592" parent_id="28585" is_featured="1" />
-    <group name="Utrecht University" domain="uu.nl" id="34898" parent_id="28598" />
-    <group name="Wageningen University and Research" domain="wur.nl" id="28595" parent_id="28585" is_featured="1" />
+    <group name="House of Life" domain="perankh.seshat.software" id="1" parent_id="0">
+      <member is_supervisor="1" email="seshat@seshat.software" first_name="Seshat" />
+      <member is_supervisor="1" email="djehuty@seshat.software" first_name="Djehuty" />
+    </group>
+    <group name="Record-keeping and Archiving" domain="archives.seshat.software" id="100" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="seshat@seshat.software" first_name="Seshat" />
+      <member email="imhotep@archives.seshat.software" first_name="Imhotep" />
+      <member email="amenhotep@archives.seshat.software" first_name="Amenhotep" last_name="son of Hapu" />
+    </group>
+    <group name="Writing and Knowledge" domain="knowledge.seshat.software" id="200" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="djehuty@seshat.software" first_name="Djehuty" />
+      <member email="horemheb@knowledge.seshat.software" first_name="Horemheb" />
+      <member email="kenhirkhopeshef@knowledge.seshat.software" first_name="Kenhirkhopeshef" />
+    </group>
+    <group name="Measurement and Time" domain="measurement.seshat.software" id="300" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="seshat@seshat.software" first_name="Seshat" />
+      <member is_supervisor="1" email="djehuty@seshat.software" first_name="Djehuty" />
+      <member email="amenemhat@measurement.seshat.software" first_name="Amenemhat" />
+      <member email="harkhuf@measurement.seshat.software" first_name="Harkhuf" />
+    </group>
+    <group name="Libraries and Collections" domain="collections.seshat.software" id="400" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="seshat@seshat.software" first_name="Seshat" />
+      <member email="manetho@collections.seshat.software" first_name="Manetho" />
+      <member email="ipuwer@collections.seshat.software" first_name="Ipuwer" />
+    </group>
+    <group name="Discovery and Exploration" domain="exploration.seshat.software" id="500" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="seshat@seshat.software" first_name="Seshat" />
+      <member email="harkhuf@exploration.seshat.software" first_name="Harkhuf" />
+      <member email="hatshepsut@exploration.seshat.software" first_name="Hatshepsut" />
+    </group>
+    <group name="Justice and Order" domain="maat.seshat.software" id="600" parent_id="1" is_featured="1">
+      <member is_supervisor="1" email="maat@seshat.software" first_name="Ma'at" />
+      <member email="rekhmire@maat.seshat.software" first_name="Rekhmire" />
+      <member email="ptahhotep@maat.seshat.software" first_name="Ptahhotep" />
+    </group>
   </groups>
   <quotas default="5000000000">
-    <group domain="tudelft.nl">50000000000</group>
-    <account email="you@example.com">25000000000</account>
+    <group domain="archives.seshat.software">100000000000</group>
+    <account email="seshat@seshat.software">25000000000</account>
   </quotas>
 </seshat>
