@@ -86,7 +86,7 @@ source-dist:
 binary-dist:
 	@PYTHON@ -c "import setuptools; setuptools.setup()" bdist_wheel
 all-local:
-	@PYTHON@ -c "import setuptools; setuptools.setup()"        \
+	@PYTHON@ -c "import setuptools; setuptools.setup(name='@PACKAGE_NAME@', version='@VERSION@')" \
            sdist --dist-dir $(builddir)/build                      \
            bdist_wheel --dist-dir $(builddir)/build
 endif
@@ -96,7 +96,8 @@ install-exec-local:
         --disable-pip-version-check                          \
         --no-build-isolation                                 \
         --no-deps                                            \
-        --no-cache-dir .
+        --no-cache-dir                                       \
+        $(abs_builddir)/build/seshat-@VERSION@-py3-none-any.whl
 
 uninstall-local:
 	rm -rf $(DESTDIR)$(pkgpythondir)

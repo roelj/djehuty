@@ -1,37 +1,36 @@
-Name:        seshat
-Version:     @VERSION@
-Release:     1%{?dist}
-Summary:     Data and software repository system
-Source0:     %{name}-%{version}.tar.gz
-License:     AGPL-3.0-or-later
-Group:       System Environment/Daemons
-BuildArch:   noarch
-Url:         @GIT_URL@
-BuildRequires: systemd-rpm-macros
-# RHEL8 defaults to Python 3.6
-%if 0%{?rhel} == 8
-%global python3_pkgversion 39
-%global __python3 /usr/bin/python3.9
-BuildRequires: python%{python3_pkgversion}
-%else
-# Only RHEL8 does not have a package for the 'build' module.
-BuildRequires: python%{python3_pkgversion}-build
-%endif
-BuildRequires: python%{python3_pkgversion}-devel
-BuildRequires: python%{python3_pkgversion}-setuptools
-BuildRequires: python%{python3_pkgversion}-pip
-BuildRequires: python%{python3_pkgversion}-wheel
-BuildRequires: make
-Requires: git
-Requires: python%{python3_pkgversion}-requests
-Requires: python%{python3_pkgversion}-jinja2
-Requires: python%{python3_pkgversion}-rdflib
-Requires: python%{python3_pkgversion}-pygit2
-Requires: python%{python3_pkgversion}-werkzeug
-Requires: python%{python3_pkgversion}-defusedxml
-Requires: python%{python3_pkgversion}-pillow
+Name:          seshat
+Version:       @VERSION@
+Release:       1%{?dist}
+Summary:       Data and software repository system
+License:       AGPL-3.0-or-later
+URL:           @GIT_URL@
+Source0:       %{name}-%{version}.tar.gz
+BuildArch:     noarch
 
-%undefine __brp_mangle_shebangs
+# RHEL 8 defaults to Python 3.6, which is EOL. Use python3.9 instead.
+%if 0%{?rhel} == 8
+BuildRequires: python39-rpm-macros
+%global python3_pkgversion 39
+%else
+# The 'build' module is only packaged outside RHEL 8.
+BuildRequires: python3-build
+%endif
+
+BuildRequires: make
+BuildRequires: systemd-rpm-macros
+BuildRequires: python%{python3_pkgversion}-devel
+BuildRequires: python%{python3_pkgversion}-pip
+BuildRequires: python%{python3_pkgversion}-setuptools
+BuildRequires: python%{python3_pkgversion}-wheel
+
+Requires:      git
+Requires:      python%{python3_pkgversion}-defusedxml
+Requires:      python%{python3_pkgversion}-jinja2
+Requires:      python%{python3_pkgversion}-pillow
+Requires:      python%{python3_pkgversion}-pygit2
+Requires:      python%{python3_pkgversion}-rdflib
+Requires:      python%{python3_pkgversion}-requests
+Requires:      python%{python3_pkgversion}-werkzeug
 
 %description
 This package provides a data and software repository system.
@@ -40,7 +39,7 @@ This package provides a data and software repository system.
 %autosetup -p1 -n %{name}-%{version}
 
 %build
-%{configure}
+%{configure} PYTHON=%{__python3}
 make
 
 %install
@@ -86,19 +85,18 @@ console_scripts =
 EOF
 %endif
 make install DESTDIR=%{buildroot}
-mkdir -p %{buildroot}%{_unitdir}
-cp etc/%{name}.service %{buildroot}%{_unitdir}/
-mkdir -p %{buildroot}/etc/%{name}
-cp etc/%{name}/%{name}-example-config.xml %{buildroot}/etc/%{name}/
+install -Dpm 0644 etc/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
+install -Dpm 0644 etc/%{name}/%{name}-example-config.xml \
+    %{buildroot}%{_sysconfdir}/%{name}/%{name}-example-config.xml
+%py3_shebang_fix %{buildroot}%{_bindir}/
 
 %files
 %license LICENSE
-%defattr(-,root,root)
 %doc README.md
 %{python3_sitelib}/%{name}/
-%{python3_sitelib}/%{name}-@VERSION@*
+%{python3_sitelib}/%{name}-%{version}*
 %{_unitdir}/%{name}.service
-%dir /etc/%{name}
+%dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-example-config.xml
 %{_bindir}/%{name}
 %dir %{_datadir}/%{name}
@@ -116,7 +114,7 @@ cp etc/%{name}/%{name}-example-config.xml %{buildroot}/etc/%{name}/
 %systemd_postun_with_restart %{name}.service
 
 %changelog
-* Mon Apr 20 2026 Roel Janssen <rrejanssen@gmail.com> 26.4+rc1
+* Mon Apr 20 2026 Roel Janssen <rrejanssen@gmail.com> - 26.4-0.1.rc1
 - Ensure RPM builds work without internet connection by providing an
   alternative to the 'build' module.
 * Mon Mar 2 2026 Roel Janssen <rrejanssen@gmail.com> 25.6-1
