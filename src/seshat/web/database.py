@@ -2930,7 +2930,7 @@ class SparqlInterface:
         roots   = list (filter (lambda category: conv.value_or (category, "parent_id", 0) == 0, results))
         for root in roots:
             # The iterable 'subcategories' is materialized by the call to 'sorted'.
-            subcategories = filter (lambda category: conv.value_or_none (category, "parent_id") == root["id"], results)  # pylint: disable=cell-var-from-loop
+            subcategories = filter (lambda category, parent=root: conv.value_or_none (category, "parent_id") == parent["id"], results)  # pylint: disable=cell-var-from-loop
             root["subcategories"] = sorted (subcategories, key = lambda field: field["title"])
 
         roots = sorted (roots, key = lambda field: field["title"])
