@@ -6,7 +6,7 @@ function save_session (session_id) {
     event.preventDefault();
     event.stopPropagation();
 
-    var jqxhr  = jQuery.ajax({
+    jQuery.ajax({
         url:         `/my/sessions/${session_id}/edit`,
         type:        "PUT",
         contentType: "application/json",
