@@ -4,7 +4,7 @@ build-backend   = "setuptools.build_meta"
 
 [project]
 name            = "seshat"
-version         = "@VERSION@"
+version         = "@VERSION_FOR_PYTHON@"
 license         = {text = "AGPL-3.0-or-later"}
 authors         = [{ name="Roel Janssen", email="rrejanssen@gmail.com" }]
 description     = "A data and software repository system"

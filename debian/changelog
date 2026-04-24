@@ -1,3 +1,9 @@
+seshat (26.4~rc2-1) stable; urgency=low
+
+  * Release candidate 2 of seshat 26.4.
+
+ -- Roel Janssen <rrejanssen@gmail.com>  Thu, 24 Apr 2026 16:08:10 +0200
+
 seshat (25.6-1) stable; urgency=low
 
   * Initial release of the Debian package.

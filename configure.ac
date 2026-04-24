@@ -1,4 +1,4 @@
-AC_INIT(seshat, 26.4+rc1)
+AC_INIT(seshat, 26.4~rc2)
 AM_INIT_AUTOMAKE([foreign tar-ustar])
 AM_PATH_PYTHON([3.9])
 AC_CONFIG_FILES([
@@ -9,6 +9,10 @@ AC_CONFIG_FILES([
   rpmbuild/SPECS/seshat.spec
   doc/seshat.1
 ])
+
+dnl Make building pre-releases work seemlessly
+dnl ---------------------------------------------------------------------------
+AC_SUBST([VERSION_FOR_PYTHON], m4_translit(AC_PACKAGE_VERSION, [~], []))
 
 dnl Check for presence of 'typst'.
 dnl ---------------------------------------------------------------------------

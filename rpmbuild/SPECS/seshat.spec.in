@@ -47,7 +47,7 @@ make
 cat > setup.cfg << EOF
 [metadata]
 name = %{name}
-version = %{version}
+version = @VERSION_FOR_PYTHON@
 url = %{url}
 
 [install]
@@ -94,7 +94,7 @@ install -Dpm 0644 etc/%{name}/%{name}-example-config.xml \
 %license LICENSE
 %doc README.md
 %{python3_sitelib}/%{name}/
-%{python3_sitelib}/%{name}-%{version}*
+%{python3_sitelib}/%{name}-@VERSION_FOR_PYTHON@*
 %{_unitdir}/%{name}.service
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-example-config.xml
