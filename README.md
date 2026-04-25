@@ -1,5 +1,8 @@
-seshat
-=========
+<p align="center">
+  <img src="https://seshat.software/logo.png" alt="Seshat logo" width="256">
+</p>
+
+# seshat
 
 This software provides a general data and software repository system that
 attempts to promote active re-use of data and software by providing a
