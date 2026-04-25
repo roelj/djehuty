@@ -1,7 +1,7 @@
 Source: seshat
 Maintainer: Roel Janssen <rrejanssen@gmail.com>
 Homepage: https://seshat.software/
-Vcs-Git: https://codeberg.org/roelj/djehuty.git
+Vcs-Git: https://codeberg.org/seshat/seshat.git
 Section: misc
 Priority: optional
 Standards-Version: 4.7.0

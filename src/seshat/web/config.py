@@ -73,7 +73,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.handle_index                = None
         self.small_footer                = (
             '<div id="footer-wrapper2"><p>This repository is powered by '
-            '<a href="https://codeberg.org/roelj/djehuty">seshat</a>.'
+            '<a href="https://codeberg.org/seshat/seshat">seshat</a>.'
             '</p></div>'
         )
         self.large_footer                = self.small_footer
