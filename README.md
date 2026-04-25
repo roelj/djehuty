@@ -24,7 +24,7 @@ For development on GNU/Linux we recommend installing `git`, `autoconf`,
 by creating a Python virtual environment for `seshat`:
 
 ```bash
-git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
+git clone https://codeberg.org/seshat/seshat.git && cd seshat/
 autoreconf -if && ./configure
 python -m venv ../seshat-env
 . ../seshat-env/bin/activate
@@ -49,7 +49,7 @@ followed by creating a Python virtual environment for `seshat`:
 
 ```bash
 brew install python3 git autoconf automake make typst
-git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
+git clone https://codeberg.org/seshat/seshat.git && cd seshat/
 autoreconf -if && ./configure
 python3 -m venv ../seshat-env
 . ../seshat-env/bin/activate
@@ -70,17 +70,14 @@ pip freeze | grep -v "seshat.git" | cut -d= -f1 | xargs -n1 pip install -U
 For development on Windows we recommend [MSYS2](https://www.msys2.org/)
 and the following approach to installing packages:
 ```bash
-PREFIX="mingw-w64-x86_64-" # See https://www.msys2.org/docs/package-naming
-pacman -Suy git autoconf automake make ${PREFIX}python \
-            ${PREFIX}python-pygit2 ${PREFIX}python-rdflib \
-            ${PREFIX}python-jinja ${PREFIX}python-requests \
-            ${PREFIX}python-werkzeug ${PREFIX}python-defusedxml \
-            ${PREFIX}python-pillow ${PREFIX}python-build \
-            ${PREFIX}python-setuptools ${PREFIX}typst
-git clone https://codeberg.org/roelj/djehuty.git && cd seshat/
-# If you chose a different PREFIX above, change /mingw64 accordingly below.
+PRE="mingw-w64-ucrt-x86_64-" # See https://www.msys2.org/docs/package-naming
+pacman -Suy auto{conf,make} make ${PRE}{git,typst,python,python-setuptools} \
+       ${PRE}python-{defusedxml,jinja,pillow,pygit2,rdflib,requests,werkzeug}
+# If you chose a different PRE above, change /ucrt64 accordingly below.
 # See: https://www.msys2.org/docs/environments
-/mingw64/bin/python -m venv --system-site-packages ../seshat-env
+export PATH="/ucrt64/bin":"${PATH}"
+git clone https://codeberg.org/seshat/seshat.git && cd seshat/
+python -m venv --system-site-packages ../seshat-env
 . ../seshat-env/bin/activate
 autoreconf -if && ./configure
 pip install --editable .
