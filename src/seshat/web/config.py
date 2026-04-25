@@ -31,7 +31,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.secondary_storage           = None
         self.endpoint                    = "http://127.0.0.1:8890/sparql"
         self.update_endpoint             = None
-        self.state_graph                 = "https://data.4tu.nl/portal/self-test"
+        self.state_graph                 = "https://seshat.software"
         self.sparql_wait_for_online      = 60
         self.sparql_read_only_mode       = False
         self.privileges                  = {}
@@ -47,7 +47,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.export_directory            = "."
         self.site_name                   = ""
         self.site_description            = ""
-        self.site_shorttag               = "4tu"
+        self.site_shorttag               = "seshat"
         self.support_email_address       = ""
         self.startup_timestamp           = 0
         self.allow_crawlers              = False
@@ -99,13 +99,13 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.datacite_prefix             = None
         self.menu                        = []
         self.colors                      = {
-            "primary-color":            "#f49120",
-            "primary-color-hover":      "#d26000",
-            "primary-color-active":     "#9d4800",
+            "primary-color":            "#7060BB",
+            "primary-color-hover":      "#8F80CC",
+            "primary-color-active":     "#574899",
             "primary-foreground-color": "#000000",
-            "privilege-button-color":   "#fce3bf",
-            "footer-background-color":  "#707070",
-            "background-color":         "#ffffff"
+            "privilege-button-color":   "#BDB5E8",
+            "footer-background-color":  "#312B63",
+            "background-color":         "#F9F8FD"
         }
 
 config = RuntimeConfiguration()
