@@ -75,7 +75,7 @@ and the following approach to installing packages:
 ```bash
 PRE="mingw-w64-ucrt-x86_64-" # See https://www.msys2.org/docs/package-naming
 pacman -Suy auto{conf,make} make ${PRE}{git,typst,python,python-setuptools} \
-       ${PRE}python-{defusedxml,jinja,pillow,pygit2,rdflib,requests,werkzeug}
+       ${PRE}python-{defusedxml,jinja,pillow,pygit2,rdflib,requests,werkzeug,pip}
 # If you chose a different PRE above, change /ucrt64 accordingly below.
 # See: https://www.msys2.org/docs/environments
 export PATH="/ucrt64/bin":"${PATH}"
