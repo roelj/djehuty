@@ -38,6 +38,10 @@
     }
 }
 
+#let silent-chapter(title) = heading(level: 1, numbering: none, outlined: true)[#title]
+#let silent-section(title) = heading(level: 2, numbering: none, outlined: true)[#title]
+#let silent-subsection(title) = heading(level: 3, numbering: none, outlined: true)[#title]
+
 #let chapter-toc-css(num-chapters) = {
   let rules = range(1, num-chapters + 1).map(i =>
     "body:has(#chapter-" + str(i) + " :target) .table-of-contents > nav > ol > li:nth-child(" + str(i) + ") > ol, " +

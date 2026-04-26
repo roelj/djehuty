@@ -1,13 +1,13 @@
 #import "config.typ": *
 #let chapter_text = [
-= News <news-section>
+#silent-chapter[News] <news-section>
 
-== Release notes for `v25.12`. <release-25-11>
+#silent-section[Release notes for `v25.12`.] <release-25-11>
 
 After a delay of 5 months, I am delighted to announce the
 December release of 2025. It consists of N commits made by 4 authors.
 
-=== New features
+#silent-subsection[New features]
 
 - Add ability to build a Debian package.
   (#commitLink("9b240c39de77af338b855e78efe1afb8c4f8a9d8"),
@@ -19,7 +19,7 @@ December release of 2025. It consists of N commits made by 4 authors.
   #commitLink("408de87dc7082ce0e933d28f4a97b6fd5ec9c965"),
   #commitLink("9981890cace3363455c851f9702c071a76bbdcb7")).
 
-=== Security
+#silent-subsection[Security]
 
 - Constrain resource usage upon cloning a Git repository
   (#commitLink("d2f0d61ec9faddc765c7db4524c10378d48a53c1")).
@@ -27,7 +27,7 @@ December release of 2025. It consists of N commits made by 4 authors.
   (#commitLink("e27148dde2317d37669cf87b8b0c8af37f67302e"),
   #commitLink("96d7eed0bfc8be59a69efe5df4253c4c4b3b2321")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Restore compatibility with Python 3.9
   (#commitLink("dde1766d29c28eafa6b76fc7839e4940435abaa3")).
@@ -42,7 +42,7 @@ December release of 2025. It consists of N commits made by 4 authors.
 - Restore styling of the maintenance page
   (#commitLink("5d8aa1db947623399236ed499191da6166045fef")).
 
-=== Incremental improvements
+#silent-subsection[Incremental improvements]
 
 - Reduce size of the documentation's HTML output
   (#commitLink("0afae34c1b979228ac8e8e35c155c14fc5c664ac")).
@@ -54,7 +54,7 @@ December release of 2025. It consists of N commits made by 4 authors.
 - Start phasing out the use of jQuery
   (#commitLink("e187225618ce0ae0dd22e9d10659f9c564b27ed3")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Remove the "backup" subcommand
   (#commitLink("e688f1cd70df2928c7124fb2dea5593447786e04")).
@@ -64,25 +64,25 @@ December release of 2025. It consists of N commits made by 4 authors.
   #commitLink("e08c1f0197c7ed66e1013928a5ccd26d5d1eae61"),
   #commitLink("1edd40f52e83d920aa03a8545918e37aed8bd18e")).
 
-== Release notes for `v25.6`. <release-25-6>
+#silent-section[Release notes for `v25.6`.] <release-25-6>
 
 The June release of 2025 consists of 15 commits made by 3 authors.
 
-=== New features
+#silent-subsection[New features]
 
 - Add initial support to display a CodeWorks badge
   (#commitLink("4b3d5212b5bd0d26cd6e928b9bf9c9e23a4e4439")).
 - Add auto-completion support for keywords
   (#commitLink("032445341f6a066ba15cd37579dfd866ed4948a4")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Return empty list upon error in #code("/v3/datasets/<uuid>.git/contributors")
   (#commitLink("5a7c70c0662f4cd2c7b3fc2a67a771e311c6512d")).
 - Avoid duplicating entries in the funding autocompletion
   (#commitLink("a53887390a9bee48a2ba3bf9d76f050e4e285c49")).
 
-=== Incremental improvements
+#silent-subsection[Incremental improvements]
 
 - Improve documentation (#commitLink("3458987dbb65b284334d6303615a4ef5c1c546db"),
   #commitLink("9edb43e9c09024c1195ae5cd2a4deedc837daf3e"),
@@ -94,7 +94,7 @@ The June release of 2025 consists of 15 commits made by 3 authors.
 - Improve contrast of the "connect with ORCID" button
   (#commitLink("c1b4d1bfcc3d1074d2137119b53c7766f2fe3d2f")).
 
-== Release notes for `v25.5`. <release-25-5>
+#silent-section[Release notes for `v25.5`.] <release-25-5>
 
 The May release of 2025 consists of 14 commits made by 3 authors.
 
@@ -102,20 +102,20 @@ This release contains a security fix for a SPARQL injection found by Thomas
 Thelen and a security fix for a HTML injection found by Anass Ksiber. Many
 thanks to both for reporting and assisting in resolving these vulnerabilities.
 
-=== UI revisions
+#silent-subsection[UI revisions]
 
 - Introduce an "Interoperability" section with links to the RO-Crate
   metadata API and the IIIF manifest
   (#commitLink("2a49687d0fab911f52b461f806dd7eadcc15df30")).
 
-=== Security
+#silent-subsection[Security]
 
 - Properly escape session cookie value
   (#commitLink("da1cbf2b15155ce4541ab7ca81f3102067fb749f")).
 - Avoid possibility of HTML injection in the search page
   (#commitLink("4f479f6869a2b7eeaf7cd78832419014eddf06f8")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Avoid re-creating the Handle configuration
   (#commitLink("80f1f2e3e06b2b85cede6b17e75793bb0ab2d670")).
@@ -131,16 +131,16 @@ thanks to both for reporting and assisting in resolving these vulnerabilities.
 - Distribute missing files in the release tarball
   (#commitLink("76b29514e469a28ad3bfc080a2711672aa0f3765")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Simplify the #code("dist-docker") target
   (#commitLink("7b08aae0f3c44447869d7dab53bbb65678ce3747")).
 
-== Release notes for `v25.4`. <release-25-4>
+#silent-section[Release notes for `v25.4`.] <release-25-4>
 
 The April release of 2025 consists of 51 commits made by 4 authors.
 
-=== New features
+#silent-subsection[New features]
 
 - Implement IIIF Presentation API
   (#commitLink("1eb35f4f424e379462a34a9f032a14d74892d052"),
@@ -156,7 +156,7 @@ The April release of 2025 consists of 51 commits made by 4 authors.
 - Implement #code("static-resources-cache") option
   (#commitLink("1529d961aa833fb388809ebb02c6e2d0455411d4")).
 
-=== Security
+#silent-subsection[Security]
 
 - Harden the `Content-Security-Policy` as an extra layer of defence against
   cross-site scripting (#commitLink("3c2c5329089a41d2f4637fed9c0c1de19c5669ef"),
@@ -169,7 +169,7 @@ The April release of 2025 consists of 51 commits made by 4 authors.
   #commitLink("7a157070a9ffcf62e5d0426dbc21ee405248a274"),
   #commitLink("9d84583c80ec001f461bf113bfc52c5045bb3c39")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Ensure ZIP files of Git repositories are bit-reproducible
   (#commitLink("586c3045883c2b13ebec1c6a7aa88f740b39f40e")).
@@ -180,7 +180,7 @@ The April release of 2025 consists of 51 commits made by 4 authors.
 - Show reviews for institutional reviewers based on the group rather
   than accounts (#commitLink("6ef0eca6c4c498c651e25e3f178dd1dec9e1c91e")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Code clean-ups (#commitLink("02ce6b383d2f83cbdb04daaa212f27f4dd0633ba"),
   #commitLink("a1e7c2fe62c0011a214fc7e7edb999ffade3463a"),
@@ -194,7 +194,7 @@ The April release of 2025 consists of 51 commits made by 4 authors.
   #commitLink("2de1e417fbc658b79e1f3ba6fb1406fc7cc7c044"),
   #commitLink("35afe28e959f3275489223f028d8d33f2e91e2da"))
 
-== Release notes for `v25.3`. <release-25-3>
+#silent-section[Release notes for `v25.3`.] <release-25-3>
 
 The March release of 2025 consists of 57 commits made by 2 authors.
 
@@ -206,7 +206,7 @@ The release date slipped a couple of days because yours truly wanted to
 give last-minute changes a little bit of time to make sure no regressions
 occurred before formalizing the release.
 
-=== New features
+#silent-subsection[New features]
 
 - Implement API endpoints for reviewers
   (#commitLink("1de7f680840ec882752de1fe53004a4bed16f568"),
@@ -217,7 +217,7 @@ occurred before formalizing the release.
 - Add #code("SoftwareSourceCode") to RO-Crate output
   (#commitLink("79cf0b32ada27780ef0efadc0d20556c8717eb84")).
 
-=== UI revisions
+#silent-subsection[UI revisions]
 
 - Revise the "Cite" and "Collect" buttons on landing pages
   (#commitLink("b0b9dbd1f21e1aec464985daff7c5af100bc5346")).
@@ -228,14 +228,14 @@ occurred before formalizing the release.
 - Fix tile scaling on the main page for different zoom levels
   (#commitLink("7a30bfa47ef1c3977180dcc4b0ec31f7ff06e89a")).
 
-=== Security
+#silent-subsection[Security]
 
 - Addressed a Cross-Site-Scripting vulnerability in the search functionality
   (#commitLink("40b12a5597407a3d67eec5a5cb570d0725197d92")).
 - Only display e-mail address of authors to the creators of such records.
   (#commitLink("05a56fa18367da28e2366a90e92a43af4639dc5f")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Fix author ordering for collections.
   (#commitLink("244017a014a4b4d36c8b4d21709996fdf24af635")).
@@ -260,7 +260,7 @@ occurred before formalizing the release.
   #commitLink("2cffe955a2f4a95afb56cb41016559fbce8bbc53"),
   #commitLink("c3227a768dd1cd476105f8a86e1de3a752af336f")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Work towards a stricter Content-Security-Policy by avoiding inline use
   of #code("style") attributes, #code("script") elements, and event handlers
@@ -280,7 +280,7 @@ occurred before formalizing the release.
   "xmlsec" build issues.
   (#commitLink("2c03cb3cb02bfc85279986f7508291349bf5c609")).
 
-== Release notes for `v25.2`. <release-25-2>
+#silent-section[Release notes for `v25.2`.] <release-25-2>
 
 The February release of 2025 consists of 75 commits made by 2 authors.
 
@@ -290,7 +290,7 @@ important security fix for a Cross-Site-Scripting vulnerability found
 by Aaron Liebig. Many thanks for reporting and assisting in resolving
 this vulnerability.
 
-=== New features
+#silent-subsection[New features]
 
 - Implement initial support for RO-Crates
   (#commitLink("5ffee87a7b9cfefacea984deb4c78f5007581e8e"),
@@ -305,12 +305,12 @@ this vulnerability.
 - Implement ability to extract/replay log entries
   (#commitLink("a5a2c090389776346944b47554c129f4e686f97e")).
 
-=== Security
+#silent-subsection[Security]
 
 - Addressed a Cross-Site-Scripting vulnerability
   (#commitLink("38e89a0c8ef351bdb524ff8bcb30b44b3ba8d04f")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Improve rendering for accessibility
   (#commitLink("a3e456cf172c52b41b071133d9d71883e606c786"),
@@ -338,14 +338,14 @@ this vulnerability.
   edit-dataset and edit-collection forms
   (#commitLink("bfd2110f7a5de061cc9921ef4c184be433fbbab3")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Remove #code("urllib3") as explicit dependency
   (#commitLink("672eaff0c058b3e71dabed0161faf505a5beb141")).
 - Prevent comments in query templates from being sent to the SPARQL
   endpoint (#commitLink("9ac703556e8f20a36c1fda6f5b77e165695e9001")).
 
-== Release notes for `v25.1`. <release-25-1>
+#silent-section[Release notes for `v25.1`.] <release-25-1>
 
 The January release of 2025 consists of 85 commits made by 3 authors.
 
@@ -353,7 +353,7 @@ In this release we included an RPM package for Enterprise Linux 9. This RPM
 depends on packages in the
 #link("https://docs.fedoraproject.org/en-US/epel/")[Extra Packages for Enterprise Linux (EPEL) repository].
 
-=== New features
+#silent-subsection[New features]
 
 - CodeMeta API output is more complete
   (#commitLink("91ed59d8650f70022131ede59d388bb1a5b76cd0"),
@@ -370,7 +370,7 @@ depends on packages in the
   (#commitLink("cc58483902f0760673c2a91567991b18829b112a"),
   #commitLink("20fe6fd9a5c6952af9368eae00755cc248c3c0a1")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Related versions of a dataset are communicated to DataCite
   (#commitLink("1539117be2a7679bafa5a94366f79a832bd759c1")).
@@ -385,7 +385,7 @@ depends on packages in the
 - Fixed HTTP `PUT` behavior for `\/v2\/account\/collections\/<id>\/articles`
   (#commitLink("107ea693e170689b83213e668f9e75b59f9348c3")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Unified the development environment instructions between GNU/Linux,
   Windows and macOS (#commitLink("8921d35c1a0909e331b4737b6c0bb6713fb77743"),
@@ -397,14 +397,14 @@ depends on packages in the
   #commitLink("609c9864e357101f39e0dfb8cfc0b045889d9d17")).
 - Embed simplified 'zipfly' (#commitLink("0fe0904a2aa25fc19094ee2c57a1b1d6fda4b4ad")).
 
-== Release notes for `v24.12`. <release-24-12>
+#silent-section[Release notes for `v24.12`.] <release-24-12>
 
-=== New features
+#silent-subsection[New features]
 
 - Add specific logging for when the server would respond an HTTP 500 error
   (#commitLink("1dcd141f7c75e82a5f970d0ac8ddba7e8915bf9c")).
 
-=== Bugfixes
+#silent-subsection[Bugfixes]
 
 - Fix a problem with downloading Git repositories as ZIP
   (#commitLink("a8c2da4c544b10a493d67c515a5fca191222ba29")).
@@ -415,7 +415,7 @@ depends on packages in the
 - Fix bug when filtering on groups in the API
   (#commitLink("187f4344f5d0e50bcf7063f28dda9bfccc8229ae")).
 
-=== Technical debt
+#silent-subsection[Technical debt]
 
 - Refactor parts of the codebase (#commitLink("0370836d5bdff62f04f5815893658284aff3ca48"),
   #commitLink("dd7602a66691840ffe6c2d444a36dd4256c23627"),
