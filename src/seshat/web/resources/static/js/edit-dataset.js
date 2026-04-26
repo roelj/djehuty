@@ -1226,7 +1226,7 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
                 if (dz_button) {
                     let h4 = document.createElement("h4");
                     h4.id = "file-upload-message";
-                    h4.textContent = "Drop files here to upload";
+                    h4.textContent = "Drop files/folder here to upload";
                     dz_button.appendChild(h4);
                     dropzone_message = h4;
                 }
@@ -1241,7 +1241,7 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
                     let remaining = fileUploader.getUploadingFiles().length + fileUploader.getQueuedFiles().length;
                     if (remaining === 0) {
                         upload_completed = 0;
-                        if (dropzone_message) { dropzone_message.textContent = "Drop files here to upload"; }
+                        if (dropzone_message) { dropzone_message.textContent = "Drop files/folder here to upload"; }
                     }
                 });
                 function upload_message (percentage) {
