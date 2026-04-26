@@ -7,7 +7,6 @@ import uuid
 from rdflib import Literal, Namespace, URIRef, XSD
 
 BLANK = Namespace("blank:")
-DJHT  = Namespace("https://ontologies.data.4tu.nl/djehuty/0.0.1/")
 
 ## Pre-compiled patterns for determining the SPARQL query type.
 COMMENTS_PATTERN = re.compile(r"(^|\n)\s*#.*?\n")
