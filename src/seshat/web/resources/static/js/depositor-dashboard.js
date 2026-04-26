@@ -41,7 +41,7 @@ function submit_storage_request (event) {
 }
 
 jQuery(document).ready(function (){
-    new Quill("#quota-reason", { theme: "4tu" });
+    new Quill("#quota-reason", { modules: quill_modules, theme: 'snow' });
     jQuery("#request-more-storage").on("click", toggle_storage_request);
     jQuery("#submit-storage-request").on("click", submit_storage_request);
 });

@@ -118,7 +118,7 @@ function render_draft_collections () {
 
 jQuery(document).ready(function (){
     if (document.getElementById ("access-request-reason") !== null) {
-        new Quill("#access-request-reason", { theme: "4tu" });
+        new Quill("#access-request-reason", { modules: quill_modules, theme: 'snow' });
     }
     jQuery("#access-request").on("click", toggle_access_request);
     jQuery("#submit-access-request").on("click", submit_access_request);
