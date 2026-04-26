@@ -26,8 +26,13 @@
 #context if target() == "html" {
     html.elem("head")[
         #html.elem("style", attrs: (type: "text/css"))[
+            \@font-face { font-family: 'SourceSans'; src: url('/static/fonts/SourceSansPro-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+            \@font-face { font-family: 'SourceSans-Italic'; src: url('/static/fonts/SourceSansPro-Italic.ttf') format('truetype'); font-weight: normal; font-style: italic; }
+            \@font-face { font-family: 'SourceSans-Bold'; src: url('/static/fonts/SourceSansPro-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
+            \@font-face { font-family: 'FiraMono'; src: url('/static/fonts/FiraMono-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
             html { width: 100%; margin: 0em; padding: 0em; background: repeating-linear-gradient(90deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%), repeating-linear-gradient(180deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%); background-size: 1em 1em; background-color: \#f9f9f9; }
-            body { margin: 12pt auto 0pt auto; max-width: 1074pt; min-width: 720pt; }
+            body { font-family: 'SourceSans', sans-serif; margin: 12pt auto 0pt auto; max-width: 1074pt; min-width: 720pt; }
+	    code { font-family: 'FiraMono', monospace; }
             \@media (max-width: 1074pt) {
             .table-of-contents { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 820pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: 1em 1em .5em .5em; }
             .chapter { margin: auto auto 1em auto; }
