@@ -41,6 +41,7 @@ EXTRA_DIST              = $(doc_TYPST) $(doc_HTML) $(doc_PDF)      \
                           news.typ                                 \
                           running-seshat.typ                       \
                           references.bib                           \
+                          toc-scroll-helper.js                     \
                           figures/account.svg                      \
                           figures/author.svg                       \
                           figures/category.svg                     \

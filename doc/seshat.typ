@@ -21,13 +21,8 @@
 )
 #set heading(numbering: "1.1")
 #let target = dictionary(std).at("target", default: () => "paged")
-#context if target() == "paged" {
-    set page(
-        numbering: "1",
-        paper: "a4",
-        margin: (x: 2.0cm, y: 2.0cm)
-    )
-}
+#set page(numbering: "1", paper: "a4", margin: (x: 2.0cm, y: 2.0cm))
+
 #context if target() == "html" {
     html.elem("head")[
         #html.elem("style", attrs: (type: "text/css"))[
@@ -40,12 +35,14 @@
             }
             \@media (min-width: 1074pt) {
             .chapter { margin-left: 254pt !important; }
-            .table-of-contents { position: fixed; height: 100vh; overflow-y: auto; width: 240pt; min-width: 240pt; max-width: 240pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: .5em; }
+            .table-of-contents { position: fixed; height: auto; overflow-y: auto; width: 240pt; min-width: 240pt; max-width: 240pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: .5em; }
             nav > ol > li > ol > li > ol > li > span > a,
             nav > ol > li > ol > li > ol > li > div > span { display: none; }
             nav > ol > li > ol > li > span >a,
             nav > ol > li > ol > li > div > span > a { font-size: 0.9em; }
             section[role=doc-endnotes] { margin-left: 254pt; }
+	    .table-of-contents > nav > ol > li > ol { display: none; }
+            #chapter-toc-css(9)
             }
             .table-of-contents p { padding: 0em 0em 0em 1em; margin-bottom: 0em; }
             .table-of-contents ol { margin: 0em; padding: 1em 0em 1em 0em; line-height: 1.3em; }
@@ -94,6 +91,7 @@
 #context if target() == "paged" {
     page(numbering: none)[
         #align(center + horizon)[
+            #image("figures/logo.svg")
             #text(size: 28pt, weight: "bold")[`seshat`]
             #v(1em)
             #text(size: 16pt)[A data and software repository system]
@@ -106,12 +104,8 @@
         ]
     ]
     page(numbering: "i")[
-        #heading(outlined: false)[Table of Contents]
-        #outline(
-            title: none,
-            indent: 1.5em,
-            depth: 3,
-        )
+        #heading(outlined: false, numbering: none)[Table of Contents]
+        #outline(title: none, indent: 1.5em, depth: 3)
     ]
 }
 #context if target() == "html" {
@@ -147,3 +141,7 @@
 #include "contact.typ"
 #pagebreak-when-paged()
 #include "news.typ"
+
+#context if target() == "html" {
+  html.elem("script", read("toc-scroll-helper.js"))
+}

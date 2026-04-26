@@ -16,16 +16,16 @@
   link(seshatgiturl + "/commit/" + hash)[#raw(short)]
 }
 
+#let chapter_counter = counter("chapter")
 #let render_chapter(chapter_text, chapter_title) = {
   let target = dictionary(std).at("target", default: () => "paged")
+  chapter_counter.step()
   context if target() == "paged" {
-    set page(
-      header: align(right)[#chapter_title],
-      numbering: "1",
-    )
+    set page(header: align(right)[#chapter_title], numbering: "1")
   }
   context if target() == "html" {
-    html.elem("div", attrs: (class: "chapter"))[ #chapter_text ]
+    let n = chapter_counter.get().first()
+    html.elem("div", attrs: (class: "chapter", id: "chapter-" + str(n)))[ #chapter_text ]
   } else [ #chapter_text ]
 }
 
@@ -36,4 +36,12 @@
     context if target() == "paged" {
         pagebreak(weak: true)
     }
+}
+
+#let chapter-toc-css(num-chapters) = {
+  let rules = range(1, num-chapters + 1).map(i =>
+    "body:has(#chapter-" + str(i) + " :target) .table-of-contents > nav > ol > li:nth-child(" + str(i) + ") > ol, " +
+    "body:has(#chapter-" + str(i) + ":target) .table-of-contents > nav > ol > li:nth-child(" + str(i) + ") > ol"
+  ).join(",\n")
+  rules + " { display: block; }"
 }
