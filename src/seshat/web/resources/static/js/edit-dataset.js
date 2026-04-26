@@ -81,7 +81,7 @@ function gather_form_data () {
     if (title == "" || title == null) { title = "Untitled item"; }
     let form_data = {
         "title":          title,
-        "description":    or_null(jQuery("#description .ql-editor").html()),
+        "description":    value_from_quill("#description"),
         "resource_title": or_null(jQuery("#resource_title").val()),
         "resource_doi":   or_null(jQuery("#resource_doi").val()),
         "geolocation":    or_null(jQuery("#geolocation").val()),
@@ -110,10 +110,7 @@ function gather_form_data () {
     if (is_embargoed) {
         form_data["embargo_until_date"] = or_null(jQuery("#embargo_until_date").val());
         form_data["embargo_title"]  = "Under embargo";
-        form_data["embargo_reason"] = or_null(jQuery("#embargo_reason .ql-editor").html());
-        if (form_data["embargo_reason"] !== null) {
-            form_data["embargo_reason"] = form_data["embargo_reason"].replaceAll('<p class="ql-align-justify">', '<p>');
-        }
+        form_data["embargo_reason"] = value_from_quill("#embargo_reason");
         form_data["license_id"]     = or_null(jQuery("#license_embargoed").val());
         if (jQuery("#files_only_embargo").prop("checked")) {
             form_data["embargo_type"] = "file";
@@ -125,14 +122,8 @@ function gather_form_data () {
         form_data["license_id"]     = 149;
         form_data["embargo_until_date"] = null;
         form_data["embargo_title"]  = "Restricted access";
-        form_data["embargo_reason"] = or_null(jQuery("#restricted_access_reason .ql-editor").html());
-        if (form_data["embargo_reason"] !== null) {
-            form_data["embargo_reason"] = form_data["embargo_reason"].replaceAll('<p class="ql-align-justify">', '<p>');
-        }
-        form_data["eula"]           = or_null(jQuery("#restricted_access_eula .ql-editor").html());
-        if (form_data["eula"] !== null) {
-            form_data["eula"] = form_data["eula"].replaceAll('<p class="ql-align-justify">', '<p>');
-        }
+        form_data["embargo_reason"] = value_from_quill("#restricted_access_reason");
+        form_data["eula"]           = value_from_quill("#restricted_access_eula");
         form_data["embargo_options"] = [{ "id": 1000, "type": "restricted_access" }];
     } else {
         form_data["license_id"]     = or_null(jQuery("#license_open").val());
@@ -1092,13 +1083,13 @@ function toggle_access_level () {
         jQuery("#open_access_form").show();
     } else if (jQuery("#embargoed_access").prop("checked")) {
         if (jQuery("#embargo_reason.ql-container").length === 0) {
-            new Quill('#embargo_reason', { theme: '4tu' });
+            new Quill('#embargo_reason', { modules: quill_modules, theme: 'snow' });
         }
         jQuery("#embargoed_access_form").show();
     } else if (jQuery("#restricted_access").prop("checked")) {
         if (jQuery("#restricted_access_reason.ql-container").length === 0) {
-            new Quill('#restricted_access_reason', { theme: '4tu' });
-            new Quill('#restricted_access_eula', { theme: '4tu' });
+            new Quill('#restricted_access_reason', { modules: quill_modules, theme: 'snow' });
+            new Quill('#restricted_access_eula', { modules: quill_modules, theme: 'snow' });
         }
         jQuery("#restricted_access_form").show();
     }
@@ -1216,7 +1207,7 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
         }
         jQuery(`#article_${dataset_uuid}`).removeClass("loader");
         jQuery(`#article_${dataset_uuid}`).show();
-        new Quill('#description', { theme: '4tu' });
+        new Quill('#description', { modules: quill_modules, theme: 'snow' });
 
         var fileUploader = new Dropzone("#dropzone-field", {
             url:               `/v3/datasets/${dataset_uuid}/upload`,

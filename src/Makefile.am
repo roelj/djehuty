@@ -210,7 +210,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/css/form.css                                  \
     seshat/web/resources/static/css/main.css                                  \
     seshat/web/resources/static/css/pub.css                                   \
-    seshat/web/resources/static/css/quill.4tu.css                             \
+    seshat/web/resources/static/css/quill.snow.css                            \
     seshat/web/resources/static/fonts/fa-brands-400.eot                       \
     seshat/web/resources/static/fonts/fa-brands-400.ttf                       \
     seshat/web/resources/static/fonts/fa-brands-400.woff                      \

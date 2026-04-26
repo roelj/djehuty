@@ -21,7 +21,7 @@ function toggle_storage_request (event) {
 function submit_storage_request (event) {
     let data = {
         "new-quota": or_null(jQuery("#new-quota").val()),
-        "reason":    or_null(jQuery("#quota-reason .ql-editor").html())
+        "reason":    value_from_quill("#quota-reason")
     };
     jQuery.ajax({
         url:         `/v3/profile/quota-request`,

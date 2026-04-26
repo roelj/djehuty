@@ -39,7 +39,7 @@ function submit_access_request (event) {
         "name" :      or_null(jQuery("#access-request-name").val()),
         "dataset_id": or_null(jQuery("#access-request-dataset-id").val()),
         "version":    or_null(jQuery("#access-request-version").val()),
-        "reason":     or_null(jQuery("#access-request-reason .ql-editor").html())
+        "reason":     value_from_quill("#access-request-reason")
     };
     jQuery.ajax({
         url:         `/data_access_request`,

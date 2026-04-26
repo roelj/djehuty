@@ -3,17 +3,17 @@
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/quill.min.js"></script>
 <script src="/static/js/utils.js?cache=1744290797"></script>
-<link href="/static/css/quill.4tu.css" rel="stylesheet">
+<link href="/static/css/quill.snow.css" rel="stylesheet">
 <link href="/static/css/form.css?cache=1738927707" rel="stylesheet">
 <style nonce="{{nonce}}">
 .info { margin-left: 5pt; color: #555; }
-.ql-toolbar.ql-4tu, .texteditor { width: 852pt !important; }
+.ql-toolbar.ql-snow, .texteditor { width: 852pt !important; border-radius: 0 .5em 0 0; }
 .texteditor { border-radius: 0em 0em .5em .5em !important; border-top: none !important; }
 #description { height: 500px !important; }
 </style>
 <script nonce="{{nonce}}">
 jQuery(document).ready(function () {
-    new Quill('#description', { theme: '4tu' });
+    new Quill('#description', { modules: quill_modules, theme: 'snow' });
     {%- if error_message %}
     show_message ("failure", "<p>{{error_message}}</p>");
     {%- endif %}{% if success_message %}

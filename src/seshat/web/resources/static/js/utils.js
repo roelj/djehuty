@@ -1,3 +1,5 @@
+const quill_modules = { toolbar: [ ['bold', 'italic', 'underline', 'strike', 'link', { 'list': 'ordered' }, { 'list': 'bullet' }, 'clean'] ]};
+
 function render_in_form (text) { return [text].join(""); }
 
 function or_null (value) { return (value == "" || value == "<p><br></p>") ? null : value; }
@@ -20,6 +22,19 @@ function show_message (type, message) {
             element.innerHTML = "<p>&nbsp;</p>";
         }, { once: true });
     }, 20000);
+}
+
+function value_from_quill (identifier) {
+    let value = or_null(jQuery(`${identifier} .ql-editor`).html());
+    if (value === undefined) { return null; }
+    if (value !== null) {
+	value = value.replaceAll('<p class="ql-align-justify">', '<p>');
+	value = value.replace(/<ol>(\s*<li data-list="bullet">[\s\S]*?)<\/ol>/g, '<ul>$1</ul>');
+	value = value.replaceAll('<li data-list="ordered">', '<li>');
+	value = value.replaceAll('<li data-list="bullet">', '<li>');
+	value = value.replaceAll('<span class="ql-ui" contenteditable="false"></span>', '');
+    }
+    return value;
 }
 
 function stop_event_propagation (event) {

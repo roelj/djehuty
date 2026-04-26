@@ -57,7 +57,7 @@ filetypes_by_extension = {
     "yml":        "YAML",
 }
 
-allowed_html_tags = ["p", "strong", "em", "u", "ol", "ul", "li", "code", "pre", "br", "sup", "sub", "h2", "h3"]
+allowed_html_tags = ["p", "strong", "em", "u", "s", "ol", "ul", "li", "code", "pre", "br", "sup", "sub", "h2", "h3"]
 
 iiif_supported_formats = [ ".jpg", ".png", ".pdf", ".tif", ".tiff", ".gif", ".webp" ]
 datetime_format = "%Y-%m-%dT%H:%M:%S"  # pylint: disable=invalid-name

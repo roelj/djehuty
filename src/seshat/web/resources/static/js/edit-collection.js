@@ -394,7 +394,7 @@ function gather_form_data () {
     if (title == "" || title == null) { title = "Untitled collection"; }
     let form_data = {
         "title":          title,
-        "description":    or_null(jQuery("#description .ql-editor").html()),
+        "description":    value_from_quill("#description"),
         "resource_title": or_null(jQuery("#resource_title").val()),
         "resource_doi":   or_null(jQuery("#resource_doi").val()),
         "geolocation":    or_null(jQuery("#geolocation").val()),
@@ -585,7 +585,7 @@ function activate (collection_id) {
     jQuery("#save").on("click", function (event)   { save_collection (collection_id, event); });
     jQuery("#publish").on("click", function (event) { publish_collection (collection_id, event); });
     // Initialize Quill to provide the WYSIWYG editor.
-    new Quill('#description', { theme: '4tu' });
+    new Quill('#description', { modules: quill_modules, theme: 'snow' });
 
     jQuery("#authors").on("input", function (event) {
         return autocomplete_author (event, collection_id);
