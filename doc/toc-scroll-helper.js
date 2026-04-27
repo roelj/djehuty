@@ -1,5 +1,5 @@
 (function () {
-  const mql = matchMedia('(min-width: 1074pt)');
+  const mql = matchMedia('(min-width: 1099pt)');
   const listFor = id => document.querySelector(
     `.table-of-contents nav > ol > li:nth-child(${id.replace('chapter-', '')}) > ol`
   );

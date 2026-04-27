@@ -26,67 +26,98 @@
 #context if target() == "html" {
     html.elem("head")[
         #html.elem("style", attrs: (type: "text/css"))[
+            :root {
+	      -\-text-color: \#111;
+	      -\-background-color: \#f9f8fd;
+	      -\-chapter-header-color: \#312b63;
+	      -\-sidebar-chapter-color: \#b6b0dd;
+	      -\-toc-header-color: \#312b63;
+	      -\-toc-header-text-color: \#f9f8fd;
+	      -\-h3-bg-color: \#ebeaf2;
+	      -\-h4-bg-color: \#f2f1f8;
+	      -\-table-header-bg-color: \#4d448b;
+	      -\-code-bg-color: \#f8f7fc;
+	      -\-code-border-color: \#dedde9;
+	      -\-figure-border-color: \#dedde9;
+	      -\-figure-bg-color: \#f7f6fb;
+	      -\-chapter-border-color: \#dedde9;
+	      -\-nav-sub-border-bg-color: \#dedde9;
+	      -\-nav-sub-hover-bg-color: \#f0eef6;
+	      -\-nav-sub-odd-bg-color: \#f8f7fc;
+	      -\-nav-sub-even-bg-color: \#fff;
+	      -\-nav-sub-text-color: \#7c2c5e;
+	      -\-nav-sub-sub-text-color: \#2c3e7c;
+	      -\-text-anchor-color: \#7c2c5e;
+	      -\-nav-sub-hover-text-color: \#a86687;
+	      -\-nav-sub-sub-hover-text-color: \#6678a8;
+	    }
             \@font-face { font-family: 'SourceSans'; src: url('/static/fonts/SourceSansPro-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
             \@font-face { font-family: 'SourceSans-Italic'; src: url('/static/fonts/SourceSansPro-Italic.ttf') format('truetype'); font-weight: normal; font-style: italic; }
             \@font-face { font-family: 'SourceSans-Bold'; src: url('/static/fonts/SourceSansPro-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
             \@font-face { font-family: 'FiraMono'; src: url('/static/fonts/FiraMono-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
-            html { width: 100%; margin: 0em; padding: 0em; background: repeating-linear-gradient(90deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%), repeating-linear-gradient(180deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%); background-size: 1em 1em; background-color: \#f9f9f9; }
-            body { font-family: 'SourceSans', sans-serif; margin: 12pt auto 0pt auto; max-width: 1074pt; min-width: 720pt; }
+            html { width: 100%; margin: 0em; padding: 0em; background: repeating-linear-gradient(90deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%), repeating-linear-gradient(180deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%); background-size: 1em 1em; background-color: var(-\-background-color); }
+            body { font-family: 'SourceSans', sans-serif; margin: 12pt auto 0pt auto; max-width: 1099pt; min-width: 720pt; }
 	    code { font-family: 'FiraMono', monospace; }
-            \@media (max-width: 1074pt) {
-            .table-of-contents { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 820pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: 1em 1em .5em .5em; }
+            \@media (max-width: 1099pt) {
+            .table-of-contents { margin: auto auto 1em auto; max-width: 1099pt; min-width: 720pt; width: 820pt; background: \#fff; color: var(-\-text-color); padding: 0em; border: solid 1pt var(-\-chapter-border-color); border-radius: 1em 1em .5em .5em; }
             .chapter { margin: auto auto 1em auto; }
             section[role=doc-endnotes] { margin-left: auto; }
             }
-            \@media (min-width: 1074pt) {
-            .chapter { margin-left: 254pt !important; }
-            .table-of-contents { position: fixed; height: auto; overflow-y: auto; width: 240pt; min-width: 240pt; max-width: 240pt; display: inline-block; border: solid 1pt \#ccc; padding: 0em; margin: 0em; background: \#fff; color: \#111; border-radius: .5em; }
+            \@media (min-width: 1099pt) {
+            .chapter { margin-left: 279pt !important; }
+            .table-of-contents { position: fixed; height: auto; overflow-y: auto; width: 265pt; min-width: 265pt; max-width: 265pt; display: inline-block; border: solid 1pt var(-\-chapter-border-color); padding: 0em; margin: 0em; background: \#fff; color: var(-\-text-color); border-radius: .5em; }
             nav > ol > li > ol > li > ol > li > span > a,
             nav > ol > li > ol > li > ol > li > div > span { display: none; }
             nav > ol > li > ol > li > span >a,
             nav > ol > li > ol > li > div > span > a { font-size: 0.9em; }
-            section[role=doc-endnotes] { margin-left: 254pt; }
+            section[role=doc-endnotes] { margin-left: 279pt; }
 	    .table-of-contents > nav > ol > li > ol { display: none; }
+	    .table-of-contents nav > ol > li > ol a, .table-of-contents nav > ol > li > ol span { text-decoration: none !important; }
+	    .table-of-contents nav > ol > li > ol > li { border: solid 1px var(-\-nav-sub-border-bg-color); border-radius: .4em; padding: 2px 2px 2px 6px; margin-bottom: 5px; }
+	    .table-of-contents nav > ol > li > ol > li:nth-child(even) { background: var(-\-nav-sub-even-bg-color); }
+	    .table-of-contents nav > ol > li > ol > li:nth-child(odd) { background: var(-\-nav-sub-odd-bg-color); }
+	    .table-of-contents nav > ol > li > ol > li:hover { background: var(-\-nav-sub-hover-bg-color); }
             #chapter-toc-css(9)
             }
             .table-of-contents p { padding: 0em 0em 0em 1em; margin-bottom: 0em; }
             .table-of-contents ol { margin: 0em; padding: 1em 0em 1em 0em; line-height: 1.3em; }
             .table-of-contents ol ol { margin: 0em; padding: 0em 1em 0em 1em; }
-            .table-of-contents h2 { background: \#ccc; color: \#111; padding: .75em; margin: 0em; }
+            .table-of-contents h2 { background: var(-\-toc-header-color); color: var(-\-toc-header-text-color); padding: .75em; margin: 0em; }
             nav > ol { margin-top: 0em; }
             nav > ol > li { margin: 0em; }
             nav > ol > li > div > span > a,
-            nav > ol > li > span > a { display: inline-block; width: calc(100% - 2em); background: \#f6f6f6; padding: .25em 1em .25em 1em; margin: .25em 0em .25em 0em; font-size: 1.2em; color: \#111; border-top: solid 1pt \#ccc; border-bottom: solid 1pt \#ccc; }
+            nav > ol > li > span > a { display: inline-block; width: calc(100% - 2em); background: var(-\-h4-bg-color); padding: .5em 1em .5em 1em; margin: .3em 0 .3em 0; font-size: 1.2em; color: var(-\-text-color); }
             nav > ol > li > ol > li > span > a,
-            nav > ol > li > ol > li > div > span > a { color: \#7c0000; }
+            nav > ol > li > ol > li > div > span > a { display: block; color: var(-\-nav-sub-text-color); }
             nav > ol > li > ol > li > span > a:hover,
-            nav > ol > li > ol > li > div > span > a:hover { color: \#af6666; }
-            nav > ol > li > ol > li > ol > li > span > a { color: \#00007c; }
-            nav > ol > li > ol > li > ol > li > span > a:hover { color: \#6666af; }
+            nav > ol > li > ol > li > div > span > a:hover { color: var(-\-nav-sub-hover-text-color); }
+            nav > ol > li > ol > li > ol > li > span > a { color: var(-\-nav-sub-sub-text-color); }
+            nav > ol > li > ol > li > ol > li > span > a:hover { color: var(-\-nav-sub-sub-hover-text-color); }
             .center { text-align: center; }
             img { display: block; max-width: 760pt; margin: 1em auto 1em auto; padding: auto; }
-            figure { background: \#fcfcfc; border: solid 1pt \#ccc; border-radius: .5em; }
-            figcaption { text-align: center;  border-top: solid 1pt \#ccc; border-radius: 0em 0em .5em .5em; background: \#eee; padding: .5em; }
-            .chapter { margin: auto auto 1em auto; max-width: 1074pt; min-width: 720pt; width: 820pt; background: \#fff; color: \#111; padding: 0em; border: solid 1pt \#ccc; border-radius: .5em; }
+            figure { background: var(-\-figure-bg-color); border: solid 1pt var(-\-figure-border-color); border-radius: .5em; }
+            figcaption { text-align: center;  border-top: solid 1pt var(-\-figure-border-color); border-radius: 0em 0em .5em .5em; background: var(-\-h3-bg-color); padding: .5em; }
+            .chapter { margin: auto auto 1em auto; max-width: 1099pt; min-width: 720pt; width: 820pt; background: \#fff; color: var(-\-text-color); padding: 0em; border: solid 1pt var(-\-chapter-border-color); border-radius: .5em; }
             .chapter p, .chapter pre, .chapter table { padding: 0pt 12pt 0pt 12pt; }
-            .chapter h2 { background: \#222; color: \#fff; padding: .75em; margin: 0em; border-radius: .25em .25em 0em 0em; }
-            .chapter h3 { font-size: 1.25em; padding: .25em 1em .25em 1em; background: \#eee; }
-            .chapter h4 { font-size: 1.10em; padding: .25em 1em .25em 1em; background: \#f6f6f6; }
-            .chapter h5 { font-size: 1.0em; padding: .25em 1em .25em 1em; background: \#f6f6f6; }
-            .chapter pre { background: \#f8f8f8; margin: 0pt 10pt 0pt 10pt; padding: 10pt; border-radius: 5pt; border: solid 1pt \#ccc; }
+            .chapter h2 { background: var(-\-chapter-header-color); color: \#fff; padding: .75em; margin: 0em; border-radius: .25em .25em 0em 0em; }
+            .chapter h3 { font-size: 1.25em; padding: .25em 1em .25em 1em; background: var(-\-h3-bg-color); }
+            .chapter h4 { font-size: 1.10em; padding: .25em 1em .25em 1em; background: var(-\-h4-bg-color); }
+            .chapter h5 { font-size: 1.0em; padding: .25em 1em .25em 1em; background: var(-\-h4-bg-color); }
+            .chapter pre { background: var(-\-code-bg-color); margin: 0pt 10pt 0pt 10pt; padding: 10pt; border-radius: 5pt; border: solid 1pt var(-\-code-border-color); }
             table { width: 100%; margin: 0em 1em 0em 0em; border-collapse: separate; border-spacing: 0em; border-radius: .5em;}
-            table tbody tr td { border: solid 1pt \#333; padding: .25em; border-top: none; border-left: 0; }
-            table thead tr th { background: \#333; color: \#fff; padding: .5em .25em .5em .25em; }
-            table thead tr th:first-child { border: solid 1pt \#333;  border-radius: 0.5em 0.5em 0em 0em; }
-            table thead tr th:last-child { border: solid 1pt \#333; border-radius: 0.5em 0.5em 0em 0em; }
+            table tbody tr td { border: solid 1pt var(-\-table-header-bg-color); padding: .25em; border-top: none; border-left: 0; }
+            table thead tr th { background: var(-\-table-header-bg-color); color: \#fff; padding: .5em .25em .5em .25em; }
+            table thead tr th:first-child { border: solid 1pt var(-\-table-header-bg-color);  border-radius: 0.5em 0.5em 0em 0em; }
+            table thead tr th:last-child { border: solid 1pt var(-\-table-header-bg-color); border-radius: 0.5em 0.5em 0em 0em; }
             table thead tr th { text-align: left; }
             table thead tr:first-child th:first-child { border-radius: 0.5em 0 0 0; }
             table thead tr:first-child th:last-child { border-radius: 0 0.5em 0 0; }
             table tbody tr:last-child td:last-child { border-radius: 0 0 0.5em 0; }
             table tbody tr:last-child td:first-child { border-radius: 0 0 0 0.5em; }
-            table tbody tr:nth-child(even) { background: \#f6f6f6; }
-            table tbody tr td:first-child { border-left: solid 1pt \#333; }
+            table tbody tr:nth-child(even) { background: var(-\-h4-bg-color); }
+            table tbody tr td:first-child { border-left: solid 1pt var(-\-table-header-bg-color); }
             section[role=doc-endnotes] ol { padding-left: .5em; }
+	    a { color: var(-\-text-anchor-color); }
         ]
     ]
 }
