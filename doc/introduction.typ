@@ -137,7 +137,7 @@ repository.
 )
 
 RPM packages for more distributions, including Enterprise Linux 9, are
-#link("https://copr.fedorainfracloud.org/coprs/4turesearchdata/seshat")[built via Copr].
+#link("https://copr.fedorainfracloud.org/coprs/seshat/seshat")[built via Copr].
 
 == Debian packages
 
