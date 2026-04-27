@@ -1,3 +1,9 @@
+seshat (26.4~rc3-1) stable; urgency=low
+
+  * Release candidate 3 of seshat 26.4.
+
+ -- Roel Janssen <rrejanssen@gmail.com>  Mon, 27 Apr 2026 22:02:10 +0200
+
 seshat (26.4~rc2-1) stable; urgency=low
 
   * Release candidate 2 of seshat 26.4.
