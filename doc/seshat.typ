@@ -54,10 +54,10 @@
             \@font-face { font-family: 'SourceSans'; src: url('/static/fonts/SourceSansPro-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
             \@font-face { font-family: 'SourceSans-Italic'; src: url('/static/fonts/SourceSansPro-Italic.ttf') format('truetype'); font-weight: normal; font-style: italic; }
             \@font-face { font-family: 'SourceSans-Bold'; src: url('/static/fonts/SourceSansPro-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
-            \@font-face { font-family: 'FiraMono'; src: url('/static/fonts/FiraMono-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+            \@font-face { font-family: 'Fira Code'; src: url('/static/fonts/FiraCode-Regular.woff2') format('woff2'); font-weight: normal; font-style: normal; }
             html { width: 100%; margin: 0em; padding: 0em; background: repeating-linear-gradient(90deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%), repeating-linear-gradient(180deg, \#f3f3f3 0, \#f3f3f3 5%, transparent 0, transparent 50%); background-size: 1em 1em; background-color: var(-\-background-color); }
             body { font-family: 'SourceSans', sans-serif; margin: 12pt auto 0pt auto; max-width: 1099pt; min-width: 720pt; }
-	    code { font-family: 'FiraMono', monospace; }
+	    code { font-family: 'Fira Code', monospace; }
             \@media (max-width: 1099pt) {
             .table-of-contents { margin: auto auto 1em auto; max-width: 1099pt; min-width: 720pt; width: 820pt; background: \#fff; color: var(-\-text-color); padding: 0em; border: solid 1pt var(-\-chapter-border-color); border-radius: 1em 1em .5em .5em; }
             .chapter { margin: auto auto 1em auto; }

@@ -10,17 +10,7 @@ Copyright: 2010, 2012 Adobe Systems Incorporated
 License: OFL-1.1-RFN
 
 Files:
- doc/fonts/SourceSansPro-*
-Copyright: 2010, 2012 Adobe Systems Incorporated
-License: OFL-1.1-RFN
-
-Files:
- src/seshat/web/resources/fonts/FiraMono-Regular.ttf
-Copyright: 2012-2013, The Mozilla Corporation and Telefonica S.A.
-License: OFL-1.1
-
-Files:
- doc/fonts/FiraMono-Regular.ttf
+ src/seshat/web/resources/fonts/FiraCode-Regular.woff2
 Copyright: 2012-2013, The Mozilla Corporation and Telefonica S.A.
 License: OFL-1.1
 

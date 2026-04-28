@@ -219,7 +219,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/fonts/fa-solid-900.ttf                        \
     seshat/web/resources/static/fonts/fa-solid-900.woff                       \
     seshat/web/resources/static/fonts/fa-solid-900.woff2                      \
-    seshat/web/resources/static/fonts/FiraMono-Regular.ttf                    \
+    seshat/web/resources/static/fonts/FiraCode-Regular.woff2                  \
     seshat/web/resources/static/fonts/SourceSansPro-Bold.ttf                  \
     seshat/web/resources/static/fonts/SourceSansPro-Italic.ttf                \
     seshat/web/resources/static/fonts/SourceSansPro-Regular.ttf               \

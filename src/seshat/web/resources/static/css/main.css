@@ -17,8 +17,8 @@
     font-style: normal;
 }
 @font-face {
-    font-family: 'FiraMono';
-    src: url('/static/fonts/FiraMono-Regular.ttf') format('truetype');
+    font-family: 'Fira Code';
+    src: url('/static/fonts/FiraCode-Regular.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
