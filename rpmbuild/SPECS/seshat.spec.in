@@ -13,7 +13,7 @@ BuildRequires: python39-rpm-macros
 %global python3_pkgversion 39
 %else
 # The 'build' module is only packaged outside RHEL 8.
-BuildRequires: python3-build
+BuildRequires: python%{python3_pkgversion}-build
 %endif
 
 BuildRequires: make
