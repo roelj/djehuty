@@ -26,6 +26,7 @@
 #context if target() == "html" {
     html.elem("head")[
         #html.elem("style", attrs: (type: "text/css"))[
+            #set smartquote(enabled: false)
             :root {
 	      -\-text-color: \#111;
 	      -\-background-color: \#f9f8fd;
