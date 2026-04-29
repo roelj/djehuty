@@ -11,7 +11,7 @@ entity that introduced the idea of writing.
 
 The source code can be downloaded at the
 #link(seshatgiturl + "/releases")[Releases]#footnote(seshatgiturl + "/releases")
-page. Make sure to download the `seshat-#seshatversion.tar.gz` file.
+page. Make sure to download the #raw("seshat-" + seshatversion + ".tar.gz") file.
 
 Or, directly download the tarball using the command-line:
 
