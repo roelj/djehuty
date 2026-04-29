@@ -38,6 +38,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.thumbnail_storage           = None
         self.profile_images_storage      = None
         self.iiif_cache_storage          = None
+        self.docker_registry_storage     = None
         self.enable_query_audit_log      = False
         self.account_quotas              = {}
         self.group_quotas                = {}

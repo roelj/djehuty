@@ -814,6 +814,12 @@ def read_configuration_file (server, config_file, logger, config_files):
         elif config.iiif_cache_storage is None:
             config.iiif_cache_storage = os.path.join (config.storage, "iiif")
 
+        docker_registry_root = xml_root.find ("docker-registry-root")
+        if docker_registry_root is not None:
+            config.docker_registry_storage = docker_registry_root.text
+        elif config.docker_registry_storage is None:
+            config.docker_registry_storage = os.path.join (config.storage, "docker-registry")
+
         s3_cache = xml_root.find ("s3-cache-root")
         if s3_cache is not None:
             config.s3_cache_storage = s3_cache.text
@@ -1197,6 +1203,12 @@ def main (config_file=None, run_internal_server=True, initialize=True,
                 os.makedirs (config.iiif_cache_storage, mode=0o700, exist_ok=True)
             except PermissionError:
                 logger.error ("Cannot create %s directory.", config.iiif_cache_storage)
+
+        if config.docker_registry_storage is not None and not inside_reload:
+            try:
+                os.makedirs (config.docker_registry_storage, mode=0o700, exist_ok=True)
+            except PermissionError:
+                logger.error ("Cannot create %s directory.", config.docker_registry_storage)
 
         server.db.setup_sparql_endpoint ()
 

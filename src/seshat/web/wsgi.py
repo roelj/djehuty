@@ -357,6 +357,17 @@ class WebServer:
             R("/iiif/v3/<file_uuid>/info.json",                                  self.iiif_v3_image_context),
             R("/iiif/v3/<container_uuid>/<version>/manifest",                    self.iiif_v3_presentation_manifest),
             R("/iiif/v3/<file_uuid>/canvas",                                     self.iiif_v3_presentation_canvas),
+
+            ## ----------------------------------------------------------------
+            ## OCI REGISTRY
+            ## ----------------------------------------------------------------
+            R("/v2/",                                                            self.api_registry_version),
+            R("/v2/_catalog",                                                    self.api_registry_catalog),
+            R("/v2/<path:name>/tags/list",                                       self.api_registry_tags),
+            R("/v2/<path:name>/manifests/<reference>",                           self.api_registry_manifest),
+            R("/v2/<path:name>/blobs/<digest>",                                  self.api_registry_blob),
+            R("/v2/<path:name>/blobs/uploads/",                                  self.api_registry_blob_upload_start),
+            R("/v2/<path:name>/blobs/uploads/<upload_uuid>",                     self.api_registry_blob_upload),
         ])
 
         ## Static resources and HTML templates.
@@ -9766,3 +9777,320 @@ class WebServer:
 
         record = formatter.format_iiif_canvas_record (metadata, config.base_url)
         return self.response (json.dumps(record), allow_origin="*")
+
+    ## ------------------------------------------------------------------------
+    ## OCI REGISTRY
+    ## ------------------------------------------------------------------------
+
+    def __registry_blob_path (self, digest):
+        """Filesystem path for the blob identified by DIGEST ('sha256:<hex>')."""
+        algo, _, hex_part = digest.partition (":")
+        return os.path.join (config.docker_registry_storage, "blobs", algo, hex_part)
+
+    def __registry_manifest_dir (self, name):
+        """Directory holding all manifest entries for repository NAME."""
+        return os.path.join (config.docker_registry_storage, "manifests", name)
+
+    def __registry_upload_path (self, upload_uuid):
+        """Filesystem path where chunks for an active upload are appended."""
+        return os.path.join (config.docker_registry_storage, "uploads", upload_uuid)
+
+    def __registry_compute_sha256 (self, path):
+        """Stream PATH through sha256 in 4 KiB chunks and return the digest."""
+        digester = hashlib.sha256 ()
+        with open (path, "rb") as stream:
+            for chunk in iter (lambda: stream.read (4096), b""):
+                digester.update (chunk)
+        return f"sha256:{digester.hexdigest()}"
+
+    def __registry_stream_to_file (self, request, destination):
+        bytes_to_read = request.content_length
+        input_stream = request.stream
+        os.makedirs (os.path.dirname (destination), mode=0o700, exist_ok=True)
+        flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
+        with os.fdopen (os.open (destination, flags, 0o600), "ab") as output_stream:
+            if bytes_to_read is None:
+                # Chunked transfer encoding: read until EOF.
+                while True:
+                    chunk = input_stream.read (4096)
+                    if not chunk:
+                        break
+                    output_stream.write (chunk)
+            else:
+                while bytes_to_read > 4096:
+                    chunk = input_stream.read (4096)
+                    if not chunk:
+                        break
+                    output_stream.write (chunk)
+                    bytes_to_read -= len(chunk)
+                if bytes_to_read > 0:
+                    chunk = input_stream.read (bytes_to_read)
+                    if chunk:
+                        output_stream.write (chunk)
+
+    def __registry_error (self, request, code, message, status):
+        """Return an OCI-formatted error response."""
+        response = self.response (json.dumps ({
+            "errors": [{"code": code, "message": message}]
+        }))
+        response.status_code = status
+        response.headers["Docker-Distribution-API-Version"] = "registry/2.0"
+        return response
+
+    def api_registry_version (self, request):
+        """Implements GET /v2/."""
+        handler = self.default_error_handling (request, "GET", "application/json")
+        if handler is not None:
+            return handler
+
+        response = self.respond_204 ()
+        response.status_code = 200
+        response.headers["Docker-Distribution-API-Version"] = "registry/2.0"
+        return response
+
+    def api_registry_catalog (self, request):
+        """Implements /v2/_catalog."""
+        handler = self.default_error_handling (request, "GET", "application/json")
+        if handler is not None:
+            return handler
+
+        manifests_root = os.path.join (config.docker_registry_storage, "manifests")
+        repositories = []
+        if os.path.isdir (manifests_root):
+            for dirpath, _, filenames in os.walk (manifests_root):
+                # A directory is a repository if it contains any manifest
+                # content -- i.e. any file that is not a '.ct' sidecar.
+                if any (not f.endswith (".ct") for f in filenames):
+                    repositories.append (os.path.relpath (dirpath, manifests_root))
+
+        return self.response (json.dumps ({"repositories": sorted (repositories)}))
+
+    def api_registry_tags (self, request, name):
+        """Implements /v2/<name>/tags/list."""
+        handler = self.default_error_handling (request, "GET", "application/json")
+        if handler is not None:
+            return handler
+
+        manifest_dir = self.__registry_manifest_dir (name)
+        tags = []
+        if os.path.isdir (manifest_dir):
+            for entry in os.listdir (manifest_dir):
+                # Skip sidecars and digest-based references; tags are the rest.
+                if entry.endswith (".ct") or entry.startswith ("sha256:"):
+                    continue
+                tags.append (entry)
+
+        return self.response (json.dumps ({"name": name, "tags": sorted (tags)}))
+
+    def api_registry_manifest (self, request, name, reference):
+        """Implements /v2/<name>/manifests/<reference>."""
+
+        manifest_dir  = self.__registry_manifest_dir (name)
+        manifest_path = os.path.join (manifest_dir, reference)
+        content_type_path = f"{manifest_path}.ct"
+
+        if request.method in ("GET", "HEAD"):
+            if not os.path.isfile (manifest_path):
+                return self.__registry_error (request, "MANIFEST_UNKNOWN",
+                                               f"No such manifest: {reference}.", 404)
+
+            try:
+                with open (content_type_path, encoding="utf-8") as stream:
+                    content_type = stream.read ()
+            except OSError:
+                content_type = "application/vnd.docker.distribution.manifest.v2+json"
+
+            digest = self.__registry_compute_sha256 (manifest_path)
+            if request.method == "HEAD":
+                response = self.respond_204 ()
+                response.status_code = 200
+                response.content_length = os.path.getsize (manifest_path)
+            else:
+                with open (manifest_path, "rb") as stream:
+                    response = self.response (stream.read (), mimetype=content_type)
+            response.headers["Docker-Content-Digest"] = digest
+            response.headers["Content-Type"] = content_type
+            return response
+
+        if request.method == "PUT":
+            content_type = value_or (request.headers, "Content-Type",
+                                     "application/vnd.docker.distribution.manifest.v2+json")
+            data = request.get_data ()
+            digest = f"sha256:{hashlib.sha256(data).hexdigest()}"
+
+            self.locks.lock (locks.LockTypes.DOCKER_REGISTRY)
+            try:
+                os.makedirs (manifest_dir, mode=0o700, exist_ok=True)
+                # Store the manifest twice: under the client-supplied reference
+                # (tag or digest) and under its computed digest, so lookups by
+                # either work.  The .ct sidecar records the Content-Type.
+                for ref in {reference, digest}:
+                    target = os.path.join (manifest_dir, ref)
+                    with open (target, "wb") as stream:
+                        stream.write (data)
+                    with open (f"{target}.ct", "w", encoding="utf-8") as stream:
+                        stream.write (content_type)
+            finally:
+                self.locks.unlock (locks.LockTypes.DOCKER_REGISTRY)
+
+            self.log.info ("Stored manifest %s/%s (%s).", name, reference, digest)
+            response = self.respond_204 ()
+            response.status_code = 201
+            response.headers["Location"] = f"/v2/{name}/manifests/{reference}"
+            response.headers["Docker-Content-Digest"] = digest
+            return response
+
+        if request.method == "DELETE":
+            if not os.path.isfile (manifest_path):
+                return self.__registry_error (request, "MANIFEST_UNKNOWN",
+                                               f"No such manifest: {reference}.", 404)
+
+            # Delete every reference that resolves to the same content so
+            # clients cannot fetch a tag after its digest has been removed.
+            target_digest = self.__registry_compute_sha256 (manifest_path)
+            self.locks.lock (locks.LockTypes.DOCKER_REGISTRY)
+            try:
+                for entry in os.listdir (manifest_dir):
+                    if entry.endswith (".ct"):
+                        continue
+                    entry_path = os.path.join (manifest_dir, entry)
+                    if self.__registry_compute_sha256 (entry_path) != target_digest:
+                        continue
+                    os.remove (entry_path)
+                    sidecar = f"{entry_path}.ct"
+                    if os.path.isfile (sidecar):
+                        os.remove (sidecar)
+            finally:
+                self.locks.unlock (locks.LockTypes.DOCKER_REGISTRY)
+
+            response = self.respond_204 ()
+            response.status_code = 202
+            return response
+
+        return self.error_405 (["GET", "HEAD", "PUT", "DELETE"])
+
+    def api_registry_blob (self, request, name, digest):
+        """Implements /v2/<name>/blobs/<digest>."""
+
+        blob_path = self.__registry_blob_path (digest)
+
+        if request.method in ("GET", "HEAD"):
+            if not os.path.isfile (blob_path):
+                return self.__registry_error (request, "BLOB_UNKNOWN",
+                                               f"No such blob: {digest}.", 404)
+
+            if request.method == "HEAD":
+                response = self.respond_204 ()
+                response.status_code = 200
+                response.content_length = os.path.getsize (blob_path)
+            else:
+                return send_file (blob_path, request.environ,
+                                  "application/octet-stream")
+            response.headers["Docker-Content-Digest"] = digest
+            response.headers["Content-Type"] = "application/octet-stream"
+            return response
+
+        if request.method == "DELETE":
+            try:
+                os.remove (blob_path)
+            except OSError:
+                return self.__registry_error (request, "BLOB_UNKNOWN",
+                                               f"No such blob: {digest}.", 404)
+            self.log.info ("Removed blob %s from %s.", digest, name)
+            response = self.respond_204 ()
+            response.status_code = 202
+            return response
+
+        return self.error_405 (["GET", "HEAD", "DELETE"])
+
+    def api_registry_blob_upload_start (self, request, name):
+        """Implements /v2/<name>/blobs/uploads/."""
+        if request.method != "POST":
+            return self.error_405 (["POST"])
+
+        supplied_digest = request.args.get ("digest")
+
+        if supplied_digest:
+            # Monolithic upload -- stream directly to the content-addressed
+            # blob path, then verify the digest.
+            blob_path = self.__registry_blob_path (supplied_digest)
+            self.__registry_stream_to_file (request, blob_path)
+            computed_digest = self.__registry_compute_sha256 (blob_path)
+            if computed_digest != supplied_digest:
+                os.remove (blob_path)
+                return self.__registry_error (request, "DIGEST_INVALID",
+                    (f"Digest mismatch: computed {computed_digest}, "
+                     f"got {supplied_digest}."), 400)
+            self.log.info ("Stored blob %s for %s (monolithic).",
+                           supplied_digest, name)
+            response = self.respond_204 ()
+            response.status_code = 201
+            response.headers["Location"] = f"/v2/{name}/blobs/{supplied_digest}"
+            response.headers["Docker-Content-Digest"] = supplied_digest
+            return response
+
+        # Chunked upload -- allocate a session.
+        upload_uuid = str(uuid.uuid4())
+        upload_path = self.__registry_upload_path (upload_uuid)
+        os.makedirs (os.path.dirname (upload_path), mode=0o700, exist_ok=True)
+        # Create the (empty) upload file so subsequent PATCH calls can append.
+        open (upload_path, "wb").close ()
+        self.log.info ("Started upload session %s for %s.", upload_uuid, name)
+
+        response = self.respond_204 ()
+        response.status_code = 202
+        response.headers["Location"] = f"/v2/{name}/blobs/uploads/{upload_uuid}"
+        response.headers["Docker-Upload-UUID"] = upload_uuid
+        response.headers["Range"] = "0-0"
+        return response
+
+    def api_registry_blob_upload (self, request, name, upload_uuid):
+        """Implements /v2/<name>/blobs/uploads/<upload_uuid>."""
+        if not validator.is_valid_uuid (upload_uuid):
+            return self.error_404 (request)
+
+        upload_path = self.__registry_upload_path (upload_uuid)
+        if not os.path.isfile (upload_path):
+            return self.__registry_error (request, "BLOB_UPLOAD_UNKNOWN",
+                                           f"No such upload: {upload_uuid}.", 404)
+
+        if request.method == "PATCH":
+            self.__registry_stream_to_file (request, upload_path)
+            new_size = os.path.getsize (upload_path)
+            response = self.respond_204 ()
+            response.status_code = 202
+            response.headers["Location"] = f"/v2/{name}/blobs/uploads/{upload_uuid}"
+            response.headers["Docker-Upload-UUID"] = upload_uuid
+            response.headers["Range"] = f"0-{max(new_size - 1, 0)}"
+            return response
+
+        if request.method == "PUT":
+            supplied_digest = request.args.get ("digest")
+            if not supplied_digest:
+                return self.__registry_error (request, "DIGEST_INVALID",
+                    "A digest query parameter is required to finalise an upload.",
+                    400)
+
+            # Any remaining data in the PUT body is the final chunk.
+            if request.content_length:
+                self.__registry_stream_to_file (request, upload_path)
+
+            computed_digest = self.__registry_compute_sha256 (upload_path)
+            if computed_digest != supplied_digest:
+                return self.__registry_error (request, "DIGEST_INVALID",
+                    (f"Digest mismatch: computed {computed_digest}, "
+                     f"expected {supplied_digest}."), 400)
+
+            blob_path = self.__registry_blob_path (supplied_digest)
+            os.makedirs (os.path.dirname (blob_path), mode=0o700, exist_ok=True)
+            os.replace (upload_path, blob_path)
+            self.log.info ("Stored blob %s for %s (chunked).",
+                           supplied_digest, name)
+
+            response = self.respond_204 ()
+            response.status_code = 201
+            response.headers["Location"] = f"/v2/{name}/blobs/{supplied_digest}"
+            response.headers["Docker-Content-Digest"] = supplied_digest
+            return response
+
+        return self.error_405 (["PATCH", "PUT"])
