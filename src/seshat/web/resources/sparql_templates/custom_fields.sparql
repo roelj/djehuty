@@ -6,25 +6,25 @@ SELECT DISTINCT ?name          ?value         ?default_value
                 ?is_mandatory
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?field             rdf:type                 djht:CustomField .
-    ?field             djht:original_name        ?name .
-    ?field             djht:predicate            ?predicate .
+    ?field             rdf:type                 shst:CustomField .
+    ?field             shst:original_name        ?name .
+    ?field             shst:predicate            ?predicate .
 
     {%- if item_uri is not none %}
-    ?item_uri          rdf:type                 djht:{{prefix}} ;
+    ?item_uri          rdf:type                 shst:{{prefix}} ;
                        ?predicate               ?value .
     {%- endif %}
-    OPTIONAL { ?field  djht:default_value        ?default_value . }
-    OPTIONAL { ?field  djht:placeholder          ?placeholder . }
-    OPTIONAL { ?field  djht:max_length           ?max_length . }
-    OPTIONAL { ?field  djht:min_length           ?min_length . }
-    OPTIONAL { ?field  djht:field_type           ?field_type . }
-    OPTIONAL { ?field  djht:is_multiple          ?is_multiple . }
-    OPTIONAL { ?field  djht:is_mandatory         ?is_mandatory . }
+    OPTIONAL { ?field  shst:default_value        ?default_value . }
+    OPTIONAL { ?field  shst:placeholder          ?placeholder . }
+    OPTIONAL { ?field  shst:max_length           ?max_length . }
+    OPTIONAL { ?field  shst:min_length           ?min_length . }
+    OPTIONAL { ?field  shst:field_type           ?field_type . }
+    OPTIONAL { ?field  shst:is_multiple          ?is_multiple . }
+    OPTIONAL { ?field  shst:is_mandatory         ?is_mandatory . }
   }
   {#- Historically the "derived from" field could have multiple values, #}
   {#- so this has to be dealt with separately. #}
-  FILTER (?predicate != djht:derived_from)
+  FILTER (?predicate != shst:derived_from)
 {%- if item_uri is not none %}
   FILTER (?item_uri = <{{item_uri}}>)
 {%- endif %}

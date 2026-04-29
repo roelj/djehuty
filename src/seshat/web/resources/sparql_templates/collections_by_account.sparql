@@ -3,15 +3,15 @@
 SELECT DISTINCT ?container_uuid ?title
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container_uri   rdf:type                      djht:CollectionContainer ;
-                     djht:account                  <account:{{account_uuid}}> .
+    ?container_uri   rdf:type                      shst:CollectionContainer ;
+                     shst:account                  <account:{{account_uuid}}> .
     {
-      ?container_uri djht:draft                    ?collection .
+      ?container_uri shst:draft                    ?collection .
     } UNION {
-      ?container_uri djht:latest_published_version ?collection .
+      ?container_uri shst:latest_published_version ?collection .
     }
 
-    ?collection      djht:title                    ?title .
+    ?collection      shst:title                    ?title .
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
     }
 }

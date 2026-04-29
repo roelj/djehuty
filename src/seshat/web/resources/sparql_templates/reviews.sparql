@@ -9,53 +9,53 @@ SELECT DISTINCT ?uuid ?request_date ?reminder_date ?assigned_to
                 ?last_seen_by_reviewer
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?review             rdf:type                 djht:Review ;
-                        djht:dataset              ?dataset .
+    ?review             rdf:type                 shst:Review ;
+                        shst:dataset              ?dataset .
 
-    OPTIONAL { ?review  djht:request_date         ?request_date . }
-    OPTIONAL { ?review  djht:reminder_date        ?reminder_date . }
+    OPTIONAL { ?review  shst:request_date         ?request_date . }
+    OPTIONAL { ?review  shst:reminder_date        ?reminder_date . }
     OPTIONAL {
-      ?review           djht:status               ?status_uri .
+      ?review           shst:status               ?status_uri .
       ?status_uri       rdfs:label                ?status_label .
     }
 
-    ?dataset            djht:container            ?container_uri ;
-                        djht:title                ?dataset_title .
-    OPTIONAL { ?dataset djht:published_date       ?published_date . }
-    OPTIONAL { ?dataset djht:declined_date        ?declined_date . }
-    OPTIONAL { ?dataset djht:modified_date        ?modified_date . }
-    OPTIONAL { ?dataset djht:last_seen_by_reviewer ?last_seen_by_reviewer . }
-    OPTIONAL { ?dataset djht:version              ?dataset_version . }
+    ?dataset            shst:container            ?container_uri ;
+                        shst:title                ?dataset_title .
+    OPTIONAL { ?dataset shst:published_date       ?published_date . }
+    OPTIONAL { ?dataset shst:declined_date        ?declined_date . }
+    OPTIONAL { ?dataset shst:modified_date        ?modified_date . }
+    OPTIONAL { ?dataset shst:last_seen_by_reviewer ?last_seen_by_reviewer . }
+    OPTIONAL { ?dataset shst:version              ?dataset_version . }
 
-    ?container_uri      djht:account              ?account .
+    ?container_uri      shst:account              ?account .
     {%- if domain is not none %}
-    ?account            djht:domain               "{{domain}}"^^xsd:string .
+    ?account            shst:domain               "{{domain}}"^^xsd:string .
     {%- endif %}
     {%- if group_id is not none %}
-    ?dataset            djht:group_id             {{group_id}} .
+    ?dataset            shst:group_id             {{group_id}} .
     {%- endif %}
 
-    OPTIONAL { ?container_uri djht:latest_published_version ?published_version . }
+    OPTIONAL { ?container_uri shst:latest_published_version ?published_version . }
     OPTIONAL {
-      ?group            rdf:type                 djht:InstitutionGroup ;
-                        djht:id                   ?group_id ;
-                        djht:name                 ?group_name .
-      ?dataset          djht:group_id             ?group_id .
+      ?group            rdf:type                 shst:InstitutionGroup ;
+                        shst:id                   ?group_id ;
+                        shst:name                 ?group_name .
+      ?dataset          shst:group_id             ?group_id .
     }
 
-    OPTIONAL { ?account djht:email                ?submitter_email . }
-    OPTIONAL { ?account djht:first_name           ?submitter_first_name . }
-    OPTIONAL { ?account djht:last_name            ?submitter_last_name . }
-    OPTIONAL { ?account djht:institution_id       ?institution_id . }
+    OPTIONAL { ?account shst:email                ?submitter_email . }
+    OPTIONAL { ?account shst:first_name           ?submitter_first_name . }
+    OPTIONAL { ?account shst:last_name            ?submitter_last_name . }
+    OPTIONAL { ?account shst:institution_id       ?institution_id . }
 
     OPTIONAL {
-      ?review  djht:assigned_to          ?assigned_to .
+      ?review  shst:assigned_to          ?assigned_to .
       {#- OPTIONAL within OPTIONAL because if ?assigned_to is unbound,
        #- the following OPTIONAL bindings shouldn't just bind freely to anything
        #- with these predicates. #}
-      OPTIONAL { ?assigned_to djht:email            ?reviewer_email . }
-      OPTIONAL { ?assigned_to djht:first_name       ?reviewer_first_name . }
-      OPTIONAL { ?assigned_to djht:last_name        ?reviewer_last_name . }
+      OPTIONAL { ?assigned_to shst:email            ?reviewer_email . }
+      OPTIONAL { ?assigned_to shst:first_name       ?reviewer_first_name . }
+      OPTIONAL { ?assigned_to shst:last_name        ?reviewer_last_name . }
     }
 
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
@@ -71,7 +71,7 @@ WHERE {
 {%- endif %}
 {%- endif %}
 {%- if status is not none %}
-  FILTER (?status_uri = djht:Review{{status | safe}})
+  FILTER (?status_uri = shst:Review{{status | safe}})
 {%- endif %}
 {% if filters is not none %}{{ filters | safe }}{% endif %}
 }

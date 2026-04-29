@@ -3,9 +3,9 @@
 SELECT (SUM(?bytes) AS ?bytes)
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset        rdf:type                       djht:Dataset .
-    ?dataset        djht:files/rdf:rest*/rdf:first ?file .
-    ?file           djht:size                      ?bytes .
+    ?dataset        rdf:type                       shst:Dataset .
+    ?dataset        shst:files/rdf:rest*/rdf:first ?file .
+    ?file           shst:size                      ?bytes .
     FILTER (?dataset = <dataset:{{dataset_uuid}}>)
   }
 }

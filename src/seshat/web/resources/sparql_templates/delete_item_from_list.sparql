@@ -3,7 +3,7 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     ?blank_before rdf:rest ?blank_node .
-    ?blank_node   djht:index ?blank_index .
+    ?blank_node   shst:index ?blank_index .
     ?blank_node   rdf:first ?blank_first .
     ?blank_node   rdf:type  rdf:List .
   }
@@ -23,7 +23,7 @@ WHERE {
       <{{subject}}> {{predicate | safe}} ?blank_node .
     }
     ?blank_node rdf:rest   ?blank_after .
-    ?blank_node djht:index ?blank_index .
+    ?blank_node shst:index ?blank_index .
     ?blank_node rdf:first  ?blank_first .
   }
 }

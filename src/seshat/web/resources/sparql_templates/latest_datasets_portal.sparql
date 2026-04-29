@@ -3,11 +3,11 @@
 SELECT ?container_uuid ?published_date ?title (?dataset AS ?dataset_uri)
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset_container rdf:type                       djht:DatasetContainer ;
-                       djht:latest_published_version  ?dataset .
-    ?dataset           rdf:type                       djht:Dataset ;
-                       djht:posted_date               ?published_date ;
-                       djht:title                     ?title .
+    ?dataset_container rdf:type                       shst:DatasetContainer ;
+                       shst:latest_published_version  ?dataset .
+    ?dataset           rdf:type                       shst:Dataset ;
+                       shst:posted_date               ?published_date ;
+                       shst:title                     ?title .
 
     BIND(STRAFTER(STR(?dataset_container), "container:") AS ?container_uuid)
   }

@@ -3,8 +3,8 @@
 SELECT DISTINCT ?uri
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?uri     rdf:type     djht:{{record_type}} ;
-             djht:{{identifier_name}} {{identifier}} .
+    ?uri     rdf:type     shst:{{record_type}} ;
+             shst:{{identifier_name}} {{identifier}} .
   }
 }
 {% endblock %}

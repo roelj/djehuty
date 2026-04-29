@@ -2,25 +2,25 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?review        djht:status                   ?review_status .
-    ?draft_dataset djht:is_under_review          ?is_under_review .
+    ?review        shst:status                   ?review_status .
+    ?draft_dataset shst:is_under_review          ?is_under_review .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?review        djht:status                   djht:ReviewRejected .
-    ?draft_dataset djht:is_under_review          "false"^^xsd:boolean ;
-                   djht:declined_date            ?now .
+    ?review        shst:status                   shst:ReviewRejected .
+    ?draft_dataset shst:is_under_review          "false"^^xsd:boolean ;
+                   shst:declined_date            ?now .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container     rdf:type                      djht:DatasetContainer ;
-                   djht:draft                    ?draft_dataset .
-    ?draft_dataset djht:is_under_review          ?is_under_review .
-    ?review        rdf:type                      djht:Review ;
-                   djht:dataset                  ?draft_dataset ;
-                   djht:status                   ?review_status .
+    ?container     rdf:type                      shst:DatasetContainer ;
+                   shst:draft                    ?draft_dataset .
+    ?draft_dataset shst:is_under_review          ?is_under_review .
+    ?review        rdf:type                      shst:Review ;
+                   shst:dataset                  ?draft_dataset ;
+                   shst:status                   ?review_status .
     BIND(NOW() AS ?now)
   }
   FILTER (?container = <container:{{container_uuid}}>)

@@ -4,16 +4,16 @@ SELECT DISTINCT ?subject ?predicate ?object (datatype(?object) AS ?type)
 WHERE {
   GRAPH <{{state_graph}}> {
     {%- if full_export: %}
-    ?container_uri rdf:type/rdfs:subClassOf djht:Container .
-    ?item          djht:container ?container_uri .
-    ?item          djht:{{predicate}}/rdf:rest* ?subject .
+    ?container_uri rdf:type/rdfs:subClassOf shst:Container .
+    ?item          shst:container ?container_uri .
+    ?item          shst:{{predicate}}/rdf:rest* ?subject .
     {%- else %}
-    ?container_uri rdf:type/rdfs:subClassOf djht:Container .
-    ?container_uri djht:published_versions/rdf:rest*/rdf:first ?item .
+    ?container_uri rdf:type/rdfs:subClassOf shst:Container .
+    ?container_uri shst:published_versions/rdf:rest*/rdf:first ?item .
     {
-      ?item          djht:{{predicate}}/rdf:rest*/rdf:first ?subject .
+      ?item          shst:{{predicate}}/rdf:rest*/rdf:first ?subject .
     } UNION {
-      ?item          djht:{{predicate}}/rdf:rest* ?subject .
+      ?item          shst:{{predicate}}/rdf:rest* ?subject .
     }
     {% endif %}
     ?subject       ?predicate       ?object .

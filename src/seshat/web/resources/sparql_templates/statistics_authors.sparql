@@ -3,8 +3,8 @@
 SELECT (COUNT(DISTINCT ?author) AS ?authors)
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?author         rdf:type            djht:Author .
-    ?author         djht:is_public      "true"^^xsd:boolean .
+    ?author         rdf:type            shst:Author .
+    ?author         shst:is_public      "true"^^xsd:boolean .
   }
 {%- if filters is not none %}{{ filters | safe }}{% endif %}
 }

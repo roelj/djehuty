@@ -528,7 +528,7 @@ class SparqlInterface:
     def repository_datalink_statistics (self, use_cache=False):
         """Returns datalink sizes."""
 
-        # Since the post-figshare djht:data_link_size is used.
+        # Since the post-figshare shst:data_link_size is used.
         filters = 'FILTER (?created > "2021-03-17"^^xsd:date)'
         query = self.__query_from_template ("statistics_datalink", {
             "filters": filters})
@@ -1865,7 +1865,7 @@ class SparqlInterface:
 
     def insert_log_entry (self, created_date, ip_address, item_uuid,
                           item_type="dataset", event_type="view"):
-        """Procedure to register a djht:LogEntry."""
+        """Procedure to register a shst:LogEntry."""
         if not isinstance (event_type, str):
             self.log.error ("Invalid event_type passed to 'insert_log_entry'.")
             return False

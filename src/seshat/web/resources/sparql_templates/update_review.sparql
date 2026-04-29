@@ -2,34 +2,34 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?review          djht:assigned_to           ?assigned_to .
+    ?review          shst:assigned_to           ?assigned_to .
     {% if status is not none %}
-    ?review          djht:status                ?status .
+    ?review          shst:status                ?status .
     {%- endif%}{% if reminder_date is not none %}
-    ?review          djht:reminder_date         ?reminder_date .
+    ?review          shst:reminder_date         ?reminder_date .
     {%- endif%}
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if assigned_to is not none %}
-    ?review          djht:assigned_to          <account:{{assigned_to | safe}}> .
+    ?review          shst:assigned_to          <account:{{assigned_to | safe}}> .
     {%- endif%}{% if status is not none %}
-    ?review          djht:status               djht:Review{{status | safe}} .
+    ?review          shst:status               shst:Review{{status | safe}} .
     {%- endif%}{% if reminder_date is not none %}
-    ?review          djht:reminder_date        "{{reminder_date | safe}}"^^xsd:dateTime .
+    ?review          shst:reminder_date        "{{reminder_date | safe}}"^^xsd:dateTime .
     {%- endif%}
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?review              rdf:type                  djht:Review .
+    ?review              rdf:type                  shst:Review .
     {%- if dataset_uri is not none %}
-    ?review djht:dataset <{{dataset_uri}}>
+    ?review shst:dataset <{{dataset_uri}}>
     {%- endif %}
-    OPTIONAL { ?review   djht:assigned_to           ?assigned_to . }
-    OPTIONAL { ?review   djht:status                ?status . }
-    OPTIONAL { ?review   djht:reminder_date         ?reminder_date . }
+    OPTIONAL { ?review   shst:assigned_to           ?assigned_to . }
+    OPTIONAL { ?review   shst:status                ?status . }
+    OPTIONAL { ?review   shst:reminder_date         ?reminder_date . }
   }
   FILTER (?review = <{{review_uri}}>)
 }

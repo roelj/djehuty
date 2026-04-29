@@ -3,42 +3,42 @@
 SELECT DISTINCT ?id ?uuid ?parent_id ?parent_uuid ?title ?source_id ?taxonomy_id ?classification_code
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?category         rdf:type                           djht:Category ;
-                      djht:id                            ?id ;
-                      djht:title                         ?title .
+    ?category         rdf:type                           shst:Category ;
+                      shst:id                            ?id ;
+                      shst:title                         ?title .
     OPTIONAL {
-      ?category        djht:parent_id                    ?parent_id .
-      ?parent_category djht:id                           ?parent_id .
+      ?category        shst:parent_id                    ?parent_id .
+      ?parent_category shst:id                           ?parent_id .
 
       BIND(STRAFTER(STR(?parent_category), "category:") AS ?parent_uuid)
     }
-    OPTIONAL { ?category  djht:classification_code       ?classification_code . }
-    OPTIONAL { ?category  djht:source_id                 ?source_id . }
-    OPTIONAL { ?category  djht:taxonomy_id               ?taxonomy_id . }
+    OPTIONAL { ?category  shst:classification_code       ?classification_code . }
+    OPTIONAL { ?category  shst:source_id                 ?source_id . }
+    OPTIONAL { ?category  shst:taxonomy_id               ?taxonomy_id . }
     {%- if item_uri is not none %}
-    ?item_uri        djht:categories/rdf:rest*/rdf:first ?category .
+    ?item_uri        shst:categories/rdf:rest*/rdf:first ?category .
     {%- if account_uuid is not none %}
-    ?container         rdf:type/rdfs:subClassOf         djht:Container .
-    ?container         djht:account                     ?account .
+    ?container         rdf:type/rdfs:subClassOf         shst:Container .
+    ?container         shst:account                     ?account .
     {%- if is_published %}
-    ?container         djht:published_versions/rdf:rest*/rdf:first ?item_uri .
+    ?container         shst:published_versions/rdf:rest*/rdf:first ?item_uri .
     {%- else %}
-    ?container         djht:draft                        ?item_uri .
+    ?container         shst:draft                        ?item_uri .
     {%- endif %}
     {%- if not disable_collaboration %}
     OPTIONAL {
-      ?collaborator      rdf:type            djht:Collaborator .
-      ?collaborator      djht:item           ?item_uri .
-      ?collaborator      djht:account        ?collaborator_account .
-      ?collaborator      djht:metadata_read  "true"^^xsd:boolean .
+      ?collaborator      rdf:type            shst:Collaborator .
+      ?collaborator      shst:item           ?item_uri .
+      ?collaborator      shst:account        ?collaborator_account .
+      ?collaborator      shst:metadata_read  "true"^^xsd:boolean .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?item_uri           djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?item_uri           shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
     {%- endif %}
     {%- endif %}

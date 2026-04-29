@@ -2,14 +2,14 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?account    djht:group          ?group .
+    ?account    shst:group          ?group .
     ?group      ?predicate          ?object .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?account    rdf:type            djht:Account .
-    ?account    djht:group          ?group .
+    ?account    rdf:type            shst:Account .
+    ?account    shst:group          ?group .
   }
 }
 {% endblock %}

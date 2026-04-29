@@ -5,10 +5,10 @@ PREFIX this: <container:{{container_uuid}}>
 SELECT DISTINCT ?account ?email ?first_name ?last_name
 WHERE {
   GRAPH <{{state_graph}}> {
-    this:               djht:account     ?account .
-    ?account            djht:email       ?email   .
-    OPTIONAL {?account  djht:first_name  ?first_name .}
-    OPTIONAL {?account  djht:last_name   ?last_name  .}
+    this:               shst:account     ?account .
+    ?account            shst:email       ?email   .
+    OPTIONAL {?account  shst:first_name  ?first_name .}
+    OPTIONAL {?account  shst:last_name   ?last_name  .}
   }
 }
 {% endblock %}

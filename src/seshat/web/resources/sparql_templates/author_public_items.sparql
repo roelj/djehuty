@@ -1,29 +1,29 @@
 {#- Find for each item the latest version authored by a given author. #}
 {% extends "prefixes.sparql" %}
 {% block query %}
-SELECT DISTINCT ((?item_type = djht:Dataset) AS ?is_dataset)
+SELECT DISTINCT ((?item_type = shst:Dataset) AS ?is_dataset)
                 (STRAFTER(STR(?container), ":") AS ?container_uuid)
                 ?version ?posted_date ?title
                 ?downloads ?views ?shares ?cites
 WHERE {
   GRAPH <{{state_graph}}> {
     ?item  rdf:type          ?item_type ;
-           djht:container    ?container ;
-           djht:version      ?version ;
-           djht:posted_date  ?posted_date ;
-           djht:title        ?title .
-    OPTIONAL { ?container djht:total_downloads ?downloads . }
-    OPTIONAL { ?container djht:total_views     ?views . }
-    OPTIONAL { ?container djht:total_shares    ?shares . }
-    OPTIONAL { ?container djht:total_cites     ?cites . }
+           shst:container    ?container ;
+           shst:version      ?version ;
+           shst:posted_date  ?posted_date ;
+           shst:title        ?title .
+    OPTIONAL { ?container shst:total_downloads ?downloads . }
+    OPTIONAL { ?container shst:total_views     ?views . }
+    OPTIONAL { ?container shst:total_shares    ?shares . }
+    OPTIONAL { ?container shst:total_cites     ?cites . }
     {
       SELECT ?container (MAX(?i_version) AS ?version)
       WHERE {
         GRAPH <{{state_graph}}> {
-          ?i_item  djht:container                    ?container ;
-                   djht:version                      ?i_version ;
-                   djht:is_public                    true ;
-                   djht:authors/rdf:rest*/rdf:first  <{{author_uri}}> .
+          ?i_item  shst:container                    ?container ;
+                   shst:version                      ?i_version ;
+                   shst:is_public                    true ;
+                   shst:authors/rdf:rest*/rdf:first  <{{author_uri}}> .
         }
       }
       GROUP BY ?container

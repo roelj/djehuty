@@ -3,112 +3,112 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if is_active is not none %}
-    ?account          djht:is_active             ?is_active .
+    ?account          shst:is_active             ?is_active .
     {%- endif%}{% if email is not none %}
-    ?account          djht:email                 ?email .
+    ?account          shst:email                 ?email .
     {%- endif%}{% if job_title is not none %}
-    ?account          djht:job_title             ?job_title .
+    ?account          shst:job_title             ?job_title .
     {%- endif%}{% if first_name is not none %}
-    ?account          djht:first_name            ?first_name .
-    ?author           djht:first_name            ?author_first_name .
+    ?account          shst:first_name            ?first_name .
+    ?author           shst:first_name            ?author_first_name .
     {%- endif%}{% if last_name is not none %}
-    ?account          djht:last_name             ?last_name .
-    ?author           djht:last_name             ?author_last_name .
+    ?account          shst:last_name             ?last_name .
+    ?author           shst:last_name             ?author_last_name .
     {%- endif%}{% if full_name is not none %}
-    ?author           djht:full_name             ?author_full_name .
+    ?author           shst:full_name             ?author_full_name .
     {%- endif%}{% if location is not none %}
-    ?account          djht:location              ?location .
+    ?account          shst:location              ?location .
     {%- endif%}{% if twitter is not none %}
-    ?account          djht:twitter               ?twitter .
+    ?account          shst:twitter               ?twitter .
     {%- endif%}{% if linkedin is not none %}
-    ?account          djht:linkedin              ?linkedin .
+    ?account          shst:linkedin              ?linkedin .
     {%- endif%}{% if website is not none %}
-    ?account          djht:website               ?website .
+    ?account          shst:website               ?website .
     {%- endif%}{% if biography is not none %}
-    ?account          djht:biography             ?biography .
+    ?account          shst:biography             ?biography .
     {%- endif%}{% if institution_user_id is not none %}
-    ?account          djht:institution_user_id   ?institution_user_id .
+    ?account          shst:institution_user_id   ?institution_user_id .
     {%- endif%}{% if institution_id is not none %}
-    ?account          djht:institution_id        ?institution_id .
+    ?account          shst:institution_id        ?institution_id .
     {%- endif%}{% if domain is not none %}
-    ?account          djht:domain                ?domain .
+    ?account          shst:domain                ?domain .
     {%- endif%}{% if profile_image is not none %}
-    ?account          djht:profile_image         ?profile_image .
+    ?account          shst:profile_image         ?profile_image .
     {%- endif%}{% if maximum_file_size is not none %}
-    ?account          djht:maximum_file_size     ?maximum_file_size .
+    ?account          shst:maximum_file_size     ?maximum_file_size .
     {%- endif%}{% if modified_date is not none %}
-    ?account          djht:modified_date         ?modified_date .
+    ?account          shst:modified_date         ?modified_date .
     {%- endif%}
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if is_active is not none %}
-    ?account          djht:is_active           {{is_active}} .
+    ?account          shst:is_active           {{is_active}} .
     {%- endif%}{% if email is not none %}
-    ?account          djht:email               {{email | safe}} .
+    ?account          shst:email               {{email | safe}} .
     {%- endif%}{% if job_title is not none %}
-    ?account          djht:job_title           {{job_title | safe}} .
+    ?account          shst:job_title           {{job_title | safe}} .
     {%- endif%}{% if first_name is not none %}
-    ?account          djht:first_name          {{first_name | safe}} .
-    ?author           djht:first_name          {{first_name | safe}} .
+    ?account          shst:first_name          {{first_name | safe}} .
+    ?author           shst:first_name          {{first_name | safe}} .
     {%- endif%}{% if last_name is not none %}
-    ?account          djht:last_name           {{last_name | safe}} .
-    ?author           djht:last_name           {{last_name | safe}} .
+    ?account          shst:last_name           {{last_name | safe}} .
+    ?author           shst:last_name           {{last_name | safe}} .
     {%- endif%}{% if full_name is not none %}
-    ?author           djht:full_name           {{full_name | safe}} .
+    ?author           shst:full_name           {{full_name | safe}} .
     {%- endif%}{% if location is not none %}
-    ?account          djht:location            {{location | safe}} .
+    ?account          shst:location            {{location | safe}} .
     {%- endif%}{% if twitter is not none %}
-    ?account          djht:twitter             {{twitter | safe}} .
+    ?account          shst:twitter             {{twitter | safe}} .
     {%- endif%}{% if linkedin is not none %}
-    ?account          djht:linkedin            {{linkedin | safe}} .
+    ?account          shst:linkedin            {{linkedin | safe}} .
     {%- endif%}{% if website is not none %}
-    ?account          djht:website             {{website | safe}} .
+    ?account          shst:website             {{website | safe}} .
     {%- endif%}{% if biography is not none %}
-    ?account          djht:biography           {{biography | safe}} .
+    ?account          shst:biography           {{biography | safe}} .
     {%- endif%}{% if institution_user_id is not none %}
-    ?account          djht:institution_user_id {{institution_user_id}} .
+    ?account          shst:institution_user_id {{institution_user_id}} .
     {%- endif%}{% if institution_id is not none %}
-    ?account          djht:institution_id      {{institution_id}} .
+    ?account          shst:institution_id      {{institution_id}} .
     {%- endif%}{% if domain is not none %}
-    ?account          djht:domain              {{domain | safe}} .
+    ?account          shst:domain              {{domain | safe}} .
     {%- endif%}{% if profile_image is not none %}
-    ?account          djht:profile_image       <{{profile_image | safe}}> .
+    ?account          shst:profile_image       <{{profile_image | safe}}> .
     {%- endif%}{% if maximum_file_size is not none %}
-    ?account          djht:maximum_file_size   {{maximum_file_size}} .
+    ?account          shst:maximum_file_size   {{maximum_file_size}} .
     {%- endif%}{% if modified_date is not none %}
-    ?account          djht:modified_date       "{{modified_date | safe}}"^^xsd:dateTime .
+    ?account          shst:modified_date       "{{modified_date | safe}}"^^xsd:dateTime .
     {%- endif%}
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?account              rdf:type                  djht:Account .
+    ?account              rdf:type                  shst:Account .
 
-    OPTIONAL { ?account   djht:is_active             ?is_active . }
-    OPTIONAL { ?account   djht:email                 ?email . }
-    OPTIONAL { ?account   djht:job_title             ?job_title . }
-    OPTIONAL { ?account   djht:first_name            ?first_name . }
-    OPTIONAL { ?account   djht:last_name             ?last_name . }
-    OPTIONAL { ?account   djht:location              ?location . }
-    OPTIONAL { ?account   djht:twitter               ?twitter . }
-    OPTIONAL { ?account   djht:linkedin              ?linkedin . }
-    OPTIONAL { ?account   djht:website               ?website . }
-    OPTIONAL { ?account   djht:biography             ?biography . }
-    OPTIONAL { ?account   djht:institution_user_id   ?institution_user_id . }
-    OPTIONAL { ?account   djht:institution_id        ?institution_id . }
-    OPTIONAL { ?account   djht:domain                ?domain . }
-    OPTIONAL { ?account   djht:profile_image         ?profile_image . }
-    OPTIONAL { ?account   djht:maximum_file_size     ?maximum_file_size . }
-    OPTIONAL { ?account   djht:modified_date         ?modified_date . }
+    OPTIONAL { ?account   shst:is_active             ?is_active . }
+    OPTIONAL { ?account   shst:email                 ?email . }
+    OPTIONAL { ?account   shst:job_title             ?job_title . }
+    OPTIONAL { ?account   shst:first_name            ?first_name . }
+    OPTIONAL { ?account   shst:last_name             ?last_name . }
+    OPTIONAL { ?account   shst:location              ?location . }
+    OPTIONAL { ?account   shst:twitter               ?twitter . }
+    OPTIONAL { ?account   shst:linkedin              ?linkedin . }
+    OPTIONAL { ?account   shst:website               ?website . }
+    OPTIONAL { ?account   shst:biography             ?biography . }
+    OPTIONAL { ?account   shst:institution_user_id   ?institution_user_id . }
+    OPTIONAL { ?account   shst:institution_id        ?institution_id . }
+    OPTIONAL { ?account   shst:domain                ?domain . }
+    OPTIONAL { ?account   shst:profile_image         ?profile_image . }
+    OPTIONAL { ?account   shst:maximum_file_size     ?maximum_file_size . }
+    OPTIONAL { ?account   shst:modified_date         ?modified_date . }
 
     OPTIONAL {
-      ?author            rdf:type                   djht:Author ;
-                         djht:account               ?account .
-      OPTIONAL { ?author djht:first_name            ?author_first_name . }
-      OPTIONAL { ?author djht:last_name             ?author_last_name . }
-      OPTIONAL { ?author djht:full_name             ?author_full_name . }
+      ?author            rdf:type                   shst:Author ;
+                         shst:account               ?account .
+      OPTIONAL { ?author shst:first_name            ?author_first_name . }
+      OPTIONAL { ?author shst:last_name             ?author_last_name . }
+      OPTIONAL { ?author shst:full_name             ?author_full_name . }
     }
 
   }

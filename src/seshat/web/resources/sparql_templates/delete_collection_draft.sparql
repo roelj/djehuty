@@ -3,23 +3,23 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     ?collection   ?predicate           ?object .
-    ?list         djht:index            ?list_index .
+    ?list         shst:index            ?list_index .
     ?list         ?any                 ?list_item .
 
-    ?container    djht:draft           ?collection .
+    ?container    shst:draft           ?collection .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container    rdf:type             djht:CollectionContainer ;
-                  djht:account          <account:{{account_uuid}}> ;
-                  djht:draft            ?collection .
+    ?container    rdf:type             shst:CollectionContainer ;
+                  shst:account          <account:{{account_uuid}}> ;
+                  shst:draft            ?collection .
 
     ?collection   ?predicate           ?object .
     OPTIONAL {
       ?collection ?list_predicate      ?list .
       ?list        rdf:type             rdf:List ;
-                   djht:index            ?list_index ;
+                   shst:index            ?list_index ;
                    rdf:rest*/rdf:first  ?list_item .
     }
   }

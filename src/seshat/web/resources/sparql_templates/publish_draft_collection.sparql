@@ -3,29 +3,29 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if not first_publication %}
-    ?container     djht:latest_published_version ?latest_published_version .
+    ?container     shst:latest_published_version ?latest_published_version .
     ?append_node   rdf:rest                      ?nil_value .
     {%- endif %}
-    ?container        djht:draft                 ?draft_collection .
-    ?draft_collection djht:is_latest             ?is_latest .
-    ?draft_collection djht:is_public             ?is_public .
-    ?draft_collection djht:is_editable           ?is_editable .
-    ?draft_collection djht:version               ?version .
+    ?container        shst:draft                 ?draft_collection .
+    ?draft_collection shst:is_latest             ?is_latest .
+    ?draft_collection shst:is_public             ?is_public .
+    ?draft_collection shst:is_editable           ?is_editable .
+    ?draft_collection shst:version               ?version .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?container     djht:latest_published_version <collection:{{collection_uuid}}> .
+    ?container     shst:latest_published_version <collection:{{collection_uuid}}> .
 
-    ?draft_collection djht:is_latest             "true"^^xsd:boolean ;
-                      djht:is_public             "true"^^xsd:boolean ;
-                      djht:is_editable           "false"^^xsd:boolean ;
-                      djht:published_date        ?now ;
-                      djht:posted_date           ?now ;
-                      djht:version               {{version}} .
+    ?draft_collection shst:is_latest             "true"^^xsd:boolean ;
+                      shst:is_public             "true"^^xsd:boolean ;
+                      shst:is_editable           "false"^^xsd:boolean ;
+                      shst:published_date        ?now ;
+                      shst:posted_date           ?now ;
+                      shst:version               {{version}} .
 
     {%- if first_publication %}
-    ?container     djht:published_versions       <{{blank_node}}> .
+    ?container     shst:published_versions       <{{blank_node}}> .
     {%- else %}
     ?append_node   rdf:rest                      <{{blank_node}}> .
     {%- endif %}
@@ -33,23 +33,23 @@ INSERT {
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container     rdf:type                      djht:CollectionContainer ;
-                   djht:draft                    ?draft_collection ;
-                   djht:account                  ?account .
+    ?container     rdf:type                      shst:CollectionContainer ;
+                   shst:draft                    ?draft_collection ;
+                   shst:account                  ?account .
 
     {%- if not first_publication %}
-    ?container     djht:published_versions/rdf:rest* ?append_node .
+    ?container     shst:published_versions/rdf:rest* ?append_node .
     {#- Working around a bug in Virtuoso.  Check whether this can be
      #- simplified to: ?append_node rdf:rest rdf:nil . #}
     ?append_node   rdf:rest ?nil_value .
     FILTER (STR(?nil_value) = STR(rdf:nil))
     {%- endif %}
 
-    OPTIONAL { ?container djht:latest_published_version ?latest_published_version . }
-    OPTIONAL { ?draft_collection djht:is_latest     ?is_latest . }
-    OPTIONAL { ?draft_collection djht:is_public     ?is_public . }
-    OPTIONAL { ?draft_collection djht:is_editable   ?is_editable . }
-    OPTIONAL { ?draft_collection djht:version       ?version . }
+    OPTIONAL { ?container shst:latest_published_version ?latest_published_version . }
+    OPTIONAL { ?draft_collection shst:is_latest     ?is_latest . }
+    OPTIONAL { ?draft_collection shst:is_public     ?is_public . }
+    OPTIONAL { ?draft_collection shst:is_editable   ?is_editable . }
+    OPTIONAL { ?draft_collection shst:version       ?version . }
 
     BIND("{{timestamp}}"^^xsd:dateTime AS ?now)
   }

@@ -16,81 +16,81 @@ SELECT DISTINCT ?account_uuid ?resource_id ?resource_doi ?resource_title
                 ?private_link_is_expired ?anonymize
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container_uri      rdf:type                 djht:CollectionContainer .
-    ?container_uri      djht:account             ?account .
-    OPTIONAL { ?container_uri djht:collection_id ?collection_id . }
-    OPTIONAL { ?container_uri djht:total_downloads ?total_downloads . }
-    OPTIONAL { ?container_uri djht:total_views    ?total_views .      }
-    OPTIONAL { ?container_uri djht:total_shares   ?total_shares .     }
-    OPTIONAL { ?container_uri djht:total_cites    ?total_cites .      }
-    OPTIONAL { ?container_uri djht:doi            ?container_doi .    }
+    ?container_uri      rdf:type                 shst:CollectionContainer .
+    ?container_uri      shst:account             ?account .
+    OPTIONAL { ?container_uri shst:collection_id ?collection_id . }
+    OPTIONAL { ?container_uri shst:total_downloads ?total_downloads . }
+    OPTIONAL { ?container_uri shst:total_views    ?total_views .      }
+    OPTIONAL { ?container_uri shst:total_shares   ?total_shares .     }
+    OPTIONAL { ?container_uri shst:total_cites    ?total_cites .      }
+    OPTIONAL { ?container_uri shst:doi            ?container_doi .    }
 
     {%- if is_published is none and is_latest is none: %}
-    ?collection         djht:container            ?container_uri .
+    ?collection         shst:container            ?container_uri .
     {%- elif is_latest %}
-    ?container_uri      djht:latest_published_version ?collection .
+    ?container_uri      shst:latest_published_version ?collection .
     {%- elif is_published %}
-    ?container_uri      djht:published_versions/rdf:rest*/rdf:first ?collection .
+    ?container_uri      shst:published_versions/rdf:rest*/rdf:first ?collection .
     {%- else %}
-    ?container_uri      djht:draft               ?collection .
+    ?container_uri      shst:draft               ?collection .
     {%- endif %}
 
     {%- if private_link_id_string is not none %}
-    ?collection         djht:private_links/rdf:rest*/rdf:first ?private_link .
-    ?private_link       djht:id                   ?private_link_id_string .
-    OPTIONAL { ?private_link djht:anonymize       ?anonymize . }
+    ?collection         shst:private_links/rdf:rest*/rdf:first ?private_link .
+    ?private_link       shst:id                   ?private_link_id_string .
+    OPTIONAL { ?private_link shst:anonymize       ?anonymize . }
     {%- endif %}
 
     OPTIONAL {
-      ?account          rdf:type                 djht:Account .
-      ?account          djht:institution_id      ?institution_id .
+      ?account          rdf:type                 shst:Account .
+      ?account          shst:institution_id      ?institution_id .
     }
 
-    ?collection            rdf:type              djht:Collection .
+    ?collection            rdf:type              shst:Collection .
 
     {%- if categories is not none: %}
-    ?collection         djht:categories/rdf:rest*/rdf:first ?category .
-    ?category           djht:id                   ?category_id .
-    ?category           djht:parent_id            ?parent_category_id .
+    ?collection         shst:categories/rdf:rest*/rdf:first ?category .
+    ?category           shst:id                   ?category_id .
+    ?category           shst:parent_id            ?parent_category_id .
     {%- endif %}
 
-    OPTIONAL { ?container_uri djht:first_online_date   ?timeline_first_online . }
-    OPTIONAL { ?collection    djht:publisher_publication_date ?timeline_publisher_publication . }
-    OPTIONAL { ?collection    djht:submission_date     ?timeline_submission . }
-    OPTIONAL { ?collection    djht:posted_date         ?timeline_posted . }
-    OPTIONAL { ?collection    djht:revision_date       ?timeline_revision . }
+    OPTIONAL { ?container_uri shst:first_online_date   ?timeline_first_online . }
+    OPTIONAL { ?collection    shst:publisher_publication_date ?timeline_publisher_publication . }
+    OPTIONAL { ?collection    shst:submission_date     ?timeline_submission . }
+    OPTIONAL { ?collection    shst:posted_date         ?timeline_posted . }
+    OPTIONAL { ?collection    shst:revision_date       ?timeline_revision . }
 
-    OPTIONAL { ?collection   djht:resource_id          ?resource_id . }
-    OPTIONAL { ?collection   djht:resource_doi         ?resource_doi . }
-    OPTIONAL { ?collection   djht:resource_title       ?resource_title . }
-    OPTIONAL { ?collection   djht:resource_link        ?resource_link . }
-    OPTIONAL { ?collection   djht:resource_version     ?resource_version . }
-    OPTIONAL { ?collection   djht:version              ?version . }
-    OPTIONAL { ?collection   djht:description          ?description . }
-    OPTIONAL { ?collection   djht:group_id             ?group_id . }
-    OPTIONAL { ?collection   djht:is_public            ?is_public . }
-    OPTIONAL { ?collection   djht:citation             ?citation . }
-    OPTIONAL { ?collection   djht:modified_date        ?modified_date . }
-    OPTIONAL { ?collection   djht:created_date         ?created_date . }
-    OPTIONAL { ?collection   djht:title                ?title . }
-    OPTIONAL { ?collection   djht:doi                  ?doi . }
-    OPTIONAL { ?collection   djht:handle               ?handle . }
-    OPTIONAL { ?collection   djht:url                  ?url . }
-    OPTIONAL { ?collection   djht:geolocation          ?geolocation . }
-    OPTIONAL { ?collection   djht:latitude             ?latitude . }
-    OPTIONAL { ?collection   djht:longitude            ?longitude . }
-    OPTIONAL { ?collection   djht:language             ?language_ut . }
-    OPTIONAL { ?collection   djht:publisher            ?publisher_ut . }
-    OPTIONAL { ?collection   djht:time_coverage        ?time_coverage . }
-    OPTIONAL { ?collection   djht:organizations        ?organizations . }
-    OPTIONAL { ?collection   djht:published_date       ?published_date . }
+    OPTIONAL { ?collection   shst:resource_id          ?resource_id . }
+    OPTIONAL { ?collection   shst:resource_doi         ?resource_doi . }
+    OPTIONAL { ?collection   shst:resource_title       ?resource_title . }
+    OPTIONAL { ?collection   shst:resource_link        ?resource_link . }
+    OPTIONAL { ?collection   shst:resource_version     ?resource_version . }
+    OPTIONAL { ?collection   shst:version              ?version . }
+    OPTIONAL { ?collection   shst:description          ?description . }
+    OPTIONAL { ?collection   shst:group_id             ?group_id . }
+    OPTIONAL { ?collection   shst:is_public            ?is_public . }
+    OPTIONAL { ?collection   shst:citation             ?citation . }
+    OPTIONAL { ?collection   shst:modified_date        ?modified_date . }
+    OPTIONAL { ?collection   shst:created_date         ?created_date . }
+    OPTIONAL { ?collection   shst:title                ?title . }
+    OPTIONAL { ?collection   shst:doi                  ?doi . }
+    OPTIONAL { ?collection   shst:handle               ?handle . }
+    OPTIONAL { ?collection   shst:url                  ?url . }
+    OPTIONAL { ?collection   shst:geolocation          ?geolocation . }
+    OPTIONAL { ?collection   shst:latitude             ?latitude . }
+    OPTIONAL { ?collection   shst:longitude            ?longitude . }
+    OPTIONAL { ?collection   shst:language             ?language_ut . }
+    OPTIONAL { ?collection   shst:publisher            ?publisher_ut . }
+    OPTIONAL { ?collection   shst:time_coverage        ?time_coverage . }
+    OPTIONAL { ?collection   shst:organizations        ?organizations . }
+    OPTIONAL { ?collection   shst:published_date       ?published_date . }
 
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
     BIND(STRAFTER(STR(?collection), "collection:") AS ?uuid)
     BIND(STRAFTER(STR(?account), "account:") AS ?account_uuid)
-    BIND (xsd:boolean (EXISTS { ?container_uri djht:draft ?draft_collection . }) AS ?has_draft)
+    BIND (xsd:boolean (EXISTS { ?container_uri shst:draft ?draft_collection . }) AS ?has_draft)
     {%- if private_link_id_string is not none %}
-    OPTIONAL { ?private_link djht:expires_date     ?private_link_expires_date . }
+    OPTIONAL { ?private_link shst:expires_date     ?private_link_expires_date . }
     {#- Wrapping the xsd:dateTime in strings is needed because Virtuoso seems to
      #- return 1 for 2023-07-07 < 2023-07-06. String comparison works because the
      #- xsd:dateTime format is YYYY-MM-DD. #}

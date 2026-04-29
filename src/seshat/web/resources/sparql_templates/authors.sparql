@@ -7,57 +7,57 @@ SELECT DISTINCT ?first_name      ?full_name       ?group_id
                 ?is_editable     ?email
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?author            rdf:type                 djht:Author .
-    OPTIONAL { ?author djht:id                  ?id . }
+    ?author            rdf:type                 shst:Author .
+    OPTIONAL { ?author shst:id                  ?id . }
 
     {%- if item_uri is not none %}
-    ?item_uri          rdf:type                 djht:{{prefix}} ;
-                       djht:authors             ?authors .
+    ?item_uri          rdf:type                 shst:{{prefix}} ;
+                       shst:authors             ?authors .
     ?authors           rdf:rest*                ?rest .
     ?rest              rdf:first                ?author ;
-                       djht:index               ?order_index .
+                       shst:index               ?order_index .
     {%- endif %}
     {%- if account_uuid is not none %}
-    ?container         rdf:type                 djht:{{prefix}}Container .
+    ?container         rdf:type                 shst:{{prefix}}Container .
     {%- if is_published %}
-    ?container         djht:published_versions/rdf:rest*/rdf:first ?item_uri .
+    ?container         shst:published_versions/rdf:rest*/rdf:first ?item_uri .
     {%- else %}
-    ?container         djht:draft               ?item_uri .
+    ?container         shst:draft               ?item_uri .
     {%- endif %}
-    ?container         djht:account             ?account .
+    ?container         shst:account             ?account .
 
     {%- if not disable_collaboration %}
     OPTIONAL {
-      ?item_uri          djht:container      ?container .
-      ?collaborator      rdf:type            djht:Collaborator .
-      ?collaborator      djht:item           ?item_uri .
-      ?collaborator      djht:account        ?collaborator_account .
-      ?collaborator      djht:metadata_read  "true"^^xsd:boolean .
+      ?item_uri          shst:container      ?container .
+      ?collaborator      rdf:type            shst:Collaborator .
+      ?collaborator      shst:item           ?item_uri .
+      ?collaborator      shst:account        ?collaborator_account .
+      ?collaborator      shst:metadata_read  "true"^^xsd:boolean .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?item_uri           djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?item_uri           shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
     {%- endif %}
     {%- endif %}
-    OPTIONAL { ?author djht:first_name          ?first_name . }
-    OPTIONAL { ?author djht:full_name           ?full_name . }
-    OPTIONAL { ?author djht:group_id            ?group_id . }
-    OPTIONAL { ?author djht:institution_id      ?institution_id . }
-    OPTIONAL { ?author djht:is_active           ?is_active . }
-    OPTIONAL { ?author djht:is_public           ?is_public . }
-    OPTIONAL { ?author djht:job_title           ?job_title . }
-    OPTIONAL { ?author djht:last_name           ?last_name . }
-    OPTIONAL { ?author djht:orcid_id            ?orcid_id . }
-    OPTIONAL { ?author djht:url_name            ?url_name . }
-    OPTIONAL { ?author djht:email               ?email . }
+    OPTIONAL { ?author shst:first_name          ?first_name . }
+    OPTIONAL { ?author shst:full_name           ?full_name . }
+    OPTIONAL { ?author shst:group_id            ?group_id . }
+    OPTIONAL { ?author shst:institution_id      ?institution_id . }
+    OPTIONAL { ?author shst:is_active           ?is_active . }
+    OPTIONAL { ?author shst:is_public           ?is_public . }
+    OPTIONAL { ?author shst:job_title           ?job_title . }
+    OPTIONAL { ?author shst:last_name           ?last_name . }
+    OPTIONAL { ?author shst:orcid_id            ?orcid_id . }
+    OPTIONAL { ?author shst:url_name            ?url_name . }
+    OPTIONAL { ?author shst:email               ?email . }
 
     {%- if account_uuid is not none %}
-    BIND (xsd:boolean (EXISTS { ?author djht:created_by <account:{{account_uuid}}> . }) AS ?is_editable)
+    BIND (xsd:boolean (EXISTS { ?author shst:created_by <account:{{account_uuid}}> . }) AS ?is_editable)
     {%- else %}
     BIND("false"^^xsd:boolean AS ?is_editable)
     {%- endif %}

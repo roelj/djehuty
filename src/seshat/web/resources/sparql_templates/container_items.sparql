@@ -4,37 +4,37 @@ SELECT DISTINCT ?account_uuid ?container_uuid ?version ?container_uri
                 (?item_uri AS ?uri) ?uuid
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container_uri       rdf:type/rdfs:subClassOf djht:Container .
-    ?container_uri       djht:account             ?account .
+    ?container_uri       rdf:type/rdfs:subClassOf shst:Container .
+    ?container_uri       shst:account             ?account .
     {%- if is_published is none and is_latest is none %}
-    ?item_uri            djht:container           ?container_uri .
+    ?item_uri            shst:container           ?container_uri .
     {%- elif is_published %}
     {%- if is_latest %}
-    ?container_uri       djht:latest_published_version ?item_uri .
+    ?container_uri       shst:latest_published_version ?item_uri .
     {%- else %}
-    ?container_uri       djht:published_versions/rdf:rest*/rdf:first ?item_uri .
+    ?container_uri       shst:published_versions/rdf:rest*/rdf:first ?item_uri .
     {%- endif %}
     {%- else %}
-    ?container_uri       djht:draft                ?item_uri .
+    ?container_uri       shst:draft                ?item_uri .
     {%- endif %}
 
 {%- if account_uuid is not none and not disable_collaboration: %}
     OPTIONAL {
-      ?collaborator       rdf:type            djht:Collaborator .
-      ?collaborator       djht:item           ?item_uri .
-      ?collaborator       djht:account        ?collaborator_account .
-      ?collaborator       djht:metadata_read  "true"^^xsd:boolean .
+      ?collaborator       rdf:type            shst:Collaborator .
+      ?collaborator       shst:item           ?item_uri .
+      ?collaborator       shst:account        ?collaborator_account .
+      ?collaborator       shst:metadata_read  "true"^^xsd:boolean .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?item_uri           djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?item_uri           shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
 {%- endif %}
-    OPTIONAL { ?item_uri djht:version              ?version . }
+    OPTIONAL { ?item_uri shst:version              ?version . }
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
     BIND(STRAFTER(STR(?account), "account:")         AS ?account_uuid)
     BIND(STRAFTER(STR(?item_uri), ":")               AS ?uuid)

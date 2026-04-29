@@ -3,15 +3,15 @@
 SELECT DISTINCT ?dataset_uri ?dataset_id ?version ?url ?url_public_api ?posted_date ?container_uuid ?uuid
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container_uri rdf:type             djht:DatasetContainer .
-    ?dataset_uri   rdf:type             djht:Dataset ;
-                   djht:container       ?container_uri ;
-                   djht:version         ?version ;
-                   djht:posted_date     ?posted_date .
+    ?container_uri rdf:type             shst:DatasetContainer .
+    ?dataset_uri   rdf:type             shst:Dataset ;
+                   shst:container       ?container_uri ;
+                   shst:version         ?version ;
+                   shst:posted_date     ?posted_date .
 
-    OPTIONAL { ?dataset_uri djht:url             ?url . }
-    OPTIONAL { ?dataset_uri djht:url_public_api  ?url_public_api . }
-    OPTIONAL { ?container_uri djht:dataset_id ?dataset_id . }
+    OPTIONAL { ?dataset_uri shst:url             ?url . }
+    OPTIONAL { ?dataset_uri shst:url_public_api  ?url_public_api . }
+    OPTIONAL { ?container_uri shst:dataset_id ?dataset_id . }
 
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
     BIND(STRAFTER(STR(?dataset_uri), "dataset:")     AS ?uuid)

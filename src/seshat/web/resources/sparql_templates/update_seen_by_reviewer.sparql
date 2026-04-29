@@ -2,18 +2,18 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?dataset   djht:last_seen_by_reviewer ?timestamp .
+    ?dataset   shst:last_seen_by_reviewer ?timestamp .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?dataset   djht:last_seen_by_reviewer "{{timestamp}}"^^xsd:dateTime .
+    ?dataset   shst:last_seen_by_reviewer "{{timestamp}}"^^xsd:dateTime .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset   rdf:type          djht:Dataset .
-    OPTIONAL { ?dataset djht:last_seen_by_reviewer ?timestamp . }
+    ?dataset   rdf:type          shst:Dataset .
+    OPTIONAL { ?dataset shst:last_seen_by_reviewer ?timestamp . }
   }
   FILTER (?dataset = <dataset:{{dataset_uuid}}>)
 }

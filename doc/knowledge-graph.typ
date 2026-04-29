@@ -21,7 +21,7 @@ Throughout this chapter, abbreviated references to ontologies are used.
   table(
     columns: (auto, 1fr),
     table.header([*Abbreviation*], [*Ontology URI*]),
-    [`djht`], [Internal and unpublished ontology.],
+    [`shst`], [Internal and unpublished ontology.],
     [`rdf`],  [#link("http://www.w3.org/1999/02/22-rdf-syntax-ns#")],
     [`rdfs`], [#link("http://www.w3.org/2000/01/rdf-schema#")],
     [`xsd`],  [#link("http://www.w3.org/2001/XMLSchema#")],
@@ -80,24 +80,24 @@ The hollow double-arrow depicts the use of an `rdf:List` with numeric indexes.
 Datasets play a central role in the repository system because every
 other type links in one way or another to it. The user submits
 files along with data about those bytes as a single record which we
-call a `djht:Dataset`. @fig-dataset shows how the remainder of types
-in this chapter relate to a `djht:Dataset`.
+call a `shst:Dataset`. @fig-dataset shows how the remainder of types
+in this chapter relate to a `shst:Dataset`.
 
 #figure(
   image("figures/dataset.svg"),
-  caption: [The RDF pattern for a `djht:Dataset`. For a full overview of
-    `djht:Dataset` properties, use the exploratory from the administration panel.],
+  caption: [The RDF pattern for a `shst:Dataset`. For a full overview of
+    `shst:Dataset` properties, use the exploratory from the administration panel.],
 ) <fig-dataset>
 
 Datasets are versioned records. The data and metadata between versions
 can differ, except all versions of a dataset share an identifier. We use
-`djht:DatasetContainer` to describe the version-unspecific properties
+`shst:DatasetContainer` to describe the version-unspecific properties
 of a set of versioned datasets.
 
 #figure(
   image("figures/dataset-container.svg"),
-  caption: [The RDF pattern for a `djht:DatasetContainer`. All versions of a
-    dataset share a `djht:dataset_id` and a UUID in the container URI.],
+  caption: [The RDF pattern for a `shst:DatasetContainer`. All versions of a
+    dataset share a `shst:dataset_id` and a UUID in the container URI.],
 ) <fig-dataset-container>
 
 The data model follows a natural expression of published versions as a
@@ -107,23 +107,23 @@ in a version-unspecific way.
 
 == Collections
 
-Collections provide a way to group `djht:Dataset` objects.
+Collections provide a way to group `shst:Dataset` objects.
 
 #figure(
   image("figures/collection.svg"),
-  caption: [The RDF pattern for a `djht:Collection`. For a full overview of
-    `djht:Collection` properties, use the exploratory from the administration panel.],
+  caption: [The RDF pattern for a `shst:Collection`. For a full overview of
+    `shst:Collection` properties, use the exploratory from the administration panel.],
 ) <fig-collection>
 
 Collections are (just like Datasets) versioned records. The metadata between
 versions can differ, except all versions of a collection share an identifier.
-We use `djht:CollectionContainer` to describe the version-unspecific
+We use `shst:CollectionContainer` to describe the version-unspecific
 properties of a set of versioned collections.
 
 #figure(
   image("figures/collection-container.svg"),
-  caption: [The RDF pattern for a `djht:CollectionContainer`. All versions of a
-    collection share a `djht:collection_id` and a UUID in the container URI.],
+  caption: [The RDF pattern for a `shst:CollectionContainer`. All versions of a
+    collection share a `shst:collection_id` and a UUID in the container URI.],
 ) <fig-collection-container>
 
 The data model follows a natural expression of published versions as a
@@ -134,12 +134,12 @@ in a version-unspecific way.
 == Authors
 
 `seshat` keeps records of authors including their full name, ORCID,
-and e-mail address. Furthermore, each `djht:Account` has a linked
-`djht:Author` record.
+and e-mail address. Furthermore, each `shst:Account` has a linked
+`shst:Author` record.
 
 #figure(
   image("figures/author.svg"),
-  caption: [The RDF pattern for a `djht:Author`.],
+  caption: [The RDF pattern for a `shst:Author`.],
 ) <fig-author>
 
 == Accounts
@@ -149,18 +149,18 @@ full name, and preferences for categories.
 
 #figure(
   image("figures/account.svg"),
-  caption: [The RDF pattern for a `djht:Account`.],
+  caption: [The RDF pattern for a `shst:Account`.],
 ) <fig-account>
 
 == Funding
 
-When the `djht:Dataset` originated out of a funded project, the funders
-can be listed using `djht:Funding`. @fig-funding displays
+When the `shst:Dataset` originated out of a funded project, the funders
+can be listed using `shst:Funding`. @fig-funding displays
 the details for this structure.
 
 #figure(
   image("figures/funding.svg"),
-  caption: [The RDF pattern for a `djht:Funding`.],
+  caption: [The RDF pattern for a `shst:Funding`.],
 ) <fig-funding>
 
 == Categories
@@ -171,57 +171,57 @@ The hierarchical structure is captured by using `id` and `parent_id` properties.
 
 #figure(
   image("figures/category.svg"),
-  caption: [The RDF pattern for a `djht:Category`.],
+  caption: [The RDF pattern for a `shst:Category`.],
 ) <fig-category>
 
 == Institutions/groups
 
-A `djht:Account` has an affiliation with an institute or research group.
-The `djht:InstitutionGroup` is stored per `djht:Dataset` and
-`djht:Collection`. The groups can be structured hierarchically by
+A `shst:Account` has an affiliation with an institute or research group.
+The `shst:InstitutionGroup` is stored per `shst:Dataset` and
+`shst:Collection`. The groups can be structured hierarchically by
 using the `id` and `parent_id` properties.
 
 #figure(
   image("figures/institutiongroup.svg"),
-  caption: [The RDF pattern for a `djht:InstitutionGroup`.],
+  caption: [The RDF pattern for a `shst:InstitutionGroup`.],
 ) <fig-institutiongroup>
 
 == Files
 
-A `djht:Dataset` keeps a list of `djht:File` records. The file
+A `shst:Dataset` keeps a list of `shst:File` records. The file
 metadata is stored in the knowledge graph while the file contents are
 stored on a filesystem. The location of the file data is tracked via the
-`djht:filesystem_location` property.
+`shst:filesystem_location` property.
 
 #figure(
   image("figures/file.svg"),
-  caption: [The RDF pattern for a `djht:File`.],
+  caption: [The RDF pattern for a `shst:File`.],
 ) <fig-file>
 
 == Private links
 
-Before a `djht:Dataset` or a `djht:Collection` is made publically
+Before a `shst:Dataset` or a `shst:Collection` is made publically
 available, it can be shared using a private link.
 
 #figure(
   image("figures/privatelink.svg"),
-  caption: [The RDF pattern for a `djht:PrivateLink`.],
+  caption: [The RDF pattern for a `shst:PrivateLink`.],
 ) <fig-privatelink>
 
 @fig-privatelink displays how private links are stored for
-a `djht:Dataset`, and it works the same for a `djht:Collection`.
+a `shst:Dataset`, and it works the same for a `shst:Collection`.
 
 == Collaborators
 
 To enable multiple accounts collaborating on a dataset before it's published,
-each `djht:Dataset` can have a list of `djht:Collaborator` objects.
+each `shst:Dataset` can have a list of `shst:Collaborator` objects.
 
 #figure(
   image("figures/collaborators.svg"),
-  caption: [The RDF pattern for a `djht:Collaborator`.],
+  caption: [The RDF pattern for a `shst:Collaborator`.],
 ) <fig-collaborators>
 
-As shown in @fig-collaborators, a `djht:Collaborator` can be
+As shown in @fig-collaborators, a `shst:Collaborator` can be
 given read, edit, and/or remove rights independently for both metadata (the
 form fields) and data (the files).
 ]

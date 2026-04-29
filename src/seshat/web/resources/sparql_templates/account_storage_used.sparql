@@ -4,20 +4,20 @@ SELECT DISTINCT ?file ?bytes
 WHERE {
   GRAPH <{{state_graph}}> {
 
-    ?container      rdf:type                      djht:DatasetContainer .
-    ?container      djht:account                  <account:{{account_uuid}}> .
+    ?container      rdf:type                      shst:DatasetContainer .
+    ?container      shst:account                  <account:{{account_uuid}}> .
 
     {
-      ?container    djht:draft                    ?dataset .
+      ?container    shst:draft                    ?dataset .
     } UNION {
-      ?container    djht:published_versions/rdf:rest*/rdf:first ?dataset .
+      ?container    shst:published_versions/rdf:rest*/rdf:first ?dataset .
     }
 
-    ?dataset        rdf:type                      djht:Dataset .
-    ?dataset        djht:files/rdf:rest*/rdf:first ?file .
+    ?dataset        rdf:type                      shst:Dataset .
+    ?dataset        shst:files/rdf:rest*/rdf:first ?file .
 
-    ?file           rdf:type                      djht:File .
-    ?file           djht:size                     ?bytes .
+    ?file           rdf:type                      shst:File .
+    ?file           shst:size                     ?bytes .
   }
 }
 {% endblock %}

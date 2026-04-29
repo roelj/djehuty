@@ -4,8 +4,8 @@ SELECT (COUNT(DISTINCT ?dataset) AS ?datasets)
 
 WHERE {
   GRAPH <{{state_graph}}> {
-    <{{collection_uri}}> rdf:type                         djht:Collection ;
-                         djht:datasets/rdf:rest*/rdf:first ?dataset .
+    <{{collection_uri}}> rdf:type                         shst:Collection ;
+                         shst:datasets/rdf:rest*/rdf:first ?dataset .
   }
 }
 {% endblock %}

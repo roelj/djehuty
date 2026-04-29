@@ -3,14 +3,14 @@
 SELECT DISTINCT ?collection_uri ?collection_id ?version ?url ?url_public_api ?posted_date ?container_uuid ?uuid
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container_uri  rdf:type            djht:CollectionContainer .
-    ?collection_uri rdf:type            djht:Collection ;
-                    djht:container      ?container_uri ;
-                    djht:version        ?version ;
-                    djht:posted_date    ?posted_date .
-    OPTIONAL { ?collection_uri djht:url_public_api ?url_public_api . }
-    OPTIONAL { ?container_uri  djht:collection_id  ?collection_id . }
-    OPTIONAL { ?url            djht:url            ?url . }
+    ?container_uri  rdf:type            shst:CollectionContainer .
+    ?collection_uri rdf:type            shst:Collection ;
+                    shst:container      ?container_uri ;
+                    shst:version        ?version ;
+                    shst:posted_date    ?posted_date .
+    OPTIONAL { ?collection_uri shst:url_public_api ?url_public_api . }
+    OPTIONAL { ?container_uri  shst:collection_id  ?collection_id . }
+    OPTIONAL { ?url            shst:url            ?url . }
 
     BIND(STRAFTER(STR(?container_uri), "container:") AS ?container_uuid)
     BIND(STRAFTER(STR(?collection_uri), "collection:") AS ?uuid)

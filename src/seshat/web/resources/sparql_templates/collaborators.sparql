@@ -9,58 +9,58 @@ SELECT DISTINCT ?dataset_uri
                 (?rest AS ?originating_blank_node)      ?is_inferred
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset_uri       djht:container/djht:account ?owner .
+    ?dataset_uri       shst:container/shst:account ?owner .
     {
-      ?dataset_uri       djht:collaborators       ?collaborators .
+      ?dataset_uri       shst:collaborators       ?collaborators .
       ?collaborators     rdf:rest*                ?rest .
       ?rest              rdf:first                ?collaborator_uri .
-      ?rest              djht:index               ?order_index .
-      ?collaborator_uri  rdf:type                 djht:Collaborator .
-      ?collaborator_uri  djht:account             ?account .
+      ?rest              shst:index               ?order_index .
+      ?collaborator_uri  rdf:type                 shst:Collaborator .
+      ?collaborator_uri  shst:account             ?account .
 
-      ?collaborator_uri  djht:metadata_read       ?metadata_read .
-      ?collaborator_uri  djht:metadata_edit       ?metadata_edit .
-      ?collaborator_uri  djht:metadata_remove     ?metadata_remove .
-      ?collaborator_uri  djht:data_read           ?data_read .
-      ?collaborator_uri  djht:data_edit           ?data_edit .
-      ?collaborator_uri  djht:data_remove         ?data_remove .
+      ?collaborator_uri  shst:metadata_read       ?metadata_read .
+      ?collaborator_uri  shst:metadata_edit       ?metadata_edit .
+      ?collaborator_uri  shst:metadata_remove     ?metadata_remove .
+      ?collaborator_uri  shst:data_read           ?data_read .
+      ?collaborator_uri  shst:data_edit           ?data_edit .
+      ?collaborator_uri  shst:data_remove         ?data_remove .
 
       OPTIONAL {
-        ?account           djht:domain              ?domain .
-        ?group_uri         rdf:type                   djht:InstitutionGroup ;
-                           djht:association_criteria  ?domain ;
-                           djht:name                  ?group_name ;
-                           djht:id                    ?group_id .
+        ?account           shst:domain              ?domain .
+        ?group_uri         rdf:type                   shst:InstitutionGroup ;
+                           shst:association_criteria  ?domain ;
+                           shst:name                  ?group_name ;
+                           shst:id                    ?group_id .
       }
       BIND("false"^^xsd:boolean AS ?is_inferred)
     }
     {%- if include_inferred %}
     UNION {
-      ?group_uri         rdf:type djht:InstitutionGroup .
-      ?dataset_uri       djht:association_criteria ?association_criteria .
-      ?group_uri         djht:association_criteria ?association_criteria .
-      ?group_uri         djht:members             ?members .
-      ?group_uri         djht:name                ?group_name .
-      ?group_uri         djht:id                  ?group_id .
+      ?group_uri         rdf:type shst:InstitutionGroup .
+      ?dataset_uri       shst:association_criteria ?association_criteria .
+      ?group_uri         shst:association_criteria ?association_criteria .
+      ?group_uri         shst:members             ?members .
+      ?group_uri         shst:name                ?group_name .
+      ?group_uri         shst:id                  ?group_id .
       ?members           rdf:rest*                ?rest .
       ?rest              rdf:first                ?collaborator_uri .
-      ?rest              djht:index               ?order_index .
-      ?collaborator_uri  rdf:type                 djht:Member .
-      ?collaborator_uri  djht:account             ?account .
-      ?collaborator_uri  djht:metadata_read       ?metadata_read .
-      ?collaborator_uri  djht:metadata_edit       ?metadata_edit .
-      ?collaborator_uri  djht:metadata_remove     ?metadata_remove .
-      ?collaborator_uri  djht:data_read           ?data_read .
-      ?collaborator_uri  djht:data_edit           ?data_edit .
-      ?collaborator_uri  djht:data_remove         ?data_remove .
-      ?collaborator_uri  djht:is_supervisor       ?is_supervisor .
+      ?rest              shst:index               ?order_index .
+      ?collaborator_uri  rdf:type                 shst:Member .
+      ?collaborator_uri  shst:account             ?account .
+      ?collaborator_uri  shst:metadata_read       ?metadata_read .
+      ?collaborator_uri  shst:metadata_edit       ?metadata_edit .
+      ?collaborator_uri  shst:metadata_remove     ?metadata_remove .
+      ?collaborator_uri  shst:data_read           ?data_read .
+      ?collaborator_uri  shst:data_edit           ?data_edit .
+      ?collaborator_uri  shst:data_remove         ?data_remove .
+      ?collaborator_uri  shst:is_supervisor       ?is_supervisor .
 
       BIND("true"^^xsd:boolean AS ?is_inferred)
     }
     {%- endif %}
-    OPTIONAL { ?account           djht:first_name          ?first_name . }
-    OPTIONAL { ?account           djht:last_name           ?last_name . }
-    OPTIONAL { ?account           djht:email               ?email . }
+    OPTIONAL { ?account           shst:first_name          ?first_name . }
+    OPTIONAL { ?account           shst:last_name           ?last_name . }
+    OPTIONAL { ?account           shst:email               ?email . }
 
     BIND(STRAFTER(STR(?collaborator_uri), ":") AS ?uuid)
     BIND(STRAFTER(STR(?account), "account:") AS ?account_uuid)

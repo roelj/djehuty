@@ -7,20 +7,20 @@ SELECT DISTINCT ?group_uuid         ?uuid
                 ?is_inferred        (?rest AS ?originating_blank_node)
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?group_uri         rdf:type                 djht:InstitutionGroup .
-    ?group_uri         djht:members             ?members .
+    ?group_uri         rdf:type                 shst:InstitutionGroup .
+    ?group_uri         shst:members             ?members .
     ?members           rdf:rest*                ?rest .
     ?rest              rdf:first                ?member_uri .
-    ?rest              djht:index               ?order_index .
-    ?member_uri        rdf:type                 djht:Member .
-    ?member_uri        djht:account             ?account .
+    ?rest              shst:index               ?order_index .
+    ?member_uri        rdf:type                 shst:Member .
+    ?member_uri        shst:account             ?account .
 
-    ?member_uri        djht:metadata_read       ?metadata_read .
-    ?member_uri        djht:metadata_edit       ?metadata_edit .
-    ?member_uri        djht:metadata_remove     ?metadata_remove .
-    ?member_uri        djht:data_read           ?data_read .
-    ?member_uri        djht:data_edit           ?data_edit .
-    ?member_uri        djht:data_remove         ?data_remove .
+    ?member_uri        shst:metadata_read       ?metadata_read .
+    ?member_uri        shst:metadata_edit       ?metadata_edit .
+    ?member_uri        shst:metadata_remove     ?metadata_remove .
+    ?member_uri        shst:data_read           ?data_read .
+    ?member_uri        shst:data_edit           ?data_edit .
+    ?member_uri        shst:data_remove         ?data_remove .
     BIND("true"^^xsd:boolean AS ?is_inferred)
 
     BIND(STRAFTER(STR(?group_uri), "group:") AS ?group_uuid)

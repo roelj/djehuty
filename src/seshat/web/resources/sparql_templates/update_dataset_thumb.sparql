@@ -2,30 +2,30 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?dataset djht:thumb  ?thumb .
-    ?dataset djht:thumb_origin  ?thumb_origin .
+    ?dataset shst:thumb  ?thumb .
+    ?dataset shst:thumb_origin  ?thumb_origin .
   }
 }
 {%- if file_uuid is not none: %}
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?dataset djht:thumb  "/thumbnails/{{dataset_uuid}}.{{extension}}"^^xsd:string .
-    ?dataset djht:thumb_origin "{{file_uuid}}"^^xsd:string .
+    ?dataset shst:thumb  "/thumbnails/{{dataset_uuid}}.{{extension}}"^^xsd:string .
+    ?dataset shst:thumb_origin "{{file_uuid}}"^^xsd:string .
   }
 }
 {%- endif %}
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset rdf:type     djht:Dataset .
+    ?dataset rdf:type     shst:Dataset .
     {%- if version is not none %}
-    ?dataset djht:version {{version | safe}}.
+    ?dataset shst:version {{version | safe}}.
     {%- endif %}
-    ?dataset djht:container/djht:account <account:{{account_uuid}}> .
-    OPTIONAL { ?dataset djht:thumb ?thumb . }
-    OPTIONAL { ?dataset djht:thumb_origin  ?thumb_origin . }
+    ?dataset shst:container/shst:account <account:{{account_uuid}}> .
+    OPTIONAL { ?dataset shst:thumb ?thumb . }
+    OPTIONAL { ?dataset shst:thumb_origin  ?thumb_origin . }
 
-    ?file    rdf:type       djht:File .
-    ?dataset djht:files/rdf:rest*/rdf:first ?file .
+    ?file    rdf:type       shst:File .
+    ?dataset shst:files/rdf:rest*/rdf:first ?file .
 
     {%- if file_uuid is not none: %}
     FILTER (?file = <file:{{file_uuid}}>)

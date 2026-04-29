@@ -8,25 +8,25 @@ SELECT DISTINCT ?id         ?full_name       ?first_name  ?last_name
                 ?image      ?account_uuid    ?biography
 WHERE {
   GRAPH <{{state_graph}}> {
-    author:            djht:is_active           ?is_active ;
-                       djht:is_public           ?is_public ;
-                       djht:full_name           ?full_name .
-    OPTIONAL { author: djht:id                  ?id . }
-    OPTIONAL { author: djht:account             ?account . }
-    OPTIONAL { author: djht:first_name          ?first_name . }
-    OPTIONAL { author: djht:last_name           ?last_name . }
-    OPTIONAL { author: djht:group_id            ?group_id . }
-    OPTIONAL { author: djht:institution_id      ?institution_id . }
-    OPTIONAL { author: djht:job_title           ?job_title . }
-    OPTIONAL { author: djht:orcid_id            ?orcid_id . }
-    OPTIONAL { author: djht:account             ?account .
-               OPTIONAL { ?account djht:location           ?location . }
-               OPTIONAL { ?account djht:twitter            ?twitter . }
-               OPTIONAL { ?account djht:linkedin           ?linkedin . }
-               OPTIONAL { ?account djht:website            ?website . }
-               OPTIONAL { ?account djht:categories         ?categories . }
-               OPTIONAL { ?account djht:biography          ?biography . }
-               OPTIONAL { ?account djht:profile_image      ?image . }
+    author:            shst:is_active           ?is_active ;
+                       shst:is_public           ?is_public ;
+                       shst:full_name           ?full_name .
+    OPTIONAL { author: shst:id                  ?id . }
+    OPTIONAL { author: shst:account             ?account . }
+    OPTIONAL { author: shst:first_name          ?first_name . }
+    OPTIONAL { author: shst:last_name           ?last_name . }
+    OPTIONAL { author: shst:group_id            ?group_id . }
+    OPTIONAL { author: shst:institution_id      ?institution_id . }
+    OPTIONAL { author: shst:job_title           ?job_title . }
+    OPTIONAL { author: shst:orcid_id            ?orcid_id . }
+    OPTIONAL { author: shst:account             ?account .
+               OPTIONAL { ?account shst:location           ?location . }
+               OPTIONAL { ?account shst:twitter            ?twitter . }
+               OPTIONAL { ?account shst:linkedin           ?linkedin . }
+               OPTIONAL { ?account shst:website            ?website . }
+               OPTIONAL { ?account shst:categories         ?categories . }
+               OPTIONAL { ?account shst:biography          ?biography . }
+               OPTIONAL { ?account shst:profile_image      ?image . }
                BIND(STRAFTER(STR(?account), ":") AS        ?account_uuid)
     }
   }

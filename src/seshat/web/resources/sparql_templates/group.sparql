@@ -3,16 +3,16 @@
 SELECT ?uuid ?id ?parent_id ?name ?association ?is_featured
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?group           rdf:type                  djht:InstitutionGroup .
-    ?group           djht:id                   ?id .
-    ?group           djht:association_criteria ?association .
+    ?group           rdf:type                  shst:InstitutionGroup .
+    ?group           shst:id                   ?id .
+    ?group           shst:association_criteria ?association .
     {%- if account_uuid is not none %}
-    ?account         rdf:type                  djht:Account .
-    ?account         djht:domain               ?association .
+    ?account         rdf:type                  shst:Account .
+    ?account         shst:domain               ?association .
     {%- endif %}
-    OPTIONAL { ?group           djht:name                 ?name . }
-    OPTIONAL { ?group           djht:parent_id            ?parent_id . }
-    OPTIONAL { ?group           djht:is_featured          ?is_featured . }
+    OPTIONAL { ?group           shst:name                 ?name . }
+    OPTIONAL { ?group           shst:parent_id            ?parent_id . }
+    OPTIONAL { ?group           shst:is_featured          ?is_featured . }
     BIND (STRAFTER(STR(?group), "group:") AS ?uuid)
   }
 {%- if account_uuid is not none %}

@@ -2,31 +2,31 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?container djht:total_downloads ?total_downloads .
-    ?container djht:total_views ?total_views .
+    ?container shst:total_downloads ?total_downloads .
+    ?container shst:total_views ?total_views .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?container djht:total_downloads ?downloads .
-    ?container djht:total_views ?views .
+    ?container shst:total_downloads ?downloads .
+    ?container shst:total_views ?views .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container rdf:type djht:DatasetContainer .
-    ?container djht:published_versions/rdf:rest*/rdf:first ?dataset .
-    OPTIONAL { ?container djht:total_downloads    ?total_downloads . }
-    OPTIONAL { ?container djht:total_views        ?total_views . }
-    OPTIONAL { ?dataset   djht:embargo_until_date ?embargo_until_date . }
-    OPTIONAL { ?dataset   djht:embargo_type       ?embargo_type . }
+    ?container rdf:type shst:DatasetContainer .
+    ?container shst:published_versions/rdf:rest*/rdf:first ?dataset .
+    OPTIONAL { ?container shst:total_downloads    ?total_downloads . }
+    OPTIONAL { ?container shst:total_views        ?total_views . }
+    OPTIONAL { ?dataset   shst:embargo_until_date ?embargo_until_date . }
+    OPTIONAL { ?dataset   shst:embargo_type       ?embargo_type . }
     {
       SELECT ?container (COUNT(?view) AS ?views)
       WHERE {
         GRAPH <{{state_graph}}> {
-          ?view     rdf:type        djht:LogEntry .
-          ?view     djht:event_type djht:LogEntryView .
-          ?view     djht:dataset    ?container .
+          ?view     rdf:type        shst:LogEntry .
+          ?view     shst:event_type shst:LogEntryView .
+          ?view     shst:dataset    ?container .
         }
       }
     }
@@ -34,9 +34,9 @@ WHERE {
       SELECT ?container (COUNT(?download) AS ?downloads)
       WHERE {
         GRAPH <{{state_graph}}> {
-          ?download rdf:type        djht:LogEntry .
-          ?download djht:event_type djht:LogEntryDownload .
-          ?download djht:dataset    ?container .
+          ?download rdf:type        shst:LogEntry .
+          ?download shst:event_type shst:LogEntryDownload .
+          ?download shst:dataset    ?container .
         }
       }
     }

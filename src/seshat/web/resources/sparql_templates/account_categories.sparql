@@ -3,22 +3,22 @@
 SELECT DISTINCT ?id ?uuid ?parent_id ?parent_uuid ?title ?source_id ?taxonomy_id
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?category        rdf:type             djht:Category .
-    ?category        djht:id               ?id .
-    ?category        djht:title            ?title .
+    ?category        rdf:type             shst:Category .
+    ?category        shst:id               ?id .
+    ?category        shst:title            ?title .
 
     OPTIONAL {
-      ?category djht:parent_id             ?parent_id .
-      ?parent_category djht:id             ?parent_id .
+      ?category shst:parent_id             ?parent_id .
+      ?parent_category shst:id             ?parent_id .
 
       BIND(STRAFTER(STR(?parent_category), "category:") AS ?parent_uuid)
     }
 
-    OPTIONAL { ?category  djht:source_id   ?source_id . }
-    OPTIONAL { ?category  djht:taxonomy_id ?taxonomy_id . }
+    OPTIONAL { ?category  shst:source_id   ?source_id . }
+    OPTIONAL { ?category  shst:taxonomy_id ?taxonomy_id . }
 
-    ?account         rdf:type             djht:Account .
-    ?account         djht:categories/rdf:rest*/rdf:first ?category .
+    ?account         rdf:type             shst:Account .
+    ?account         shst:categories/rdf:rest*/rdf:first ?category .
 
     BIND(STRAFTER(STR(?category), "category:") AS ?uuid)
   }

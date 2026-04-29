@@ -3,217 +3,217 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if title is not none %}
-    ?dataset           djht:title                ?title .
+    ?dataset           shst:title                ?title .
     {%- endif%}{% if description is not none %}
-    ?dataset           djht:description          ?description .
+    ?dataset           shst:description          ?description .
     {%- endif%}
     {% if doi is not none %}
-    ?dataset           djht:doi                  ?doi .
+    ?dataset           shst:doi                  ?doi .
     {%- endif%}
-    ?dataset           djht:resource_doi         ?resource_doi .
-    ?dataset           djht:resource_title       ?resource_title .
+    ?dataset           shst:resource_doi         ?resource_doi .
+    ?dataset           shst:resource_title       ?resource_title .
     {% if license_url is not none %}
-    ?dataset           djht:license              ?license .
+    ?dataset           shst:license              ?license .
     {%- endif%}{% if group_id is not none %}
-    ?dataset           djht:group_id             ?group_id .
+    ?dataset           shst:group_id             ?group_id .
     {%- endif%}
-    ?dataset           djht:time_coverage        ?time_coverage .
+    ?dataset           shst:time_coverage        ?time_coverage .
     {% if publisher is not none %}
-    ?dataset           djht:publisher            ?publisher .
+    ?dataset           shst:publisher            ?publisher .
     {%- endif%}{% if language is not none %}
-    ?dataset           djht:language             ?language .
+    ?dataset           shst:language             ?language .
     {%- endif%}
-    ?dataset           djht:format               ?format .
+    ?dataset           shst:format               ?format .
     {% if contributors is not none %}
-    ?dataset           djht:contributors         ?contributors .
+    ?dataset           shst:contributors         ?contributors .
     {%- endif%}{% if license_remarks is not none %}
-    ?dataset           djht:license_remarks      ?license_remarks .
+    ?dataset           shst:license_remarks      ?license_remarks .
     {%- endif%}
-    ?dataset           djht:geolocation          ?geolocation .
-    ?dataset           djht:longitude            ?longitude .
-    ?dataset           djht:latitude             ?latitude .
-    ?dataset           djht:data_link            ?data_link .
+    ?dataset           shst:geolocation          ?geolocation .
+    ?dataset           shst:longitude            ?longitude .
+    ?dataset           shst:latitude             ?latitude .
+    ?dataset           shst:data_link            ?data_link .
     {% if derived_from is not none %}
-    ?dataset           djht:derived_from         ?derived_from .
+    ?dataset           shst:derived_from         ?derived_from .
     {%- endif%}
-    ?dataset           djht:same_as              ?same_as .
-    ?dataset           djht:organizations        ?organizations .
+    ?dataset           shst:same_as              ?same_as .
+    ?dataset           shst:organizations        ?organizations .
     {% if defined_type_name is not none %}
-    ?dataset           djht:defined_type_name    ?defined_type_name .
+    ?dataset           shst:defined_type_name    ?defined_type_name .
     {%- endif%}{% if defined_type is not none %}
-    ?dataset           djht:defined_type         ?defined_type .
+    ?dataset           shst:defined_type         ?defined_type .
     {%- endif%}{% if has_linked_file is not none %}
-    ?dataset           djht:has_linked_file      ?has_linked_file .
+    ?dataset           shst:has_linked_file      ?has_linked_file .
     {%- endif%}
-    ?dataset           djht:embargo_until_date   ?embargo_until_date .
+    ?dataset           shst:embargo_until_date   ?embargo_until_date .
     {% if embargo_type is not none or not (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_type         ?embargo_type .
+    ?dataset           shst:embargo_type         ?embargo_type .
     {%- endif%}{% if is_metadata_record is not none %}
-    ?dataset           djht:is_metadata_record   ?is_metadata_record .
+    ?dataset           shst:is_metadata_record   ?is_metadata_record .
     {%- endif%}{% if metadata_reason is not none %}
-    ?dataset           djht:metadata_reason      ?metadata_reason .
+    ?dataset           shst:metadata_reason      ?metadata_reason .
     {%- endif%}{% if embargo_title is not none or not (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_title        ?embargo_title .
+    ?dataset           shst:embargo_title        ?embargo_title .
     {%- endif%}{% if embargo_reason is not none or not (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_reason       ?embargo_reason .
+    ?dataset           shst:embargo_reason       ?embargo_reason .
     {%- endif%}{% if eula is not none or not (is_embargoed or is_restricted) %}
-    ?dataset           djht:eula                 ?eula .
+    ?dataset           shst:eula                 ?eula .
     {%- endif%}{% if agreed_to_deposit_agreement is not none %}
-    ?dataset           djht:agreed_to_deposit_agreement ?agreed_to_deposit_agreement .
+    ?dataset           shst:agreed_to_deposit_agreement ?agreed_to_deposit_agreement .
     {%- endif%}{% if agreed_to_publish is not none %}
-    ?dataset           djht:agreed_to_publish    ?agreed_to_publish .
+    ?dataset           shst:agreed_to_publish    ?agreed_to_publish .
     {%- endif%}{% if git_repository_name is not none %}
-    ?dataset           djht:git_repository_name  ?git_repository_name .
+    ?dataset           shst:git_repository_name  ?git_repository_name .
     {%- endif%}{% if git_code_hosting_url is not none %}
-    ?dataset           djht:git_code_hosting_url ?git_code_hosting_url .
+    ?dataset           shst:git_code_hosting_url ?git_code_hosting_url .
     {%- endif%}{% if container_doi is not none %}
-    ?container         djht:doi                  ?container_doi .
+    ?container         shst:doi                  ?container_doi .
     {%- endif%}{% if first_online_date is not none %}
-    ?container         djht:first_online_date    ?first_online_date .
+    ?container         shst:first_online_date    ?first_online_date .
     {%- endif%}
-    ?dataset           djht:modified_date        ?modified_date .
+    ?dataset           shst:modified_date        ?modified_date .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if title is not none %}
-    ?dataset           djht:title                {{title | safe}} .
+    ?dataset           shst:title                {{title | safe}} .
     {%- endif%}{% if description is not none %}
-    ?dataset           djht:description          {{description | safe}} .
+    ?dataset           shst:description          {{description | safe}} .
     {%- endif%}{% if resource_doi is not none %}
-    ?dataset           djht:resource_doi         {{resource_doi | safe}} .
+    ?dataset           shst:resource_doi         {{resource_doi | safe}} .
     {%- endif%}{% if doi is not none %}
-    ?dataset           djht:doi                  {{doi | safe}} .
+    ?dataset           shst:doi                  {{doi | safe}} .
     {%- endif%}{% if resource_title is not none %}
-    ?dataset           djht:resource_title       {{resource_title | safe}} .
+    ?dataset           shst:resource_title       {{resource_title | safe}} .
     {%- endif%}{% if license_url is not none %}
-    ?dataset           djht:license              <{{license_url | safe}}> .
+    ?dataset           shst:license              <{{license_url | safe}}> .
     {%- endif%}{% if group_id is not none %}
-    ?dataset           djht:group_id             {{group_id | safe}} .
+    ?dataset           shst:group_id             {{group_id | safe}} .
     {%- endif%}{% if time_coverage is not none %}
-    ?dataset           djht:time_coverage        {{time_coverage | safe}} .
+    ?dataset           shst:time_coverage        {{time_coverage | safe}} .
     {%- endif%}{% if publisher is not none %}
-    ?dataset           djht:publisher            {{publisher | safe}} .
+    ?dataset           shst:publisher            {{publisher | safe}} .
     {%- endif%}{% if language is not none %}
-    ?dataset           djht:language             {{language | safe}} .
+    ?dataset           shst:language             {{language | safe}} .
     {%- endif%}{% if format is not none %}
-    ?dataset           djht:format               {{format | safe}} .
+    ?dataset           shst:format               {{format | safe}} .
     {%- endif%}{% if contributors is not none %}
-    ?dataset           djht:contributors         {{contributors | safe}} .
+    ?dataset           shst:contributors         {{contributors | safe}} .
     {%- endif%}{% if license_remarks is not none %}
-    ?dataset           djht:license_remarks      {{license_remarks | safe}} .
+    ?dataset           shst:license_remarks      {{license_remarks | safe}} .
     {%- endif%}{% if geolocation is not none %}
-    ?dataset           djht:geolocation          {{geolocation | safe}} .
+    ?dataset           shst:geolocation          {{geolocation | safe}} .
     {%- endif%}{% if longitude is not none %}
-    ?dataset           djht:longitude            {{longitude | safe}} .
+    ?dataset           shst:longitude            {{longitude | safe}} .
     {%- endif%}{% if latitude is not none %}
-    ?dataset           djht:latitude             {{latitude | safe}} .
+    ?dataset           shst:latitude             {{latitude | safe}} .
     {%- endif%}{% if data_link is not none %}
-    ?dataset           djht:data_link            {{data_link | safe}} .
+    ?dataset           shst:data_link            {{data_link | safe}} .
     {%- endif%}{% if derived_from is not none %}
-    ?dataset           djht:derived_from         {{derived_from | safe}} .
+    ?dataset           shst:derived_from         {{derived_from | safe}} .
     {%- endif%}{% if same_as is not none %}
-    ?dataset           djht:same_as              {{same_as | safe}} .
+    ?dataset           shst:same_as              {{same_as | safe}} .
     {%- endif%}{% if organizations is not none %}
-    ?dataset           djht:organizations        {{organizations | safe}} .
+    ?dataset           shst:organizations        {{organizations | safe}} .
     {%- endif%}{% if defined_type_name is not none %}
-    ?dataset           djht:defined_type_name    {{defined_type_name | safe}} .
+    ?dataset           shst:defined_type_name    {{defined_type_name | safe}} .
     {%- endif%}{% if defined_type is not none %}
-    ?dataset           djht:defined_type         {{defined_type | safe}} .
+    ?dataset           shst:defined_type         {{defined_type | safe}} .
     {%- endif%}{% if has_linked_file is not none %}
-    ?dataset           djht:has_linked_file      {{has_linked_file | safe}} .
+    ?dataset           shst:has_linked_file      {{has_linked_file | safe}} .
     {%- endif%}{% if is_metadata_record is not none %}
-    ?dataset           djht:is_metadata_record   {{is_metadata_record | safe}} .
+    ?dataset           shst:is_metadata_record   {{is_metadata_record | safe}} .
     {%- endif%}{% if metadata_reason is not none %}
-    ?dataset           djht:metadata_reason      {{metadata_reason | safe}} .
+    ?dataset           shst:metadata_reason      {{metadata_reason | safe}} .
     {%- endif%}{% if embargo_until_date is not none and is_embargoed %}
-    ?dataset           djht:embargo_until_date   {{embargo_until_date | safe}} .
+    ?dataset           shst:embargo_until_date   {{embargo_until_date | safe}} .
     {%- endif%}{% if embargo_type is not none and (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_type         {{embargo_type | safe}} .
+    ?dataset           shst:embargo_type         {{embargo_type | safe}} .
     {%- endif%}{% if embargo_title is not none and (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_title        {{embargo_title | safe}} .
+    ?dataset           shst:embargo_title        {{embargo_title | safe}} .
     {%- endif%}{% if embargo_reason is not none and (is_embargoed or is_restricted) %}
-    ?dataset           djht:embargo_reason       {{embargo_reason | safe}} .
+    ?dataset           shst:embargo_reason       {{embargo_reason | safe}} .
     {%- endif%}{% if eula is not none and (is_embargoed or is_restricted) %}
-    ?dataset           djht:eula                 {{eula | safe}} .
+    ?dataset           shst:eula                 {{eula | safe}} .
     {%- endif%}{% if agreed_to_deposit_agreement is not none %}
-    ?dataset           djht:agreed_to_deposit_agreement {{agreed_to_deposit_agreement | safe}} .
+    ?dataset           shst:agreed_to_deposit_agreement {{agreed_to_deposit_agreement | safe}} .
     {%- endif%}{% if agreed_to_publish is not none %}
-    ?dataset           djht:agreed_to_publish    {{agreed_to_publish | safe}} .
+    ?dataset           shst:agreed_to_publish    {{agreed_to_publish | safe}} .
     {%- endif%}{% if git_repository_name is not none %}
-    ?dataset          djht:git_repository_name  {{git_repository_name | safe}} .
+    ?dataset          shst:git_repository_name  {{git_repository_name | safe}} .
     {%- endif%}{% if git_code_hosting_url is not none %}
-    ?dataset           djht:git_code_hosting_url {{git_code_hosting_url | safe}} .
+    ?dataset           shst:git_code_hosting_url {{git_code_hosting_url | safe}} .
     {%- endif%}{% if container_doi is not none %}
-    ?container         djht:doi                  {{container_doi | safe}} .
+    ?container         shst:doi                  {{container_doi | safe}} .
     {%- endif%}{% if first_online_date is not none %}
-    ?container         djht:first_online_date    "{{first_online_date | safe}}"^^xsd:dateTime .
+    ?container         shst:first_online_date    "{{first_online_date | safe}}"^^xsd:dateTime .
     {%- endif%}
-    ?dataset           djht:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
+    ?dataset           shst:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container          rdf:type                 djht:DatasetContainer .
-    ?container          djht:account              ?account .
-    ?container          djht:draft                ?dataset .
+    ?container          rdf:type                 shst:DatasetContainer .
+    ?container          shst:account              ?account .
+    ?container          shst:draft                ?dataset .
 
-    ?dataset            rdf:type                 djht:Dataset .
-    ?dataset            djht:title                ?title .
+    ?dataset            rdf:type                 shst:Dataset .
+    ?dataset            shst:title                ?title .
 
 {%- if account_uuid is not none and not disable_collaboration: %}
     OPTIONAL {
-      ?collaborator      rdf:type            djht:Collaborator .
-      ?collaborator      djht:item           ?dataset .
-      ?collaborator      djht:account        ?collaborator_account .
-      ?collaborator      djht:metadata_edit  "true"^^xsd:boolean .
+      ?collaborator      rdf:type            shst:Collaborator .
+      ?collaborator      shst:item           ?dataset .
+      ?collaborator      shst:account        ?collaborator_account .
+      ?collaborator      shst:metadata_edit  "true"^^xsd:boolean .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?dataset            djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?dataset            shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
 {%- endif %}
 
-    OPTIONAL { ?dataset djht:license              ?license . }
-    OPTIONAL { ?dataset djht:description          ?description . }
-    OPTIONAL { ?dataset djht:group_id             ?group_id . }
-    OPTIONAL { ?dataset djht:resource_doi         ?resource_doi . }
-    OPTIONAL { ?dataset djht:doi                  ?doi . }
-    OPTIONAL { ?dataset djht:resource_title       ?resource_title . }
-    OPTIONAL { ?dataset djht:modified_date        ?modified_date . }
-    OPTIONAL { ?dataset djht:publisher             ?publisher . }
-    OPTIONAL { ?dataset djht:language              ?language . }
-    OPTIONAL { ?dataset djht:time_coverage         ?time_coverage . }
-    OPTIONAL { ?dataset djht:geolocation           ?geolocation . }
-    OPTIONAL { ?dataset djht:longitude             ?longitude . }
-    OPTIONAL { ?dataset djht:latitude              ?latitude . }
-    OPTIONAL { ?dataset djht:format                ?format . }
-    OPTIONAL { ?dataset djht:organizations         ?organizations . }
-    OPTIONAL { ?dataset djht:data_link             ?data_link . }
-    OPTIONAL { ?dataset djht:same_as               ?same_as . }
-    OPTIONAL { ?dataset djht:derived_from          ?derived_from . }
-    OPTIONAL { ?dataset djht:contributors          ?contributors . }
-    OPTIONAL { ?dataset djht:license_remarks       ?license_remarks . }
-    OPTIONAL { ?dataset djht:defined_type_name     ?defined_type_name . }
-    OPTIONAL { ?dataset djht:defined_type          ?defined_type . }
-    OPTIONAL { ?dataset djht:has_linked_file       ?has_linked_file . }
-    OPTIONAL { ?dataset djht:is_metadata_record    ?is_metadata_record . }
-    OPTIONAL { ?dataset djht:metadata_reason       ?metadata_reason . }
-    OPTIONAL { ?dataset djht:embargo_until_date    ?embargo_until_date . }
-    OPTIONAL { ?dataset djht:embargo_type          ?embargo_type . }
-    OPTIONAL { ?dataset djht:embargo_title         ?embargo_title . }
-    OPTIONAL { ?dataset djht:embargo_reason        ?embargo_reason . }
-    OPTIONAL { ?dataset djht:eula                  ?eula . }
-    OPTIONAL { ?dataset djht:agreed_to_deposit_agreement ?agreed_to_deposit_agreement . }
-    OPTIONAL { ?dataset djht:agreed_to_publish     ?agreed_to_publish . }
-    OPTIONAL { ?dataset djht:git_repository_name   ?git_repository_name . }
-    OPTIONAL { ?dataset djht:git_code_hosting_url  ?git_code_hosting_url . }
-    OPTIONAL { ?container djht:doi                 ?container_doi . }
-    OPTIONAL { ?container djht:first_online_date   ?first_online_date . }
+    OPTIONAL { ?dataset shst:license              ?license . }
+    OPTIONAL { ?dataset shst:description          ?description . }
+    OPTIONAL { ?dataset shst:group_id             ?group_id . }
+    OPTIONAL { ?dataset shst:resource_doi         ?resource_doi . }
+    OPTIONAL { ?dataset shst:doi                  ?doi . }
+    OPTIONAL { ?dataset shst:resource_title       ?resource_title . }
+    OPTIONAL { ?dataset shst:modified_date        ?modified_date . }
+    OPTIONAL { ?dataset shst:publisher             ?publisher . }
+    OPTIONAL { ?dataset shst:language              ?language . }
+    OPTIONAL { ?dataset shst:time_coverage         ?time_coverage . }
+    OPTIONAL { ?dataset shst:geolocation           ?geolocation . }
+    OPTIONAL { ?dataset shst:longitude             ?longitude . }
+    OPTIONAL { ?dataset shst:latitude              ?latitude . }
+    OPTIONAL { ?dataset shst:format                ?format . }
+    OPTIONAL { ?dataset shst:organizations         ?organizations . }
+    OPTIONAL { ?dataset shst:data_link             ?data_link . }
+    OPTIONAL { ?dataset shst:same_as               ?same_as . }
+    OPTIONAL { ?dataset shst:derived_from          ?derived_from . }
+    OPTIONAL { ?dataset shst:contributors          ?contributors . }
+    OPTIONAL { ?dataset shst:license_remarks       ?license_remarks . }
+    OPTIONAL { ?dataset shst:defined_type_name     ?defined_type_name . }
+    OPTIONAL { ?dataset shst:defined_type          ?defined_type . }
+    OPTIONAL { ?dataset shst:has_linked_file       ?has_linked_file . }
+    OPTIONAL { ?dataset shst:is_metadata_record    ?is_metadata_record . }
+    OPTIONAL { ?dataset shst:metadata_reason       ?metadata_reason . }
+    OPTIONAL { ?dataset shst:embargo_until_date    ?embargo_until_date . }
+    OPTIONAL { ?dataset shst:embargo_type          ?embargo_type . }
+    OPTIONAL { ?dataset shst:embargo_title         ?embargo_title . }
+    OPTIONAL { ?dataset shst:embargo_reason        ?embargo_reason . }
+    OPTIONAL { ?dataset shst:eula                  ?eula . }
+    OPTIONAL { ?dataset shst:agreed_to_deposit_agreement ?agreed_to_deposit_agreement . }
+    OPTIONAL { ?dataset shst:agreed_to_publish     ?agreed_to_publish . }
+    OPTIONAL { ?dataset shst:git_repository_name   ?git_repository_name . }
+    OPTIONAL { ?dataset shst:git_code_hosting_url  ?git_code_hosting_url . }
+    OPTIONAL { ?container shst:doi                 ?container_doi . }
+    OPTIONAL { ?container shst:first_online_date   ?first_online_date . }
   }
 {%- if account_uuid is not none: %}
   {%- if disable_collaboration %}

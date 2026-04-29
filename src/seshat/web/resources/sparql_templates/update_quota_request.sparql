@@ -3,13 +3,13 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if requested_size is not none %}
-    ?request          djht:requested_size        ?requested_size .
+    ?request          shst:requested_size        ?requested_size .
     {%- endif %}{% if reason is not none %}
-    ?request          djht:reason                ?reason .
+    ?request          shst:reason                ?reason .
     {%- endif %}{% if status is not none %}
-    ?request          djht:status                ?status .
+    ?request          shst:status                ?status .
     {%- if assign_to_account %}
-    ?account          djht:quota                 ?quota .
+    ?account          shst:quota                 ?quota .
     {%- endif %}
     {%- endif %}
   }
@@ -17,16 +17,16 @@ DELETE {
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if requested_size is not none %}
-    ?request          djht:requested_size        {{requested_size}} .
+    ?request          shst:requested_size        {{requested_size}} .
     {%- endif %}{% if reason is not none %}
-    ?request          djht:reason                {{reason}} .
+    ?request          shst:reason                {{reason}} .
     {%- endif%}{% if status is not none %}
-    ?request          djht:status                {{status | safe}} .
+    ?request          shst:status                {{status | safe}} .
     {%- if assign_to_account %}
     {%- if requested_size is not none %}
-    ?account          djht:quota                 {{requested_size}} .
+    ?account          shst:quota                 {{requested_size}} .
     {%- else %}
-    ?account          djht:quota                 ?requested_size .
+    ?account          shst:quota                 ?requested_size .
     {%- endif %}
     {%- endif %}
     {%- endif %}
@@ -34,12 +34,12 @@ INSERT {
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?request              rdf:type                  djht:QuotaRequest .
-    ?request              djht:account              ?account .
-    OPTIONAL { ?account   djht:quota                ?quota . }
-    OPTIONAL { ?request   djht:requested_size       ?requested_size . }
-    OPTIONAL { ?request   djht:reason               ?reason . }
-    OPTIONAL { ?request   djht:status               ?status . }
+    ?request              rdf:type                  shst:QuotaRequest .
+    ?request              shst:account              ?account .
+    OPTIONAL { ?account   shst:quota                ?quota . }
+    OPTIONAL { ?request   shst:requested_size       ?requested_size . }
+    OPTIONAL { ?request   shst:reason               ?reason . }
+    OPTIONAL { ?request   shst:status               ?status . }
   }
   FILTER (?request = <quota-request:{{quota_request_uuid}}>)
 }

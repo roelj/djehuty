@@ -4,11 +4,11 @@ SELECT DISTINCT (STRAFTER(STR(?associated_author), ":") AS ?associated_author_uu
                 ?full_name ?is_active
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?item          djht:is_public                    true ;
-                   djht:authors/rdf:rest*/rdf:first  <{{author_uri}}> ,
+    ?item          shst:is_public                    true ;
+                   shst:authors/rdf:rest*/rdf:first  <{{author_uri}}> ,
                                                      ?associated_author .
-    ?associated_author djht:full_name                ?full_name ;
-                   djht:is_active                    ?is_active .
+    ?associated_author shst:full_name                ?full_name ;
+                   shst:is_active                    ?is_active .
     FILTER (?associated_author != <{{author_uri}}>)
   }
 }

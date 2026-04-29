@@ -7,19 +7,19 @@ SELECT DISTINCT ?file ?bytes
 {%- endif %}
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset        rdf:type            djht:Dataset .
-    ?dataset        djht:files/rdf:rest*/rdf:first ?file .
-    ?file           rdf:type            djht:File .
-    ?file           djht:size           ?bytes .
+    ?dataset        rdf:type            shst:Dataset .
+    ?dataset        shst:files/rdf:rest*/rdf:first ?file .
+    ?file           rdf:type            shst:File .
+    ?file           shst:size           ?bytes .
 {%- if extended_properties is defined and extended_properties %}
-    ?dataset        djht:container      ?container .
-    OPTIONAL { ?dataset djht:is_public  ?is_public . }
-    OPTIONAL { ?file  djht:id           ?id . }
-    OPTIONAL { ?file  djht:name         ?name . }
-    OPTIONAL { ?file  djht:filesystem_location ?filesystem_location . }
-    OPTIONAL { ?file  djht:is_link_only ?is_link_only . }
-    OPTIONAL { ?file  djht:supplied_md5 ?supplied_md5 . }
-    OPTIONAL { ?file  djht:computed_md5 ?computed_md5 . }
+    ?dataset        shst:container      ?container .
+    OPTIONAL { ?dataset shst:is_public  ?is_public . }
+    OPTIONAL { ?file  shst:id           ?id . }
+    OPTIONAL { ?file  shst:name         ?name . }
+    OPTIONAL { ?file  shst:filesystem_location ?filesystem_location . }
+    OPTIONAL { ?file  shst:is_link_only ?is_link_only . }
+    OPTIONAL { ?file  shst:supplied_md5 ?supplied_md5 . }
+    OPTIONAL { ?file  shst:computed_md5 ?computed_md5 . }
     BIND (STRAFTER(STR(?file), "file:") AS ?uuid)
     BIND (STRAFTER(STR(?container), "container:") AS ?container_uuid)
 {%- endif %}

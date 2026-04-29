@@ -3,93 +3,93 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if download_url is not none %}
-    ?file              djht:download_url        ?download_url .
+    ?file              shst:download_url        ?download_url .
     {%- endif%}{% if computed_md5 is not none %}
-    ?file              djht:computed_md5        ?computed_md5 .
+    ?file              shst:computed_md5        ?computed_md5 .
     {%- endif%}{% if is_incomplete is not none %}
-    ?file              djht:is_incomplete       ?is_incomplete .
+    ?file              shst:is_incomplete       ?is_incomplete .
     {%- endif%}{% if is_image is not none %}
-    ?file              djht:is_image            ?is_image .
+    ?file              shst:is_image            ?is_image .
     {%- endif%}{% if viewer_type is not none %}
-    ?file              djht:viewer_type         ?viewer_type .
+    ?file              shst:viewer_type         ?viewer_type .
     {%- endif%}{% if preview_state is not none %}
-    ?file              djht:preview_state       ?preview_state .
+    ?file              shst:preview_state       ?preview_state .
     {%- endif%}{% if file_size is not none %}
-    ?file              djht:size                ?size .
+    ?file              shst:size                ?size .
     {%- endif%}{% if status is not none %}
-    ?file              djht:status              ?status .
+    ?file              shst:status              ?status .
     {%- endif%}{% if handle is not none %}
-    ?file              djht:handle              ?handle .
+    ?file              shst:handle              ?handle .
     {%- endif%}{% if filesystem_location is not none %}
-    ?file              djht:filesystem_location ?filesystem_location .
+    ?file              shst:filesystem_location ?filesystem_location .
     {%- endif%}
-    ?file              djht:modified_date        ?modified_date .
+    ?file              shst:modified_date        ?modified_date .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if download_url is not none %}
-    ?file              djht:download_url        "{{download_url | safe}}"^^xsd:string .
+    ?file              shst:download_url        "{{download_url | safe}}"^^xsd:string .
     {%- endif%}{% if computed_md5 is not none %}
-    ?file              djht:computed_md5        "{{computed_md5 | safe}}"^^xsd:string .
+    ?file              shst:computed_md5        "{{computed_md5 | safe}}"^^xsd:string .
     {%- endif%}{% if is_incomplete is not none %}
-    ?file              djht:is_incomplete       {{is_incomplete}} .
+    ?file              shst:is_incomplete       {{is_incomplete}} .
     {%- endif%}{% if is_image is not none %}
-    ?file              djht:is_image            {{is_image | safe}} .
+    ?file              shst:is_image            {{is_image | safe}} .
     {%- endif%}{% if viewer_type is not none %}
-    ?file              djht:viewer_type         "{{viewer_type | safe}}"^^xsd:string .
+    ?file              shst:viewer_type         "{{viewer_type | safe}}"^^xsd:string .
     {%- endif%}{% if preview_state is not none %}
-    ?file              djht:preview_state       "{{preview_state | safe}}"^^xsd:string .
+    ?file              shst:preview_state       "{{preview_state | safe}}"^^xsd:string .
     {%- endif%}{% if file_size is not none %}
-    ?file              djht:size                {{file_size | safe}} .
+    ?file              shst:size                {{file_size | safe}} .
     {%- endif%}{% if status is not none %}
-    ?file              djht:status              "{{status | safe}}"^^xsd:string .
+    ?file              shst:status              "{{status | safe}}"^^xsd:string .
     {%- endif%}{% if handle is not none %}
-    ?file              djht:handle              "{{handle | safe}}"^^xsd:string .
+    ?file              shst:handle              "{{handle | safe}}"^^xsd:string .
     {%- endif%}{% if filesystem_location is not none %}
-    ?file              djht:filesystem_location "{{filesystem_location | safe}}"^^xsd:string .
+    ?file              shst:filesystem_location "{{filesystem_location | safe}}"^^xsd:string .
     {%- endif%}
-    ?file              djht:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
+    ?file              shst:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?file              rdf:type                djht:File .
+    ?file              rdf:type                shst:File .
 
     {#- Ensure that the account_uuid associated with the ?file can modify its
      #- properties. #}
-    ?dataset           djht:files/rdf:rest*/rdf:first ?file .
-    ?dataset           djht:container/djht:account    ?account .
+    ?dataset           shst:files/rdf:rest*/rdf:first ?file .
+    ?dataset           shst:container/shst:account    ?account .
 
 {%- if account_uuid is not none and not disable_collaboration: %}
     OPTIONAL {
-      ?collaborator      rdf:type            djht:Collaborator .
-      ?collaborator      djht:item           ?dataset .
-      ?collaborator      djht:account        ?collaborator_account .
-      ?collaborator      djht:data_edit      "true"^^xsd:boolean .
+      ?collaborator      rdf:type            shst:Collaborator .
+      ?collaborator      shst:item           ?dataset .
+      ?collaborator      shst:account        ?collaborator_account .
+      ?collaborator      shst:data_edit      "true"^^xsd:boolean .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?dataset            djht:association_criteria ?association_criteria .
-      ?group_uri          djht:association_criteria ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?dataset            shst:association_criteria ?association_criteria .
+      ?group_uri          shst:association_criteria ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
 {%- endif %}
 
-    OPTIONAL { ?file   djht:id                  ?id . }
-    OPTIONAL { ?file   djht:filesystem_location ?filesystem_location . }
-    OPTIONAL { ?file   djht:download_url        ?download_url . }
-    OPTIONAL { ?file   djht:computed_md5        ?computed_md5 . }
-    OPTIONAL { ?file   djht:is_incomplete       ?is_incomplete . }
-    OPTIONAL { ?file   djht:is_image            ?is_image . }
-    OPTIONAL { ?file   djht:viewer_type         ?viewer_type . }
-    OPTIONAL { ?file   djht:preview_state       ?preview_state . }
-    OPTIONAL { ?file   djht:size                ?size . }
-    OPTIONAL { ?file   djht:status              ?status . }
-    OPTIONAL { ?file   djht:handle              ?handle . }
-    OPTIONAL { ?file   djht:modified_date       ?modified_date . }
+    OPTIONAL { ?file   shst:id                  ?id . }
+    OPTIONAL { ?file   shst:filesystem_location ?filesystem_location . }
+    OPTIONAL { ?file   shst:download_url        ?download_url . }
+    OPTIONAL { ?file   shst:computed_md5        ?computed_md5 . }
+    OPTIONAL { ?file   shst:is_incomplete       ?is_incomplete . }
+    OPTIONAL { ?file   shst:is_image            ?is_image . }
+    OPTIONAL { ?file   shst:viewer_type         ?viewer_type . }
+    OPTIONAL { ?file   shst:preview_state       ?preview_state . }
+    OPTIONAL { ?file   shst:size                ?size . }
+    OPTIONAL { ?file   shst:status              ?status . }
+    OPTIONAL { ?file   shst:handle              ?handle . }
+    OPTIONAL { ?file   shst:modified_date       ?modified_date . }
   }
   FILTER (?file = <file:{{file_uuid | safe}}>)
 {%- if account_uuid is not none: %}

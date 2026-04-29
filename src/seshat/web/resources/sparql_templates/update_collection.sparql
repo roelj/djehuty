@@ -3,104 +3,104 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if title is not none %}
-    ?collection           djht:title                ?title .
+    ?collection           shst:title                ?title .
     {%- endif%}{% if description is not none %}
-    ?collection           djht:description          ?description .
+    ?collection           shst:description          ?description .
     {%- endif%}{% if doi is not none %}
-    ?collection           djht:doi                  ?doi .
+    ?collection           shst:doi                  ?doi .
     {%- endif%}{% if resource_doi is not none %}
-    ?collection           djht:resource_doi         ?resource_doi .
+    ?collection           shst:resource_doi         ?resource_doi .
     {%- endif%}{% if resource_title is not none %}
-    ?collection           djht:resource_title       ?resource_title .
+    ?collection           shst:resource_title       ?resource_title .
     {%- endif%}{% if group_id is not none %}
-    ?collection           djht:group_id             ?group_id .
+    ?collection           shst:group_id             ?group_id .
     {%- endif%}{% if time_coverage is not none %}
-    ?collection           djht:time_coverage        ?time_coverage .
+    ?collection           shst:time_coverage        ?time_coverage .
     {%- endif%}{% if publisher is not none %}
-    ?collection           djht:publisher            ?publisher .
+    ?collection           shst:publisher            ?publisher .
     {%- endif%}{% if language is not none %}
-    ?collection           djht:language             ?language .
+    ?collection           shst:language             ?language .
     {%- endif%}{% if contributors is not none %}
-    ?collection           djht:contributors         ?contributors .
+    ?collection           shst:contributors         ?contributors .
     {%- endif%}{% if geolocation is not none %}
-    ?collection           djht:geolocation          ?geolocation .
+    ?collection           shst:geolocation          ?geolocation .
     {%- endif%}{% if longitude is not none %}
-    ?collection           djht:longitude            ?longitude .
+    ?collection           shst:longitude            ?longitude .
     {%- endif%}{% if latitude is not none %}
-    ?collection           djht:latitude             ?latitude .
+    ?collection           shst:latitude             ?latitude .
     {%- endif%}{% if organizations is not none %}
-    ?collection           djht:organizations        ?organizations .
+    ?collection           shst:organizations        ?organizations .
     {%- endif%}{% if container_doi is not none %}
-    ?container            djht:doi                  ?container_doi .
+    ?container            shst:doi                  ?container_doi .
     {%- endif%}{% if first_online_date is not none %}
-    ?container            djht:first_online_date    ?first_online_date .
+    ?container            shst:first_online_date    ?first_online_date .
     {%- endif%}
-    ?collection           djht:modified_date        ?modified_date .
+    ?collection           shst:modified_date        ?modified_date .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
     {%- if title is not none %}
-    ?collection           djht:title                {{title | safe}} .
+    ?collection           shst:title                {{title | safe}} .
     {%- endif%}{% if description is not none %}
-    ?collection           djht:description          {{description | safe}} .
+    ?collection           shst:description          {{description | safe}} .
     {%- endif%}{% if doi is not none %}
-    ?collection           djht:doi                  {{doi | safe}} .
+    ?collection           shst:doi                  {{doi | safe}} .
     {%- endif%}{% if resource_doi is not none %}
-    ?collection           djht:resource_doi         {{resource_doi | safe}} .
+    ?collection           shst:resource_doi         {{resource_doi | safe}} .
     {%- endif%}{% if resource_title is not none %}
-    ?collection           djht:resource_title       {{resource_title | safe}} .
+    ?collection           shst:resource_title       {{resource_title | safe}} .
     {%- endif%}{% if group_id is not none %}
-    ?collection           djht:group_id             {{group_id}} .
+    ?collection           shst:group_id             {{group_id}} .
     {%- endif%}{% if time_coverage is not none %}
-    ?collection           djht:time_coverage        {{time_coverage | safe}} .
+    ?collection           shst:time_coverage        {{time_coverage | safe}} .
     {%- endif%}{% if publisher is not none %}
-    ?collection           djht:publisher            {{publisher | safe}} .
+    ?collection           shst:publisher            {{publisher | safe}} .
     {%- endif%}{% if language is not none %}
-    ?collection           djht:language             {{language | safe}} .
+    ?collection           shst:language             {{language | safe}} .
     {%- endif%}{% if contributors is not none %}
-    ?collection           djht:contributors         {{contributors | safe}} .
+    ?collection           shst:contributors         {{contributors | safe}} .
     {%- endif%}{% if geolocation is not none %}
-    ?collection           djht:geolocation          {{geolocation | safe}} .
+    ?collection           shst:geolocation          {{geolocation | safe}} .
     {%- endif%}{% if longitude is not none %}
-    ?collection           djht:longitude            {{longitude | safe}} .
+    ?collection           shst:longitude            {{longitude | safe}} .
     {%- endif%}{% if latitude is not none %}
-    ?collection           djht:latitude             {{latitude | safe}} .
+    ?collection           shst:latitude             {{latitude | safe}} .
     {%- endif%}{% if organizations is not none %}
-    ?collection           djht:organizations        {{organizations | safe}} .
+    ?collection           shst:organizations        {{organizations | safe}} .
     {%- endif%}{% if container_doi is not none %}
-    ?container            djht:doi                  {{container_doi | safe}} .
+    ?container            shst:doi                  {{container_doi | safe}} .
     {%- endif%}{% if first_online_date is not none %}
-    ?container            djht:first_online_date    "{{first_online_date | safe}}"^^xsd:dateTime .
+    ?container            shst:first_online_date    "{{first_online_date | safe}}"^^xsd:dateTime .
     {%- endif%}
-    ?collection           djht:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
+    ?collection           shst:modified_date        "{{modified_date | safe}}"^^xsd:dateTime .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container          rdf:type                 djht:CollectionContainer .
-    ?container          djht:account              ?account .
-    ?container          djht:draft                ?collection .
+    ?container          rdf:type                 shst:CollectionContainer .
+    ?container          shst:account              ?account .
+    ?container          shst:draft                ?collection .
 
-    ?collection         rdf:type                 djht:Collection .
+    ?collection         rdf:type                 shst:Collection .
 
-    OPTIONAL { ?collection djht:title                ?title . }
-    OPTIONAL { ?collection djht:description          ?description . }
-    OPTIONAL { ?collection djht:doi                  ?doi . }
-    OPTIONAL { ?collection djht:group_id             ?group_id . }
-    OPTIONAL { ?collection djht:resource_doi         ?resource_doi . }
-    OPTIONAL { ?collection djht:resource_title       ?resource_title . }
-    OPTIONAL { ?collection djht:modified_date        ?modified_date . }
-    OPTIONAL { ?collection djht:publisher            ?publisher . }
-    OPTIONAL { ?collection djht:language             ?language . }
-    OPTIONAL { ?collection djht:time_coverage        ?time_coverage . }
-    OPTIONAL { ?collection djht:geolocation          ?geolocation . }
-    OPTIONAL { ?collection djht:longitude            ?longitude . }
-    OPTIONAL { ?collection djht:latitude             ?latitude . }
-    OPTIONAL { ?collection djht:organizations        ?organizations . }
-    OPTIONAL { ?collection djht:contributors         ?contributors . }
-    OPTIONAL { ?container  djht:doi                  ?container_doi . }
-    OPTIONAL { ?container  djht:first_online_date    ?first_online_date . }
+    OPTIONAL { ?collection shst:title                ?title . }
+    OPTIONAL { ?collection shst:description          ?description . }
+    OPTIONAL { ?collection shst:doi                  ?doi . }
+    OPTIONAL { ?collection shst:group_id             ?group_id . }
+    OPTIONAL { ?collection shst:resource_doi         ?resource_doi . }
+    OPTIONAL { ?collection shst:resource_title       ?resource_title . }
+    OPTIONAL { ?collection shst:modified_date        ?modified_date . }
+    OPTIONAL { ?collection shst:publisher            ?publisher . }
+    OPTIONAL { ?collection shst:language             ?language . }
+    OPTIONAL { ?collection shst:time_coverage        ?time_coverage . }
+    OPTIONAL { ?collection shst:geolocation          ?geolocation . }
+    OPTIONAL { ?collection shst:longitude            ?longitude . }
+    OPTIONAL { ?collection shst:latitude             ?latitude . }
+    OPTIONAL { ?collection shst:organizations        ?organizations . }
+    OPTIONAL { ?collection shst:contributors         ?contributors . }
+    OPTIONAL { ?container  shst:doi                  ?container_doi . }
+    OPTIONAL { ?container  shst:first_online_date    ?first_online_date . }
   }
 {%- if account_uuid is not none: %}
   FILTER (?account = <account:{{account_uuid}}>)

@@ -3,10 +3,10 @@
 SELECT DISTINCT ?data_link ?bytes
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset    rdf:type            djht:Dataset .
-    ?dataset    djht:data_link      ?data_link .
-    ?dataset    djht:data_link_size ?bytes .
-    ?dataset    djht:created_date   ?created .
+    ?dataset    rdf:type            shst:Dataset .
+    ?dataset    shst:data_link      ?data_link .
+    ?dataset    shst:data_link_size ?bytes .
+    ?dataset    shst:created_date   ?created .
   }
 {%- if filters is not none %}{{ filters | safe }}{% endif %}
 }

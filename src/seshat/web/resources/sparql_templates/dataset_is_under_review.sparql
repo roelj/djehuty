@@ -3,8 +3,8 @@
 ASK
 {
   GRAPH <{{state_graph}}> {
-    ?review             rdf:type                 djht:Review ;
-                        djht:dataset             ?dataset .
+    ?review             rdf:type                 shst:Review ;
+                        shst:dataset             ?dataset .
   }
   FILTER (?dataset = <dataset:{{dataset_uuid}}>)
 }

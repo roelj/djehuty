@@ -10,52 +10,52 @@ SELECT DISTINCT ?name          ?size          ?is_link_only
                 ?filename      ?handle
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?file              rdf:type                djht:File .
-    ?dataset_uri       rdf:type                djht:Dataset ;
-                       djht:container          ?container ;
-                       djht:files              ?files .
+    ?file              rdf:type                shst:File .
+    ?dataset_uri       rdf:type                shst:Dataset ;
+                       shst:container          ?container ;
+                       shst:files              ?files .
     ?files             rdf:rest*               ?rest .
     ?rest              rdf:first               ?file ;
-                       djht:index              ?order_index .
+                       shst:index              ?order_index .
     {%- if account_uuid is not none %}
-    ?container         rdf:type/rdfs:subClassOf djht:Container .
-    ?container         djht:account            ?account .
+    ?container         rdf:type/rdfs:subClassOf shst:Container .
+    ?container         shst:account            ?account .
     {%- if not disable_collaboration %}
     OPTIONAL {
-      ?collaborator       rdf:type djht:Collaborator .
-      ?collaborator       djht:item ?dataset_uri .
-      ?collaborator       djht:account ?collaborator_account .
-      ?collaborator       djht:data_read ?data_read .
-      ?collaborator       djht:data_edit ?data_edit .
-      ?collaborator       djht:data_remove ?data_remove .
+      ?collaborator       rdf:type shst:Collaborator .
+      ?collaborator       shst:item ?dataset_uri .
+      ?collaborator       shst:account ?collaborator_account .
+      ?collaborator       shst:data_read ?data_read .
+      ?collaborator       shst:data_edit ?data_edit .
+      ?collaborator       shst:data_remove ?data_remove .
     }
     OPTIONAL {
-      ?group_uri          rdf:type djht:InstitutionGroup .
-      ?dataset_uri        djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:association_criteria        ?association_criteria .
-      ?group_uri          djht:members/rdf:rest*/rdf:first ?member_uri .
-      ?member_uri         djht:is_supervisor "true"^^xsd:boolean .
-      ?member_uri         djht:account ?member_account .
+      ?group_uri          rdf:type shst:InstitutionGroup .
+      ?dataset_uri        shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:association_criteria        ?association_criteria .
+      ?group_uri          shst:members/rdf:rest*/rdf:first ?member_uri .
+      ?member_uri         shst:is_supervisor "true"^^xsd:boolean .
+      ?member_uri         shst:account ?member_account .
     }
     {%- endif %}
     {%- endif %}
-    OPTIONAL { ?dataset_uri djht:embargo_until_date ?embargo_until_date . }
-    OPTIONAL { ?file  djht:id                   ?id . }
-    OPTIONAL { ?file  djht:name                 ?name . }
-    OPTIONAL { ?file  djht:filesystem_location  ?filesystem_location . }
-    OPTIONAL { ?file  djht:size                 ?size . }
-    OPTIONAL { ?file  djht:handle               ?handle . }
-    OPTIONAL { ?file  djht:is_link_only         ?is_link_only . }
-    OPTIONAL { ?file  djht:download_url         ?download_url . }
-    OPTIONAL { ?file  djht:supplied_md5         ?supplied_md5 . }
-    OPTIONAL { ?file  djht:computed_md5         ?computed_md5 . }
-    OPTIONAL { ?file  djht:viewer_type          ?viewer_type . }
-    OPTIONAL { ?file  djht:preview_state        ?preview_state . }
-    OPTIONAL { ?file  djht:status               ?status . }
-    OPTIONAL { ?file  djht:upload_url           ?upload_url . }
-    OPTIONAL { ?file  djht:upload_token         ?upload_token . }
-    OPTIONAL { ?file  djht:is_incomplete        ?is_incomplete . }
-    OPTIONAL { ?file  djht:is_image             ?is_image . }
+    OPTIONAL { ?dataset_uri shst:embargo_until_date ?embargo_until_date . }
+    OPTIONAL { ?file  shst:id                   ?id . }
+    OPTIONAL { ?file  shst:name                 ?name . }
+    OPTIONAL { ?file  shst:filesystem_location  ?filesystem_location . }
+    OPTIONAL { ?file  shst:size                 ?size . }
+    OPTIONAL { ?file  shst:handle               ?handle . }
+    OPTIONAL { ?file  shst:is_link_only         ?is_link_only . }
+    OPTIONAL { ?file  shst:download_url         ?download_url . }
+    OPTIONAL { ?file  shst:supplied_md5         ?supplied_md5 . }
+    OPTIONAL { ?file  shst:computed_md5         ?computed_md5 . }
+    OPTIONAL { ?file  shst:viewer_type          ?viewer_type . }
+    OPTIONAL { ?file  shst:preview_state        ?preview_state . }
+    OPTIONAL { ?file  shst:status               ?status . }
+    OPTIONAL { ?file  shst:upload_url           ?upload_url . }
+    OPTIONAL { ?file  shst:upload_token         ?upload_token . }
+    OPTIONAL { ?file  shst:is_incomplete        ?is_incomplete . }
+    OPTIONAL { ?file  shst:is_image             ?is_image . }
 
     BIND(STRAFTER(STR(?file), "file:") AS ?uuid)
     BIND(STRAFTER(STR(?container), "container:") AS ?container_uuid)

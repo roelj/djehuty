@@ -3,34 +3,34 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     {%- if not first_publication %}
-    ?container     djht:latest_published_version ?latest_published_version .
+    ?container     shst:latest_published_version ?latest_published_version .
     ?append_node   rdf:rest                      ?nil_value .
     {%- endif %}
-    ?container     djht:draft                    ?draft_dataset .
-    ?draft_dataset djht:is_latest                ?is_latest .
-    ?draft_dataset djht:is_public                ?is_public .
-    ?draft_dataset djht:is_editable              ?is_editable .
-    ?draft_dataset djht:version                  ?version .
-    ?draft_dataset djht:is_under_review          ?is_under_review .
+    ?container     shst:draft                    ?draft_dataset .
+    ?draft_dataset shst:is_latest                ?is_latest .
+    ?draft_dataset shst:is_public                ?is_public .
+    ?draft_dataset shst:is_editable              ?is_editable .
+    ?draft_dataset shst:version                  ?version .
+    ?draft_dataset shst:is_under_review          ?is_under_review .
 
-    ?review        djht:status                   ?review_status .
+    ?review        shst:status                   ?review_status .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?container     djht:latest_published_version <dataset:{{dataset_uuid}}> .
+    ?container     shst:latest_published_version <dataset:{{dataset_uuid}}> .
 
-    ?draft_dataset djht:is_latest                "true"^^xsd:boolean ;
-                   djht:is_public                "true"^^xsd:boolean ;
-                   djht:is_editable              "false"^^xsd:boolean ;
-                   djht:is_under_review          "false"^^xsd:boolean ;
-                   djht:published_date           ?now ;
-                   djht:posted_date              ?now ;
-                   djht:version                  {{version}} .
-    ?review        djht:status                   djht:ReviewApproved .
+    ?draft_dataset shst:is_latest                "true"^^xsd:boolean ;
+                   shst:is_public                "true"^^xsd:boolean ;
+                   shst:is_editable              "false"^^xsd:boolean ;
+                   shst:is_under_review          "false"^^xsd:boolean ;
+                   shst:published_date           ?now ;
+                   shst:posted_date              ?now ;
+                   shst:version                  {{version}} .
+    ?review        shst:status                   shst:ReviewApproved .
 
     {%- if first_publication %}
-    ?container     djht:published_versions       <{{blank_node}}> .
+    ?container     shst:published_versions       <{{blank_node}}> .
     {%- else %}
     ?append_node   rdf:rest                      <{{blank_node}}> .
     {%- endif %}
@@ -38,26 +38,26 @@ INSERT {
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container     rdf:type                      djht:DatasetContainer ;
-                   djht:draft                    ?draft_dataset .
-    ?review        rdf:type                      djht:Review ;
-                   djht:dataset                  ?draft_dataset ;
-                   djht:status                   ?review_status .
+    ?container     rdf:type                      shst:DatasetContainer ;
+                   shst:draft                    ?draft_dataset .
+    ?review        rdf:type                      shst:Review ;
+                   shst:dataset                  ?draft_dataset ;
+                   shst:status                   ?review_status .
 
     {%- if not first_publication %}
-    ?container     djht:published_versions/rdf:rest* ?append_node .
+    ?container     shst:published_versions/rdf:rest* ?append_node .
     {#- Working around a bug in Virtuoso.  Check whether this can be
      #- simplified to: ?append_node rdf:rest rdf:nil . #}
     ?append_node   rdf:rest ?nil_value .
     FILTER (STR(?nil_value) = STR(rdf:nil))
     {%- endif %}
 
-    OPTIONAL { ?container djht:latest_published_version ?latest_published_version . }
-    OPTIONAL { ?draft_dataset djht:is_latest     ?is_latest . }
-    OPTIONAL { ?draft_dataset djht:is_public     ?is_public . }
-    OPTIONAL { ?draft_dataset djht:is_editable   ?is_editable . }
-    OPTIONAL { ?draft_dataset djht:is_under_review ?is_under_review . }
-    OPTIONAL { ?draft_dataset djht:version       ?version . }
+    OPTIONAL { ?container shst:latest_published_version ?latest_published_version . }
+    OPTIONAL { ?draft_dataset shst:is_latest     ?is_latest . }
+    OPTIONAL { ?draft_dataset shst:is_public     ?is_public . }
+    OPTIONAL { ?draft_dataset shst:is_editable   ?is_editable . }
+    OPTIONAL { ?draft_dataset shst:is_under_review ?is_under_review . }
+    OPTIONAL { ?draft_dataset shst:version       ?version . }
 
     BIND("{{timestamp}}"^^xsd:dateTime AS ?now)
   }

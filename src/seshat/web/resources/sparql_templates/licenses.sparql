@@ -3,10 +3,10 @@
 SELECT DISTINCT ?id ?name ?url ?type
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?url             rdf:type                 djht:License ;
-                     djht:id                   ?id ;
-                     djht:type/rdfs:label      ?type ;
-                     djht:name                 ?name .
+    ?url             rdf:type                 shst:License ;
+                     shst:id                   ?id ;
+                     shst:type/rdfs:label      ?type ;
+                     shst:name                 ?name .
   }
   {%- if license_id is defined: %}
   FILTER (?id = {{license_id}})

@@ -2,19 +2,19 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?dataset          djht:git_uuid            ?git_uuid .
+    ?dataset          shst:git_uuid            ?git_uuid .
   }
 }
 INSERT {
   GRAPH <{{state_graph}}> {
-    ?dataset          djht:git_uuid            {{git_uuid | safe}} .
+    ?dataset          shst:git_uuid            {{git_uuid | safe}} .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container            rdf:type             djht:DatasetContainer ;
-                          djht:draft           ?dataset .
-    OPTIONAL { ?dataset   djht:git_uuid        ?git_uuid . }
+    ?container            rdf:type             shst:DatasetContainer ;
+                          shst:draft           ?dataset .
+    OPTIONAL { ?dataset   shst:git_uuid        ?git_uuid . }
   }
   FILTER (?dataset = <dataset:{{dataset_uuid}}>)
 }

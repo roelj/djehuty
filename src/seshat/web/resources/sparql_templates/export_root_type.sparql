@@ -4,14 +4,14 @@ SELECT DISTINCT ?subject ?predicate ?object (datatype(?object) AS ?type)
 WHERE {
   GRAPH <{{state_graph}}> {
     {%- if type_name == "Dataset" or type_name == "Collection" %}
-    ?container_uri rdf:type         djht:{{type_name}}Container .
+    ?container_uri rdf:type         shst:{{type_name}}Container .
     {%- if full_export: %}
-    ?subject       djht:container   ?container_uri .
+    ?subject       shst:container   ?container_uri .
     {%- else %}
-    ?container_uri djht:published_versions/rdf:rest*/rdf:first ?subject .
+    ?container_uri shst:published_versions/rdf:rest*/rdf:first ?subject .
     {%- endif %}
     {%- else %}
-    ?subject       rdf:type         djht:{{type_name}} .
+    ?subject       rdf:type         shst:{{type_name}} .
     {%- endif %}
     ?subject       ?predicate       ?object .
   }

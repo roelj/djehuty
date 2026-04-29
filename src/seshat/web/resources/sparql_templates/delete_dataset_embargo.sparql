@@ -2,21 +2,21 @@
 {% block query %}
 DELETE {
   GRAPH <{{state_graph}}> {
-    ?dataset  djht:embargo_type       ?embargo_type .
-    ?dataset  djht:embargo_title      ?embargo_title .
-    ?dataset  djht:embargo_reason     ?embargo_reason .
-    ?dataset  djht:embargo_until_date ?embargo_until_date .
+    ?dataset  shst:embargo_type       ?embargo_type .
+    ?dataset  shst:embargo_title      ?embargo_title .
+    ?dataset  shst:embargo_reason     ?embargo_reason .
+    ?dataset  shst:embargo_until_date ?embargo_until_date .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?dataset  rdf:type               djht:Dataset .
-    ?dataset  djht:container/djht:account <account:{{account_uuid}}> .
+    ?dataset  rdf:type               shst:Dataset .
+    ?dataset  shst:container/shst:account <account:{{account_uuid}}> .
 
-    OPTIONAL { ?dataset  djht:embargo_type       ?embargo_type . }
-    OPTIONAL { ?dataset  djht:embargo_title      ?embargo_title . }
-    OPTIONAL { ?dataset  djht:embargo_reason     ?embargo_reason . }
-    OPTIONAL { ?dataset  djht:embargo_until_date ?embargo_until_date . }
+    OPTIONAL { ?dataset  shst:embargo_type       ?embargo_type . }
+    OPTIONAL { ?dataset  shst:embargo_title      ?embargo_title . }
+    OPTIONAL { ?dataset  shst:embargo_reason     ?embargo_reason . }
+    OPTIONAL { ?dataset  shst:embargo_until_date ?embargo_until_date . }
   }
   FILTER (?dataset = <{{dataset_uri}}>)
 }

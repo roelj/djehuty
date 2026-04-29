@@ -7,16 +7,16 @@ DELETE {
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container rdf:type/rdfs:subClassOf djht:Container ;
-               djht:account         ?account ;
+    ?container rdf:type/rdfs:subClassOf shst:Container ;
+               shst:account         ?account ;
                ?container_predicate ?dataset .
-    ?dataset   djht:private_links/rdf:rest*/rdf:first ?link .
-    ?link      rdf:type             djht:PrivateLink ;
-               djht:id              ?id_string ;
+    ?dataset   shst:private_links/rdf:rest*/rdf:first ?link .
+    ?link      rdf:type             shst:PrivateLink ;
+               shst:id              ?id_string ;
                ?predicate           ?object .
   }
   FILTER (?container = <container:{{container_uuid}}>)
-  FILTER (?container_predicate = djht:draft || ?container_predicate = djht:latest_published_version)
+  FILTER (?container_predicate = shst:draft || ?container_predicate = shst:latest_published_version)
   FILTER (?account   = <account:{{account_uuid}}>)
   {%- if id_string is not none %}
   FILTER (?id_string = "{{id_string}}"^^xsd:string)

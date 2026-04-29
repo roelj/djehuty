@@ -3,20 +3,20 @@
 SELECT DISTINCT ?container_uuid ?dataset_id ((SUM(?{{item_type}}) / COUNT(?version)) AS ?{{item_type}}) ?title ?figshare_url
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container      rdf:type                      djht:DatasetContainer .
-    ?container      djht:dataset_id               ?dataset_id .
-    ?container      djht:total_{{item_type}}      ?{{item_type}} .
-    ?container      djht:latest_published_version ?dataset .
+    ?container      rdf:type                      shst:DatasetContainer .
+    ?container      shst:dataset_id               ?dataset_id .
+    ?container      shst:total_{{item_type}}      ?{{item_type}} .
+    ?container      shst:latest_published_version ?dataset .
 
-    ?dataset        djht:title                    ?title .
-    ?dataset        djht:version                  ?version .
-    ?dataset        djht:figshare_url             ?figshare_url .
-    ?dataset        djht:published_date           ?published_date .
+    ?dataset        shst:title                    ?title .
+    ?dataset        shst:version                  ?version .
+    ?dataset        shst:figshare_url             ?figshare_url .
+    ?dataset        shst:published_date           ?published_date .
     {%- if category_ids is not none: %}
-    ?dataset            djht:categories/rdf:rest*/rdf:first ?category .
-    ?category           djht:id                   ?category_id .
+    ?dataset            shst:categories/rdf:rest*/rdf:first ?category .
+    ?category           shst:id                   ?category_id .
     {%- endif %}
-    OPTIONAL { ?dataset      djht:group_id        ?group_id . }
+    OPTIONAL { ?dataset      shst:group_id        ?group_id . }
 
     BIND(STRAFTER(STR(?container), "container:") AS ?container_uuid)
   }

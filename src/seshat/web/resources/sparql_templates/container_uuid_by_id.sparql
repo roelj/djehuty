@@ -4,8 +4,8 @@ SELECT ?container_uuid
 
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container  a                      djht:{{item_type.capitalize()}}Container ;
-                djht:{{item_type}}_id  {{container_id}} .
+    ?container  a                      shst:{{item_type.capitalize()}}Container ;
+                shst:{{item_type}}_id  {{container_id}} .
     BIND(STRAFTER(STR(?container), "container:") AS ?container_uuid)
   }
 }

@@ -6,26 +6,26 @@ SELECT DISTINCT ?role ?active ?created_date ?email ?first_name ?group_id
                 ?profile_image ?quota
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?account             rdf:type                   djht:Account .
-    ?account             djht:email                 ?email .
+    ?account             rdf:type                   shst:Account .
+    ?account             shst:email                 ?email .
 
-    OPTIONAL { ?account  djht:active                ?active . }
-    OPTIONAL { ?account  djht:created_date          ?created_date . }
-    OPTIONAL { ?account  djht:first_name            ?first_name . }
-    OPTIONAL { ?account  djht:institution_id        ?institution_id . }
-    OPTIONAL { ?account  djht:institution_user_id   ?institution_user_id . }
-    OPTIONAL { ?account  djht:last_name             ?last_name . }
-    OPTIONAL { ?account  djht:maximum_file_size     ?maximum_file_size . }
-    OPTIONAL { ?account  djht:profile_image         ?profile_image . }
-    OPTIONAL { ?account  djht:modified_date         ?modified_date . }
-    OPTIONAL { ?account  djht:role                  ?role . }
-    OPTIONAL { ?account  djht:quota                 ?quota . }
-    OPTIONAL { ?account  djht:domain                ?domain . }
+    OPTIONAL { ?account  shst:active                ?active . }
+    OPTIONAL { ?account  shst:created_date          ?created_date . }
+    OPTIONAL { ?account  shst:first_name            ?first_name . }
+    OPTIONAL { ?account  shst:institution_id        ?institution_id . }
+    OPTIONAL { ?account  shst:institution_user_id   ?institution_user_id . }
+    OPTIONAL { ?account  shst:last_name             ?last_name . }
+    OPTIONAL { ?account  shst:maximum_file_size     ?maximum_file_size . }
+    OPTIONAL { ?account  shst:profile_image         ?profile_image . }
+    OPTIONAL { ?account  shst:modified_date         ?modified_date . }
+    OPTIONAL { ?account  shst:role                  ?role . }
+    OPTIONAL { ?account  shst:quota                 ?quota . }
+    OPTIONAL { ?account  shst:domain                ?domain . }
     OPTIONAL {
-      ?group             rdf:type                   djht:InstitutionGroup ;
-                         djht:association_criteria  ?domain ;
-                         djht:id                    ?group_id ;
-                         djht:parent_id             ?group_parent_id .
+      ?group             rdf:type                   shst:InstitutionGroup ;
+                         shst:association_criteria  ?domain ;
+                         shst:id                    ?group_id ;
+                         shst:parent_id             ?group_parent_id .
     }
     BIND(STRAFTER(STR(?account), "account:") AS ?uuid)
   }

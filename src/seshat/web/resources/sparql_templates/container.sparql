@@ -6,18 +6,18 @@ SELECT DISTINCT ?account_uuid ?draft ?doi ?latest_published_version ?first_onlin
 
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?container            rdf:type                      djht:{{item_type.capitalize()}}Container .
-    OPTIONAL { ?container djht:account                  ?account .           }
-    OPTIONAL { ?container djht:draft                    ?draft .             }
-    OPTIONAL { ?container djht:doi                      ?doi .               }
-    OPTIONAL { ?container djht:first_online_date        ?first_online_date . }
-    OPTIONAL { ?container djht:totals_created_at        ?totals_created_at . }
-    OPTIONAL { ?container djht:total_downloads          ?total_downloads .   }
-    OPTIONAL { ?container djht:total_views              ?total_views .       }
-    OPTIONAL { ?container djht:total_shares             ?total_shares .      }
-    OPTIONAL { ?container djht:total_cites              ?total_cites .       }
-    OPTIONAL { ?container djht:latest_published_version ?latest_published_version .
-               OPTIONAL { ?latest_published_version djht:version   ?latest_published_version_number . }
+    ?container            rdf:type                      shst:{{item_type.capitalize()}}Container .
+    OPTIONAL { ?container shst:account                  ?account .           }
+    OPTIONAL { ?container shst:draft                    ?draft .             }
+    OPTIONAL { ?container shst:doi                      ?doi .               }
+    OPTIONAL { ?container shst:first_online_date        ?first_online_date . }
+    OPTIONAL { ?container shst:totals_created_at        ?totals_created_at . }
+    OPTIONAL { ?container shst:total_downloads          ?total_downloads .   }
+    OPTIONAL { ?container shst:total_views              ?total_views .       }
+    OPTIONAL { ?container shst:total_shares             ?total_shares .      }
+    OPTIONAL { ?container shst:total_cites              ?total_cites .       }
+    OPTIONAL { ?container shst:latest_published_version ?latest_published_version .
+               OPTIONAL { ?latest_published_version shst:version   ?latest_published_version_number . }
              }
 
     BIND(STRAFTER(STR(?account), "account:") AS ?account_uuid)

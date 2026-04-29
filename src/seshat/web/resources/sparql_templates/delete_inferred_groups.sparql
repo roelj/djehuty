@@ -3,18 +3,18 @@
 DELETE {
   GRAPH <{{state_graph}}> {
     ?group      ?predicate          ?object .
-    ?account    djht:group          ?group .
+    ?account    shst:group          ?group .
   }
 }
 WHERE {
   GRAPH <{{state_graph}}> {
-    ?group      rdf:type            djht:InstitutionGroup .
-    ?group      djht:is_inferred    "true"^^xsd:boolean .
+    ?group      rdf:type            shst:InstitutionGroup .
+    ?group      shst:is_inferred    "true"^^xsd:boolean .
     ?group      ?predicate          ?object .
 
     OPTIONAL {
-      ?account    rdf:type           djht:Account .
-      ?account    djht:group         ?group .
+      ?account    rdf:type           shst:Account .
+      ?account    shst:group         ?group .
     }
   }
 }
