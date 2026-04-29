@@ -1,4 +1,4 @@
-AC_INIT(seshat, 26.4~rc3)
+AC_INIT(seshat, 26.4~rc4)
 AM_INIT_AUTOMAKE([foreign tar-ustar])
 AM_PATH_PYTHON([3.9])
 AC_CONFIG_FILES([
