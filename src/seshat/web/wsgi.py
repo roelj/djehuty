@@ -7755,6 +7755,7 @@ class WebServer:
             if supplied_md5 == "d41d8cd98f00b204e9800998ecf8427e":
                 return self.error_400 (request, "Empty file is not allowed.", "EmptyFile")
 
+        output_filename = None
         try:
             dataset   = self.__dataset_by_id_or_uri (dataset_id,
                                                      account_uuid=account_uuid,
