@@ -310,7 +310,7 @@ function render_collaborators_for_dataset (dataset_uuid, may_edit_metadata, call
             let input_settings = { "type": "checkbox" };
             if (collaborator.is_supervisor) { input_settings["disabled"] = "disabled"; }
 
-            column1.html(`${collaborator.first_name} ${collaborator.last_name} (${collaborator.email})${supervisor_badge}${group_member_badge}`);
+            column1.html(`${collaborator.first_name} ${collaborator.last_name ?? ''} (${collaborator.email})${supervisor_badge}${group_member_badge}`);
             let column2 = jQuery("<td/>", { "class": "type-begin" });
             let column3 = jQuery("<td/>", { "class": "type-end" });
             let column4 = jQuery("<td/>");
