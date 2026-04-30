@@ -20,6 +20,11 @@
   </head>
   <body>
     <div id="wrapper" {%- if path == "/" %} class="footer1"{% else %} class="footer2"{% endif %}>
+      {%- if database_down and not maintenance_mode %}
+      <div id="db-down" class="pre-header">
+        <p>The website is having technical difficulties. Saving changes is unavailable, and data may not load.</p>
+      </div>
+      {%- endif %}
       {%- if sandbox_message %}
       <div id="sandbox-message" class="pre-header sandbox-message-css">
         <p>{{sandbox_message | safe}}</p>

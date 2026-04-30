@@ -55,6 +55,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.in_preproduction            = False
         self.using_uwsgi                 = False
         self.maintenance_mode            = False
+        self.sparql_is_up                = False
         self.sandbox_message_css         = ""
         self.sandbox_message             = False
         self.notice_message              = False

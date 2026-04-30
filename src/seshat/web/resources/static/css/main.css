@@ -517,7 +517,7 @@ img { user-select: none; }
 .hidden { font-size: 0; user-select: none; }
 .center { text-align: center; }
 .no-select { user-select: none; }
-#pre-header {
+#db-down, #pre-header {
     display: block;
     width: 100%;
     background: #aa3333;

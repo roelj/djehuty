@@ -507,6 +507,7 @@ class WebServer:
             "in_production":       config.in_production,
             "is_logged_in":        account is not None,
             "may_deposit":         self.db.is_depositor (token, account),
+            "database_down":       not config.sparql_is_up,
             "large_footer":        config.large_footer,
             "maintenance_mode":    config.maintenance_mode,
             "menu":                config.menu,

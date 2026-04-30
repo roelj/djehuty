@@ -43,7 +43,6 @@ class SparqlInterface:
                                          "resources", "sparql_templates")),
                                          autoescape=True)
         self.sparql       = None
-        self.sparql_is_up = False
         self.store        = None
 
     def setup_sparql_endpoint (self):
@@ -92,7 +91,7 @@ class SparqlInterface:
             sys.addaudithook (rdflib_network_audit_hook)
 
         self.ontology = Namespace(config.ontology_url)
-        self.sparql_is_up = True
+        config.sparql_is_up = True
         return None
 
     ## ------------------------------------------------------------------------
@@ -223,9 +222,9 @@ class SparqlInterface:
             if cache_key_string is not None:
                 self.cache.cache_value (prefix, cache_key, results)
 
-            if not self.sparql_is_up:
+            if not config.sparql_is_up:
                 self.log.info ("SPARQL endpoint seems up again.")
-                self.sparql_is_up = True
+                config.sparql_is_up = True
 
         except OSError as error:
             error_type = type(error).__name__
@@ -240,12 +239,12 @@ class SparqlInterface:
                 self.log.error ("SPARQL endpoint returned %d:\n---\n%s\n---",
                                 error.code, error.reason)
                 return []
-            if self.sparql_is_up:
+            if config.sparql_is_up:
                 if error_type == "URLError":
                     self.log.error ("SPARQL endpoint seems down.")
                 else:
                     self.log.error ("SPARQL endpoint seems down due to %s.", error_type)
-                self.sparql_is_up = False
+                config.sparql_is_up = False
             return []
         except AttributeError as error:
             self.log.error ("SPARQL query failed.")
