@@ -1,11 +1,17 @@
 function shorthand_uri (value) {
-    return value.replace("https://ontologies.data.4tu.nl/djehuty/0.0.1/", "shst:")
+    if (typeof ontology_url === 'undefined') {
+	ontology_url = "https://seshat.software/ontology/latest/";
+    }
+    return value.replace(ontology_url, "shst:")
                 .replace("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:")
                 .replace("http://www.w3.org/2000/01/rdf-schema#", "rdfs:");
 }
 
 function longform_uri (value) {
-    return value.replace("shst:", "https://ontologies.data.4tu.nl/djehuty/0.0.1/")
+    if (typeof ontology_url === 'undefined') {
+	ontology_url = "https://seshat.software/ontology/latest/";
+    }
+    return value.replace("shst:", ontology_url)
                 .replace("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
                 .replace("rdfs:", "http://www.w3.org/2000/01/rdf-schema#");
 }

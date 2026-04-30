@@ -3216,7 +3216,8 @@ class WebServer:
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
-        return self.__render_template (request, "admin/exploratory.html")
+        return self.__render_template (request, "admin/exploratory.html",
+                                       ontology_url = config.ontology_url)
 
     def ui_admin_sparql (self, request):
         """Implements /admin/sparql."""

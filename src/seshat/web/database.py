@@ -44,6 +44,7 @@ class SparqlInterface:
                                          autoescape=True)
         self.sparql       = None
         self.store        = None
+        self.ontology     = None
 
     def setup_sparql_endpoint (self):
         """Procedure to be called after setting the 'endpoint' members."""
