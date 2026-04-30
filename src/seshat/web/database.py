@@ -2072,24 +2072,19 @@ class SparqlInterface:
             if existing_links:
                 return self.__append_to_existing_list (link_uri, existing_links)
 
+            arguments = {
+                "account_uuid": account_uuid,
+                # Ignoring is_published and is_latest enables both published and
+                # draft items to be found via the item -> container relationship.
+                "is_published": None,
+                "is_latest":    None,
+                "limit":        1
+            }
             item = None
             if item_type == "dataset":
-                item      = self.datasets (dataset_uuid = item_uuid,
-                                           account_uuid = account_uuid,
-                                           # Ignoring is_published and is_latest
-                                           # enabled both published and draft
-                                           # datasets to be found via the
-                                           # dataset -> container relationship.
-                                           is_published = None,
-                                           is_latest    = None,
-                                           limit        = 1)[0]
+                item = self.datasets (dataset_uuid=item_uuid, **arguments)[0]
             elif item_type == "collection":
-                item      = self.collections (collection_uuid = item_uuid,
-                                              account_uuid = account_uuid,
-                                              # See above.
-                                              is_published = None,
-                                              is_latest    = None,
-                                              limit        = 1)[0]
+                item = self.collections (collection_uuid=item_uuid, **arguments)[0]
 
             if item is None:
                 self.log.error ("Could not find item to insert a private link %s for.",
