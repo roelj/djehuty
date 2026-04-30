@@ -25,7 +25,7 @@
 
 #context if target() == "html" {
     html.elem("head")[
-        #html.elem("style", attrs: (type: "text/css"))[
+        #html.elem("style")[
             #set smartquote(enabled: false)
             :root {
 	      -\-text-color: \#111;
@@ -95,7 +95,7 @@
             nav > ol > li > ol > li > ol > li > span > a { color: var(-\-nav-sub-sub-text-color); }
             nav > ol > li > ol > li > ol > li > span > a:hover { color: var(-\-nav-sub-sub-hover-text-color); }
             .center { text-align: center; }
-            img { display: block; max-width: 760pt; margin: 1em auto 1em auto; padding: auto; }
+            img { display: block; max-width: 760pt; margin: 1em auto 1em auto; }
             figure { background: var(-\-figure-bg-color); border: solid 1pt var(-\-figure-border-color); border-radius: .5em; }
             figcaption { text-align: center;  border-top: solid 1pt var(-\-figure-border-color); border-radius: 0em 0em .5em .5em; background: var(-\-h3-bg-color); padding: .5em; }
             .chapter { margin: auto auto 1em auto; max-width: 1099pt; min-width: 720pt; width: 820pt; background: \#fff; color: var(-\-text-color); padding: 0em; border: solid 1pt var(-\-chapter-border-color); border-radius: .5em; }

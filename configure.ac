@@ -59,7 +59,7 @@ AC_ARG_VAR(BASE_URL, [The URL on which the instance will run.  This is only
                       used to align the documentation.])
 
 dnl Default value for BASE_URL (use without "/" at the end)
-: "${BASE_URL=https://demo.seshat.software/}"
+: "${BASE_URL=https://demo.seshat.software}"
 
 AC_ARG_VAR(GIT_URL, [The URL of the Git repository for the code of this
                      instance.  This is only used to align the documentation.])
