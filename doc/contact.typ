@@ -11,13 +11,12 @@ This software is voluntarily maintained by
 
 #silent-section[Mailing lists]
 
-You can best reach us through the #link("https://djehuty.roelj.com/postorius/lists/devel.djehuty.roelj.com/")[development mailing list],
-which we use for all communication regarding the project.
+You can best reach us by e-mailing #link("mailto:development@seshat.software")[development\@seshat.software].
 
 #silent-section[Reporting security vulnerabilities] <reporting-security-vulnerabilities>
 
 For security-related matters, please e-mail
-#link("mailto:security@djehuty.roelj.com")[security\@djehuty.roelj.com].
+#link("mailto:security@seshat.software")[security\@seshat.software].
 ]
 
 #render_chapter(chapter_text, "Contact")

@@ -12,7 +12,7 @@ to its aims.
 ## Reporting (potential) security issues
 
 For security-related matters, please e-mail
-[security@djehuty.roelj.com](mailto:security@djehuty.roelj.com).  If you are
+[security@seshat.software](mailto:security@seshat.software).  If you are
 (going to be) running an instance of this project and would like to be part of
 the security mailing list, then please write the mailing list.
 
