@@ -141,14 +141,12 @@ RPM packages for more distributions, including Enterprise Linux 9, are
 
 == Debian packages
 
-Debian packages are provided and built for Debian 13.
+A Debian package is provided and built for Debian 13.
 #table(
   columns: (auto, 1fr),
   table.header([*Filename*], [*Description*]),
-    [#link(seshatgiturl + "/releases/download/v" + seshatversion + "/seshat-" + seshatversion + ".deb")[seshat-#(seshatversion)\.deb]],
-  [Binary DEB, to install and run `seshat`.],
-    [#link(seshatgiturl + "/releases/download/v" + seshatversion + "/seshat-" + seshatversion + ".src.deb")[seshat-#(seshatversion)\.src\.deb]],
-  [Source DEB, to (re)build from source code.],
+    [#link(seshatgiturl + "/releases/download/v" + seshatversion + "/seshat_" + seshatversion + "-1_all.deb")[seshat\_#(seshatversion)-1\_all\.deb]],
+    [Binary DEB, to install and run `seshat`.],
 )
 
 ]
