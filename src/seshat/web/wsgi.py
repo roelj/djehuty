@@ -3227,7 +3227,8 @@ class WebServer:
             return self.error_403 (request)
 
         if request.method == "GET":
-            return self.__render_template (request, "admin/sparql.html")
+            return self.__render_template (request, "admin/sparql.html",
+                                           ontology_url = config.ontology_url)
 
         if request.method == "POST":
             query  = request.get_data().decode("utf-8")
