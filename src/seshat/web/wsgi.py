@@ -7891,9 +7891,6 @@ class WebServer:
                         chunk = input_stream.read (content_to_read)
                         file_size += output_stream.write (chunk)
                         md5.update (chunk)
-                        content_to_read = 0
-                    else:
-                        md5.update (bytes(0))
 
                     # Make the file read-only from here on.
                     if os.name != 'nt':
