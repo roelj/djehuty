@@ -2910,11 +2910,11 @@ class WebServer:
                 if feed_expire_time is not None:
                     delta = current_time + feed_expire_time
 
-                self.locks.lock (locks.LockTypes.PRIVATE_LINKS)
-                self.db.insert_private_link (item["uuid"], account_uuid, whom=whom,
-                                             purpose=purpose, expires_date=delta,
-                                             anonymize=anonymize, item_type=item_type)
-                self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
+                with self.locks.locked (locks.LockTypes.PRIVATE_LINKS):
+                    self.db.insert_private_link (item["uuid"], account_uuid, whom=whom,
+                                                 purpose=purpose, expires_date=delta,
+                                                 anonymize=anonymize, item_type=item_type)
+
                 return redirect (f"/my/{item_type}s/{item_uuid}/private_links", code=302)
             except validator.ValidationException as error:
                 return self.error_400 (request, error.message, error.code)
@@ -2935,14 +2935,12 @@ class WebServer:
             return self.error_403 (request)
 
         response = redirect (request.referrer, code=302)
-        self.locks.lock (locks.LockTypes.PRIVATE_LINKS)
-        if self.db.delete_private_links (item["container_uuid"],
-                                         account_uuid,
-                                         private_link_id) is None:
-            self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
-            return self.error_500()
+        with self.locks.locked (locks.LockTypes.PRIVATE_LINKS):
+            if self.db.delete_private_links (item["container_uuid"],
+                                             account_uuid,
+                                             private_link_id) is None:
+                return self.error_500()
 
-        self.locks.unlock (locks.LockTypes.PRIVATE_LINKS)
         return response
 
     def ui_collection_delete_private_link (self, request, collection_uuid, link_id):
@@ -7857,9 +7855,9 @@ class WebServer:
             computed_file_size = request.content_length - read_ahead_bytes - headers_len - len(expected_end)
             bytes_to_read      = bytes_to_read - read_ahead_bytes - headers_len
             content_to_read    = bytes_to_read - len(expected_end)
+            file_uuid          = None
 
-            try:
-                self.locks.lock (locks.LockTypes.FILE_LIST)
+            with self.locks.locked (locks.LockTypes.FILE_LIST):
                 file_uuid = self.db.insert_file (
                     name          = filename,
                     size          = computed_file_size,
@@ -7867,13 +7865,12 @@ class WebServer:
                     upload_url    = f"/article/{dataset_id}/upload",
                     upload_token  = self.token_from_request (request),
                     dataset_uri   = dataset["uri"],
-                account_uuid  = account_uuid)
-            except RuntimeError as error:
-                self.locks.unlock (locks.LockTypes.FILE_LIST)
+                    account_uuid  = account_uuid)
+
+            if file_uuid is None:
                 self.error_500 (("Failed to create file metadata for "
                                  f"{dataset_id}: {error}."))
 
-            self.locks.unlock (locks.LockTypes.FILE_LIST)
             output_filename = os.path.join (config.storage, f"{dataset_id}_{file_uuid}")
 
             computed_md5 = None
