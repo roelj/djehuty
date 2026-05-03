@@ -7900,11 +7900,15 @@ class WebServer:
                         os.fchmod (destination_fd, 0o400)  # pylint: disable=no-member
             except BadRequest:
                 is_incomplete = True
-                self.log.error ("Failed to write %s to disk: possible that bad internet connection on user's side or page refreshed/closed during upload.", output_filename)
+                self.log.error (("Failed to write %s to disk: possible that "
+                                 "bad internet connection on user's side or "
+                                 "page refreshed/closed during upload."),
+                                 output_filename)
 
             if computed_file_size != file_size:
                 is_incomplete = True
-                self.log.error ("Computed file size (%d) and actual file size (%d) for uploaded file mismatch.",
+                self.log.error (("Computed file size (%d) and actual file size "
+                                 "(%d) for uploaded file mismatch."),
                                 computed_file_size, file_size)
 
             bytes_to_read -= file_size
