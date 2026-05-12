@@ -9836,7 +9836,7 @@ class WebServer:
                     if chunk:
                         output_stream.write (chunk)
 
-    def __oci_registry_error (self, request, code, message, status):
+    def __oci_registry_error (self, code, message, status):
         """Return an OCI-formatted error response."""
         response = self.response (json.dumps ({
             "errors": [{"code": code, "message": message}]
@@ -9845,9 +9845,9 @@ class WebServer:
         response.headers["Docker-Distribution-API-Version"] = "registry/2.0"
         return response
 
-    def __registry_unauthorized (self, request, message="Authentication required."):
+    def __registry_unauthorized (self, message="Authentication required."):
         """Return a 401 response carrying the Bearer challenge header."""
-        response = self.__oci_registry_error (request, "UNAUTHORIZED", message, 401)
+        response = self.__oci_registry_error ("UNAUTHORIZED", message, 401)
         www_auth = f'Bearer realm="{config.base_url}/oci/token",service="{config.site_name}"'
         response.headers["Www-Authenticate"] = www_auth
         return response
@@ -9858,11 +9858,10 @@ class WebServer:
         if token == config.oci_anonymous_token_value:
             if request.method in ("GET", "HEAD"):
                 return None
-            return self.__registry_unauthorized (request,
-                "Anonymous tokens are not permitted for write operations.")
+            return self.__registry_unauthorized ()
 
         if self.account_uuid_from_request (request, allow_impersonation=False) is None:
-            return self.__registry_unauthorized (request)
+            return self.__registry_unauthorized ()
         return None
 
     def api_oci_registry_token (self, request):
@@ -9876,14 +9875,12 @@ class WebServer:
             try:
                 decoded = base64.b64decode (authorization[6:], validate=True).decode ("utf-8")
             except (binascii.Error, ValueError):
-                return self.__registry_unauthorized (request,
-                    "Malformed Basic credentials.")
+                return self.__registry_unauthorized ("Malformed Basic credentials.")
             _, _, candidate = decoded.partition (":")
             if candidate:
                 account = self.db.account_by_session_token (candidate)
                 if account is None:
-                    return self.__registry_unauthorized (request,
-                        "Invalid credentials.")
+                    return self.__registry_unauthorized ("Invalid credentials.")
                 token = candidate
 
         return self.response (json.dumps ({
@@ -9959,8 +9956,8 @@ class WebServer:
                 return auth_failure
 
             if not os.path.isfile (manifest_path):
-                return self.__oci_registry_error (request, "MANIFEST_UNKNOWN",
-                                              f"No such manifest: {reference}.", 404)
+                return self.__oci_registry_error ("MANIFEST_UNKNOWN",
+                                                  f"No such manifest: {reference}.", 404)
 
             try:
                 with open (content_type_path, encoding="utf-8") as stream:
@@ -10017,8 +10014,8 @@ class WebServer:
                 return auth_failure
 
             if not os.path.isfile (manifest_path):
-                return self.__oci_registry_error (request, "MANIFEST_UNKNOWN",
-                                               f"No such manifest: {reference}.", 404)
+                return self.__oci_registry_error ("MANIFEST_UNKNOWN",
+                                                  f"No such manifest: {reference}.", 404)
 
             # Delete every reference that resolves to the same content so
             # clients cannot fetch a tag after its digest has been removed.
@@ -10044,7 +10041,7 @@ class WebServer:
 
         return self.error_405 (["GET", "HEAD", "PUT", "DELETE"])
 
-    def api_oci_registry_blob (self, request, name, digest):
+    def api_oci_registry_blob (self, request, name, digest):  # pylint: disable=unused-argument
         """Implements /v2/<name>/blobs/<digest>."""
 
         blob_path = self.__oci_registry_blob_path (digest)
@@ -10055,8 +10052,8 @@ class WebServer:
                 return auth_failure
 
             if not os.path.isfile (blob_path):
-                return self.__oci_registry_error (request, "BLOB_UNKNOWN",
-                                               f"No such blob: {digest}.", 404)
+                return self.__oci_registry_error ("BLOB_UNKNOWN",
+                                                  f"No such blob: {digest}.", 404)
 
             if request.method == "HEAD":
                 response = self.respond_204 ()
@@ -10077,7 +10074,7 @@ class WebServer:
             try:
                 os.remove (blob_path)
             except OSError:
-                return self.__oci_registry_error (request, "BLOB_UNKNOWN", f"No such blob: {digest}.", 404)
+                return self.__oci_registry_error ("BLOB_UNKNOWN", f"No such blob: {digest}.", 404)
             response = self.respond_204 ()
             response.status_code = 202
             return response
@@ -10103,7 +10100,7 @@ class WebServer:
             computed_digest = self.__oci_registry_compute_sha256 (blob_path)
             if computed_digest != supplied_digest:
                 os.remove (blob_path)
-                return self.__oci_registry_error (request, "DIGEST_INVALID",
+                return self.__oci_registry_error ("DIGEST_INVALID",
                     (f"Digest mismatch: computed {computed_digest}, "
                      f"got {supplied_digest}."), 400)
             response = self.respond_204 ()
@@ -10136,8 +10133,8 @@ class WebServer:
 
         upload_path = self.__oci_registry_upload_path (upload_uuid)
         if not os.path.isfile (upload_path):
-            return self.__oci_registry_error (request, "BLOB_UPLOAD_UNKNOWN",
-                                           f"No such upload: {upload_uuid}.", 404)
+            return self.__oci_registry_error ("BLOB_UPLOAD_UNKNOWN",
+                                              f"No such upload: {upload_uuid}.", 404)
 
         if request.method == "PATCH":
             self.__oci_registry_stream_to_file (request, upload_path)
@@ -10151,7 +10148,7 @@ class WebServer:
         if request.method == "PUT":
             supplied_digest = request.args.get ("digest")
             if not supplied_digest:
-                return self.__oci_registry_error (request, "DIGEST_INVALID",
+                return self.__oci_registry_error ("DIGEST_INVALID",
                     "A digest query parameter is required to finalise an upload.",
                     400)
 
@@ -10161,7 +10158,7 @@ class WebServer:
 
             computed_digest = self.__oci_registry_compute_sha256 (upload_path)
             if computed_digest != supplied_digest:
-                return self.__oci_registry_error (request, "DIGEST_INVALID",
+                return self.__oci_registry_error ("DIGEST_INVALID",
                     (f"Digest mismatch: computed {computed_digest}, "
                      f"expected {supplied_digest}."), 400)
 
