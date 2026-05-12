@@ -48,6 +48,37 @@
           -\-nav-sub-sub-hover-text-color: \#6678a8;
 	  -\-background-pattern-color: \#f3f3f3;
         }
+	\@media (prefers-color-scheme: dark) {
+	:root {
+	  -\-text-color: \#e6e4f0;
+	  -\-background-color: \#14121c;
+	  -\-block-background: \#1a1826;
+	  -\-chapter-header-color: \#1f1a3d;
+	  -\-sidebar-chapter-color: \#4a4380;
+	  -\-toc-header-color: \#1f1a3d;
+	  -\-toc-header-text-color: \#e6e4f0;
+	  -\-h2-fg-color: \#e6e4f0;
+	  -\-h3-bg-color: \#2a2640;
+	  -\-h4-bg-color: \#221f33;
+	  -\-table-header-bg-color: \#2f2866;
+	  -\-code-bg-color: \#1c1929;
+	  -\-code-border-color: \#34304a;
+	  -\-figure-border-color: \#34304a;
+	  -\-figure-bg-color: \#1c1929;
+	  -\-chapter-border-color: \#34304a;
+	  -\-nav-sub-border-bg-color: \#34304a;
+	  -\-nav-sub-hover-bg-color: \#2a2640;
+	  -\-nav-sub-odd-bg-color: \#1c1929;
+	  -\-nav-sub-even-bg-color: \#221f33;
+	  -\-nav-sub-text-color: \#d8a0c0;
+	  -\-nav-sub-sub-text-color: \#a0b4d8;
+	  -\-text-anchor-color: \#d8a0c0;
+	  -\-nav-sub-hover-text-color: \#a86687;
+	  -\-nav-sub-sub-hover-text-color: \#6678a8;
+	  -\-background-pattern-color: \#1a1826;
+	}
+	img { filter: invert(0.92) hue-rotate(180deg); }
+	}
         \@font-face { font-family: 'SourceSans'; src: url('/static/fonts/SourceSansPro-Regular.ttf') format('truetype'); font-weight: normal; font-style: normal; }
         \@font-face { font-family: 'SourceSans-Italic'; src: url('/static/fonts/SourceSansPro-Italic.ttf') format('truetype'); font-weight: normal; font-style: italic; }
         \@font-face { font-family: 'SourceSans-Bold'; src: url('/static/fonts/SourceSansPro-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
@@ -58,7 +89,7 @@
         \@media (max-width: 1099pt) {
           .table-of-contents { margin: auto auto 1em auto; max-width: 1099pt; min-width: 720pt; width: 820pt; background: var(-\-block-background); color: var(-\-text-color); padding: 0em; border: solid 1pt var(-\-chapter-border-color); border-radius: 1em 1em .5em .5em; }
           .chapter { margin: auto auto 1em auto; }
-          section[role=doc-endnotes] { margin-left: auto; }
+          section[role=doc-endnotes] { margin-left: auto; color: var(-\-text-color); }
         }
         \@media (min-width: 1099pt) {
           .chapter { margin-left: 279pt !important; }
@@ -67,7 +98,7 @@
           nav > ol > li > ol > li > ol > li > div > span { display: none; }
           nav > ol > li > ol > li > span >a,
           nav > ol > li > ol > li > div > span > a { font-size: 0.9em; }
-          section[role=doc-endnotes] { margin-left: 279pt; }
+          section[role=doc-endnotes] { margin-left: 279pt; color: var(-\-text-color); }
 	  .table-of-contents > nav > ol > li > ol { display: none; }
 	  .table-of-contents nav > ol > li > ol a, .table-of-contents nav > ol > li > ol span { text-decoration: none !important; }
 	  .table-of-contents nav > ol > li > ol > li { border: solid 1px var(-\-nav-sub-border-bg-color); border-radius: .4em; padding: 2px 2px 2px 6px; margin-bottom: 5px; }
