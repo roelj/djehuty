@@ -9993,7 +9993,7 @@ class WebServer:
                 # Store the manifest twice: under the client-supplied reference
                 # (tag or digest) and under its computed digest, so lookups by
                 # either work.  The .ct sidecar records the Content-Type.
-                for ref in {reference, digest}:
+                for ref in {reference, digest}:  # pylint: disable=use-sequence-for-iteration
                     target = os.path.join (manifest_dir, ref)
                     with open (target, "wb") as stream:
                         stream.write (data)
@@ -10114,7 +10114,7 @@ class WebServer:
         upload_path = self.__oci_registry_upload_path (upload_uuid)
         os.makedirs (os.path.dirname (upload_path), mode=0o700, exist_ok=True)
         # Create the (empty) upload file so subsequent PATCH calls can append.
-        open (upload_path, "wb").close ()
+        os.close (os.open (upload_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600))
 
         response = self.respond_204 ()
         response.status_code = 202
