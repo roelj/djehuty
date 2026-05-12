@@ -10005,7 +10005,6 @@ class WebServer:
             finally:
                 self.locks.unlock (locks.LockTypes.OCI_REGISTRY)
 
-            self.log.info ("Stored manifest %s/%s (%s).", name, reference, digest)
             response = self.respond_204 ()
             response.status_code = 201
             response.headers["Location"] = f"/v2/{name}/manifests/{reference}"
@@ -10079,7 +10078,6 @@ class WebServer:
                 os.remove (blob_path)
             except OSError:
                 return self.__oci_registry_error (request, "BLOB_UNKNOWN", f"No such blob: {digest}.", 404)
-            self.log.info ("Removed blob %s from %s.", digest, name)
             response = self.respond_204 ()
             response.status_code = 202
             return response
@@ -10108,8 +10106,6 @@ class WebServer:
                 return self.__oci_registry_error (request, "DIGEST_INVALID",
                     (f"Digest mismatch: computed {computed_digest}, "
                      f"got {supplied_digest}."), 400)
-            self.log.info ("Stored blob %s for %s (monolithic).",
-                           supplied_digest, name)
             response = self.respond_204 ()
             response.status_code = 201
             response.headers["Location"] = f"/v2/{name}/blobs/{supplied_digest}"
@@ -10122,12 +10118,10 @@ class WebServer:
         os.makedirs (os.path.dirname (upload_path), mode=0o700, exist_ok=True)
         # Create the (empty) upload file so subsequent PATCH calls can append.
         open (upload_path, "wb").close ()
-        self.log.info ("Started upload session %s for %s.", upload_uuid, name)
 
         response = self.respond_204 ()
         response.status_code = 202
         response.headers["Location"] = f"/v2/{name}/blobs/uploads/{upload_uuid}"
-        #response.headers["Docker-Upload-UUID"] = upload_uuid
         response.headers["Range"] = "0-0"
         return response
 
@@ -10151,7 +10145,6 @@ class WebServer:
             response = self.respond_204 ()
             response.status_code = 202
             response.headers["Location"] = f"/v2/{name}/blobs/uploads/{upload_uuid}"
-            #response.headers["Docker-Upload-UUID"] = upload_uuid
             response.headers["Range"] = f"0-{max(new_size - 1, 0)}"
             return response
 
@@ -10175,8 +10168,6 @@ class WebServer:
             blob_path = self.__oci_registry_blob_path (supplied_digest)
             os.makedirs (os.path.dirname (blob_path), mode=0o700, exist_ok=True)
             os.replace (upload_path, blob_path)
-            self.log.info ("Stored blob %s for %s (chunked).",
-                           supplied_digest, name)
 
             response = self.respond_204 ()
             response.status_code = 201
