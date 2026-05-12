@@ -15,6 +15,7 @@ class LockTypes(Enum):
     PRIVATE_LINKS = 2
     AUTHORS       = 3
     SUBMIT_DATASET = 4
+    OCI_REGISTRY  = 5
 
 class LockAcquisitionTimeout(Exception):
     """Raised when a lock could not be acquired within the timeout."""

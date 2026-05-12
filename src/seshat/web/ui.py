@@ -814,6 +814,12 @@ def read_configuration_file (server, config_file, logger, config_files):
         elif config.iiif_cache_storage is None:
             config.iiif_cache_storage = os.path.join (config.storage, "iiif")
 
+        oci_registry_root = xml_root.find ("oci-registry-root")
+        if oci_registry_root is not None:
+            config.oci_registry_storage = oci_registry_root.text
+        elif config.oci_registry_storage is None:
+            config.oci_registry_storage = os.path.join (config.storage, "oci-registry")
+
         s3_cache = xml_root.find ("s3-cache-root")
         if s3_cache is not None:
             config.s3_cache_storage = s3_cache.text
@@ -1197,6 +1203,12 @@ def main (config_file=None, run_internal_server=True, initialize=True,
                 os.makedirs (config.iiif_cache_storage, mode=0o700, exist_ok=True)
             except PermissionError:
                 logger.error ("Cannot create %s directory.", config.iiif_cache_storage)
+
+        if config.oci_registry_storage is not None and not inside_reload:
+            try:
+                os.makedirs (config.oci_registry_storage, mode=0o700, exist_ok=True)
+            except PermissionError:
+                logger.error ("Cannot create %s directory.", config.oci_registry_storage)
 
         server.db.setup_sparql_endpoint ()
 
