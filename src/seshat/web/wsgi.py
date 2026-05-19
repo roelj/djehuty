@@ -93,8 +93,6 @@ class WebServer:
             ## UI
             ## ----------------------------------------------------------------
             R("/",                                                               self.ui_home),
-            R("/portal",                                                         self.ui_redirect_to_home),
-            R("/browse",                                                         self.ui_redirect_to_home),
             R("/ping",                                                           self.ping),
             R("/doc",                                                            self.ui_doc),
             R("/doc/",                                                           self.ui_doc),
@@ -1682,13 +1680,6 @@ class WebServer:
 
     ## API CALLS
     ## ------------------------------------------------------------------------
-
-    def ui_redirect_to_home (self, request):
-        """Implements /."""
-        if self.accepts_html (request, strict=True):
-            return redirect ("/", code=301)
-
-        return self.response (json.dumps({ "status": "OK" }))
 
     def ping (self, request):
         """Implements /ping."""
