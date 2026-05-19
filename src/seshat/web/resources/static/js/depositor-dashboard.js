@@ -40,8 +40,22 @@ function submit_storage_request (event) {
     });
 }
 
+function delete_session (event) {
+    stop_event_propagation (event);
+    let session_uuid = event.currentTarget.id;
+    if (session_uuid.startsWith("session-")) { session_uuid = session_uuid.slice(8) }
+    jQuery.ajax({
+	type: "DELETE",
+	url: `/v3/sessions/${session_uuid}`
+    }).done(function () { window.location.pathname = "/my/dashboard"; })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+          show_message ("failure", "<p>Failed to remove session.</p>");
+      });
+}
+
 jQuery(document).ready(function (){
     new Quill("#quota-reason", { modules: quill_modules, theme: 'snow' });
     jQuery("#request-more-storage").on("click", toggle_storage_request);
     jQuery("#submit-storage-request").on("click", submit_storage_request);
+    jQuery(".delete-session").on("click", delete_session);
 });

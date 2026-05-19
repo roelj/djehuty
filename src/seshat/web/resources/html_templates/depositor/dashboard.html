@@ -103,7 +103,7 @@ jQuery(document).ready(function (){
         {% endif %}
       </td>
       <td>{{session.created_date | default("Unknown", False)}}</td>
-      <td>{%- if session_token != session.token %}<a href="/my/sessions/{{session.uuid}}/delete" class="fas fa-trash-can" title="Remove"></a>{% endif %}</td>
+      <td>{%- if session_token != session.token %}<a href="#" id="session-{{session.uuid}}" class="delete-session fas fa-trash-can" title="Remove"></a>{% endif %}</td>
     </tr>
     {%- endfor %}
   </tbody>

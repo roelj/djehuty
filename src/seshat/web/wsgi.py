@@ -312,6 +312,7 @@ class WebServer:
             R("/v3/datasets/<dataset_uuid>/collaborators/<collaborator_uuid>",   self.api_v3_update_collaborators),
             R("/v3/accounts/search",                                             self.api_v3_accounts_search),
             R("/v3/authors/<author_uuid>",                                       self.api_v3_author_details),
+            R("/v3/sessions/<session_uuid>",                                     self.api_v3_session_details),
 
             ## RO-Crates
             ## ----------------------------------------------------------------
@@ -6658,6 +6659,22 @@ class WebServer:
                 return self.error_400 (request, error.message, error.code)
 
         return self.error_405 (["GET", "PUT"])
+
+    def api_v3_session_details (self, request, session_uuid):
+        """Implements /v3/sessions/<session_uuid>."""
+
+        account_uuid = self.account_uuid_from_request (request)
+        if account_uuid is None:
+            return self.error_authorization_failed (request)
+
+        if not validator.is_valid_uuid (session_uuid):
+            return self.error_404 (request)
+
+        if request.method == "DELETE":
+            self.db.delete_session_by_uuid (account_uuid, session_uuid)
+            return self.respond_204 ()
+
+        return self.error_405 ("DELETE")
 
     def __reorder_authors_for_item (self, request, container_uuid):
         """Generalization for api_v3_[datasets|collections]_authors_reorder."""
