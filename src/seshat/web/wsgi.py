@@ -9806,6 +9806,10 @@ class WebServer:
 
     def api_oci_registry_version (self, request):
         """Implements GET /v2/."""
+
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
+
         if request.method not in ("GET", "HEAD"):
             return self.error_405 (["GET", "HEAD"])
 
@@ -9820,6 +9824,10 @@ class WebServer:
 
     def api_oci_registry_catalog (self, request):
         """Implements /v2/_catalog."""
+
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
+
         handler = self.default_error_handling (request, "GET", "application/json")
         if handler is not None:
             return handler
@@ -9841,6 +9849,10 @@ class WebServer:
 
     def api_oci_registry_tags (self, request, name):
         """Implements /v2/<name>/tags/list."""
+
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
+
         handler = self.default_error_handling (request, "GET", "application/json")
         if handler is not None:
             return handler
@@ -9861,6 +9873,9 @@ class WebServer:
 
     def api_oci_registry_manifest (self, request, name, reference):
         """Implements /v2/<name>/manifests/<reference>."""
+
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
 
         manifest_dir  = self.__oci_registry_manifest_dir (name)
         manifest_path = os.path.join (manifest_dir, reference)
@@ -9960,6 +9975,9 @@ class WebServer:
     def api_oci_registry_blob (self, request, name, digest):  # pylint: disable=unused-argument
         """Implements /v2/<name>/blobs/<digest>."""
 
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
+
         blob_path = self.__oci_registry_blob_path (digest)
 
         if request.method in ("GET", "HEAD"):
@@ -9999,6 +10017,10 @@ class WebServer:
 
     def api_oci_registry_blob_upload_start (self, request, name):
         """Implements /v2/<name>/blobs/uploads/."""
+
+        if not config.enable_oci_registry:
+            return self.error_404 (request)
+
         if request.method != "POST":
             return self.error_405 (["POST"])
 
@@ -10040,7 +10062,8 @@ class WebServer:
 
     def api_oci_registry_blob_upload (self, request, name, upload_uuid):
         """Implements /v2/<name>/blobs/uploads/<upload_uuid>."""
-        if not validator.is_valid_uuid (upload_uuid):
+
+        if not (config.enable_oci_registry and validator.is_valid_uuid (upload_uuid)):
             return self.error_404 (request)
 
         auth_failure = self.__registry_require_auth (request)

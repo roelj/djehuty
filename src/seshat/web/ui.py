@@ -763,6 +763,9 @@ def read_configuration_file (server, config_file, logger, config_files):
         config.enable_iiif = read_boolean_value (xml_root, "enable-iiif",
                                                  config.enable_iiif, logger)
 
+        config.enable_oci_registry = read_boolean_value (xml_root, "enable-oci-registry",
+                                                         config.enable_oci_registry, logger)
+
         config.delay_inserting_log_entries = read_boolean_value (xml_root, "delay-inserting-log-entries",
                                                                  config.delay_inserting_log_entries, logger)
 

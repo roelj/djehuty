@@ -385,6 +385,18 @@ manipulation. The following parameters can be configured:
   [`iiif-cache-root`],  [The directory to store the output of IIIF Image API requests to avoid re-computing the image.],
 )
 
+== Configuring OCI registry support
+
+`seshat` has built-in support for the OCI registry v2 API.  The following
+configuration options are available:
+
+#table(
+  columns: (auto, 1fr),
+  table.header([*Option*], [*Description*]),
+  [`enable-oci-registry`], [Enable support for the built-in OCI registry (defaults to `0`.],
+  [`oci-registry-root`],   [The directory to store the container images in.],
+)
+
 == Customizing looks
 
 With the following options, the instance can be branded as necessary.

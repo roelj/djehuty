@@ -65,6 +65,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.show_latest_datasets        = True
         self.disable_2fa                 = False
         self.enable_iiif                 = False
+        self.enable_oci_registry         = False
         self.disable_collaboration       = False
         self.automatic_login_email       = None
         self.handle_certificate_path     = None
