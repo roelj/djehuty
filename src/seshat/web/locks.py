@@ -13,7 +13,6 @@ class LockTypes(Enum):
     """Enumeration of lock types."""
     FILE_LIST     = 1
     PRIVATE_LINKS = 2
-    AUTHORS       = 3
     SUBMIT_DATASET = 4
     OCI_REGISTRY  = 5
 
