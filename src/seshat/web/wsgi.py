@@ -2017,7 +2017,7 @@ class WebServer:
 
             if mfa_token is None:
                 response = redirect ("/my/dashboard", code=302)
-                response.set_cookie (key=self.cookie_key, value=token, samesite="Strict", secure=config.in_production)
+                response.set_cookie (key=self.cookie_key, value=token, samesite="Lax", secure=config.in_production)
                 return response
 
             ## Send e-mail
@@ -2029,7 +2029,7 @@ class WebServer:
                 "2fa_token", token = mfa_token)
 
             response = redirect (f"/my/sessions/{session_uuid}/activate", code=302)
-            response.set_cookie (key=self.cookie_key, value=token, secure=config.in_production, samesite="Strict")
+            response.set_cookie (key=self.cookie_key, value=token, samesite="Lax", secure=config.in_production)
             return response
 
         return self.error_500 ("Failed to complete the log in procedure for an unknown reason.")
@@ -2176,8 +2176,8 @@ class WebServer:
         except (TypeError, KeyError):
             pass
 
-        sessions     = self.db.sessions (account_uuid)
-        return self.__render_template (
+        sessions = self.db.sessions (account_uuid)
+        response = self.__render_template (
             request, "depositor/dashboard.html",
             storage_used = pretty_print_size (storage_used),
             quota        = pretty_print_size (account_quota),
@@ -2185,6 +2185,11 @@ class WebServer:
             percentage_used = percentage_used,
             documentation_url = config.documentation_url,
             sessions     = sessions)
+
+        # 'Upgrade' SameSite from "Lax" to "Strict".
+        token = self.token_from_cookie (request)
+        response.set_cookie (key=self.cookie_key, value=token, samesite="Strict", secure=config.in_production)
+        return response
 
     def __datasets_with_storage_usage (self, datasets):
         for dataset in datasets:
