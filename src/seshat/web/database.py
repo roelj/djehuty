@@ -1639,7 +1639,7 @@ class SparqlInterface:
         if self.add_triples_from_graph (graph):
             self.cache.invalidate_by_prefix ("accounts")
 
-            if email is not None and (first_name is not None or last_name is not None):
+            if email is not None and ((first_name is not None or last_name is not None) or orcid_id):
                 account_uuid = rdf.uri_to_uuid (account_uri)
                 author_uuid = self.insert_author (
                     first_name   = first_name,
