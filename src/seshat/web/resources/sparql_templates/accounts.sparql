@@ -58,10 +58,10 @@ WHERE {
   {% if filters is not none %}{{filters | safe}}{% endif %}
 
   {%- if search_for is not none %}
-  FILTER (CONTAINS (UCASE (STR (?email)),      UCASE ({{search_for | safe}})) ||
-          CONTAINS (UCASE (STR (?first_name)), UCASE ({{search_for | safe}})) ||
-          CONTAINS (UCASE (STR (?last_name)),  UCASE ({{search_for | safe}})) ||
-          CONTAINS (UCASE (STR (?orcid)),      UCASE ({{search_for | safe}})))
+  FILTER (CONTAINS (LCASE (STR (?email)),      LCASE ({{search_for | safe}})) ||
+          CONTAINS (LCASE (STR (?first_name)), LCASE ({{search_for | safe}})) ||
+          CONTAINS (LCASE (STR (?last_name)),  LCASE ({{search_for | safe}})) ||
+          CONTAINS (LCASE (STR (?orcid)),      LCASE ({{search_for | safe}})))
   {%- endif %}
 }
 {% endblock %}
