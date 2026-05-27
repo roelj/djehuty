@@ -52,6 +52,7 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.site_shorttag               = "seshat"
         self.support_email_address       = ""
         self.startup_timestamp           = 0
+        self.disable_account_creation    = False
         self.allow_crawlers              = False
         self.in_production               = False
         self.in_preproduction            = False

@@ -1860,6 +1860,10 @@ class WebServer:
 
             account_uuid = self.db.account_uuid_by_orcid (orcid_record['orcid'])
             if account_uuid is None:
+                if config.disable_account_creation:
+                    return self.error_403 (request,
+                        ("Account creation disabled so an account for "
+                         f"{orcid_record['orcid']} could not be created."))
                 try:
                     account_uuid = self.db.insert_account (
                         # We don't receive the user's e-mail address,
@@ -1943,6 +1947,11 @@ class WebServer:
 
                         self.log.access ("Account %s logged in via SAML.", account_uuid) #  pylint: disable=no-member
                     else:
+                        if config.disable_account_creation:
+                            return self.error_403 (request,
+                                ("Account creation disabled so an account for "
+                                 f"{saml_record['email']} could not be created."))
+
                         account_uuid = self.db.insert_account (
                             email       = saml_record["email"],
                             first_name  = value_or_none (saml_record, "first_name"),

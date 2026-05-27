@@ -30,6 +30,7 @@ configuration file, for which an example is available at
   [`cache-root`],             [`seshat` can cache query responses to lower the load on the database server. Specify the directory where to store cache files. This element takes an attribute `clear-on-start`, and when set to 1, it will remove all cache files on start-up of `seshat`.],
   [`profile-images-root`],    [Users can upload a profile image in `seshat`. This option should point to a filesystem directory where these profile images can be stored.],
   [`disable-2fa`],            [Accounts with privileges receive a code by e-mail as a second factor when logging in. Setting this option to 1 disables the second factor authentication.],
+  [`disable-account-creation`], [When set to 1, new accounts cannot be created, effectively disabling new users from signing up. The default is 0.],
   [`sandbox-message`],        [Display a message on the top of every page.],
   [`notice-message`],         [Display a message on the main page.],
   [`maintenance-mode`],       [When set to 1, all HTTP requests result in the displayment of a maintenance message. Use this option while backing up the database, or when performing major updates.],
