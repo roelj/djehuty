@@ -147,12 +147,6 @@
         "type": "data"
     },
     {
-        "url": "https://doi.org/10.4121/resource:terms_of_use",
-        "value": 98,
-        "name": "4TU General Terms of Use",
-        "type": "legacy"
-    },
-    {
         "url": "https://creativecommons.org/publicdomain/zero/1.0/",
         "value": 2,
         "name": "CC0",
