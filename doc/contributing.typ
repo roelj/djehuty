@@ -41,12 +41,11 @@ If all went well, we will now be able to run `seshat`:
 
 Invoking `seshat web` starts the web interface of `seshat`. On what
 port it makes itself available can be configured in its configuration file.
-An example of a configuration file can be found in
-`etc/seshat/seshat-example-config.xml`. We will use the example
-configuration as the basis to configure it for the development environment.
+An example of a configuration file can be found in `etc/seshat.xml`. We will
+use this file as the basis to configure our development environment.
 
 ```bash
-[env]$ cp etc/seshat/seshat-example-config.xml config.xml
+[env]$ cp etc/seshat.xml config.xml
 ```
 
 In the remainder of the chapter we will assume a value of `127.0.0.1` for

@@ -112,11 +112,11 @@ store its state.
 ## Run the web service
 
 To start the web service, we recommend copying the
-[example configuration](./etc/seshat/seshat-example-config.xml)
+[example configuration](./etc/seshat.xml)
 and go from there:
 
 ```python
-cp etc/seshat/seshat-example-config.xml seshat.xml
+cp etc/seshat.xml seshat.xml
 ```
 
 ### First run

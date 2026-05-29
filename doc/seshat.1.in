@@ -55,7 +55,7 @@ Show a help message.
 Show versioning information.
 .SH FILES
 .TP
-.I /etc/seshat/seshat-example-config.xml
+.I /etc/seshat.xml
 Example configuration file.
 .SH "SEE ALSO"
 The full documentation for

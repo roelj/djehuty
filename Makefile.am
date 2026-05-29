@@ -9,12 +9,14 @@ if HAVE_DOCS
 SUBDIRS                += doc
 endif
 
+sysconf_DATA = etc/seshat.xml
+
 EXTRA_DIST              =                   \
   LICENSE                                   \
   MANIFEST.in                               \
   README.md                                 \
   etc/seshat.service                        \
-  etc/seshat/seshat-example-config.xml      \
+  etc/seshat.xml                            \
   debian/changelog                          \
   debian/control                            \
   debian/copyright                          \

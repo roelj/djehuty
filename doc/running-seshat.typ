@@ -5,8 +5,7 @@
 
 Now that `seshat` is installed, it's a good moment to look into its
 run-time configuration options. All configuration can be done through a
-configuration file, for which an example is available at
-`etc/seshat/seshat-example-config.xml`.
+configuration file, for which an example is available at `etc/seshat.xml`.
 
 == Essential options <sec-essential-options>
 

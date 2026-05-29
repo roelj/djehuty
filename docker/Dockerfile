@@ -11,7 +11,7 @@ ARG GIT_URL="https://codeberg.org/seshat/seshat.git"
 # Or a non-self-updating (release) container:
 # docker image build -t seshat:latest .
 #
-# start with: docker container run --rm -ti -v ../etc/seshat/seshat-example-config.xml:/config.xml:Z seshat:latest /bin/seshat web -c /config.xml
+# start with: docker container run --rm -ti -v ../etc/seshat.xml:/config.xml:Z seshat:latest /bin/seshat web -c /config.xml
 
 RUN apt-get update \
     && apt-get install -y autoconf automake make git python3 python3-venv \
