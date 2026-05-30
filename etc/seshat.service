@@ -4,7 +4,7 @@ StartLimitIntervalSec=500
 StartLimitBurst=5
 
 [Service]
-ExecStart=/usr/bin/seshat web --config-file=/etc/seshat/seshat.xml
+ExecStart=/usr/bin/seshat web --config-file=/etc/seshat.xml
 Environment=LC_ALL=en_US.utf8
 StandardOutput=journal
 StandardError=journal

@@ -86,8 +86,7 @@ EOF
 %endif
 make install DESTDIR=%{buildroot}
 install -Dpm 0644 etc/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
-install -Dpm 0644 etc/%{name}/%{name}-example-config.xml \
-    %{buildroot}%{_sysconfdir}/%{name}/%{name}-example-config.xml
+install -Dpm 0644 etc/%{name}.xml %{buildroot}%{_sysconfdir}/%{name}.xml
 %py3_shebang_fix %{buildroot}%{_bindir}/
 
 %files
@@ -96,8 +95,7 @@ install -Dpm 0644 etc/%{name}/%{name}-example-config.xml \
 %{python3_sitelib}/%{name}/
 %{python3_sitelib}/%{name}-@VERSION_FOR_PYTHON@*
 %{_unitdir}/%{name}.service
-%dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}-example-config.xml
+%config(noreplace) %{_sysconfdir}/%{name}.xml
 %{_bindir}/%{name}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{name}.pdf
