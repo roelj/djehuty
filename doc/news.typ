@@ -2,6 +2,72 @@
 #let chapter_text = [
 #silent-chapter[News] <news>
 
+#silent-section[Release notes for `v26.5`.] <release-26-05>
+
+The May release of 2026 consists of 39 commits made by 3 authors.
+
+#silent-subsection[New features]
+
+- Add OCI registry v2 API
+  (#commitLink("199b30be5da07cbb3d77bbd60d31b0d6b0c2175c"),
+  #commitLink("92760e5a05bcd466cfc77a1692b86d342d4fe4c5"),
+  #commitLink("5046a01315a13f8e3c4ed33f941fd6d276ad5b02"),
+  #commitLink("d88892d9aebc5c910be26ee7df01bb20768d234c")).
+- Add a v3 API call to revoke API tokens from the dashboard
+  (#commitLink("f5eba830e0bed146a23d285dcbea0025e3bb075a"),
+  #commitLink("bda7af831862a93e5363fc72d88157bc544d9e14")).
+- Add a `disable-account-creation` configuration option
+  (#commitLink("524ccdf9bad97b6d6a529e466463c8a2997e5579")).
+- Add a dark-mode theme to the HTML documentation
+  (#commitLink("90097098e27f9b072ecac249e018fad009a0e4fe"),
+  #commitLink("480b383af13a40da1dcfdf17029228053847ec73")).
+
+#silent-subsection[Bugfixes]
+
+- Restore logging in via an external identity provider by relaxing the
+  cookie's `SameSite` attribute during the login redirect
+  (#commitLink("776bbf88866b271e0d7b61b8400d252dc6848e78")).
+- Prevent duplicate account records when logging in with ORCID
+  (#commitLink("c5a0c63015da2ec509ae80d1c9e5e7b5dd38cb69")).
+- Return the proper error in `api_v3_dataset_upload_file` instead of
+  silently ignoring it
+  (#commitLink("bc1cfbb8a839332062a85547c344c92f1118a812")).
+- Install the systemd service file and example configuration into the
+  standard system locations for distribution packages
+  (#commitLink("90acbcfaf7cbce246e1b30f480e0cac4c08e1c3d"),
+  #commitLink("555a0e55fc9c2c8e7d1562b0c991a2e46237ede2"),
+  #commitLink("30bd6d86c019eb913a15bad9268031ec910f6526")).
+- Use predictable links to chapters in the documentation
+  (#commitLink("99fe2dba4113a824ce20de9a51e8195242e71626")).
+
+#silent-subsection[Incremental improvements]
+
+- Update project website and e-mail addresses
+  (#commitLink("722238f2e8f5b8f80f017f107abe5678ac1ad6b1"),
+  #commitLink("7a4fc5c538239b183883d4f85135d29531b2589a"))
+- Consistently use rounded corners on chapters in the documentation
+  (#commitLink("9738ff43361aa796c8ac44850bee14c0e9d56c5c")).
+
+#silent-subsection[Technical debt]
+
+- Remove the OpenDAP-to-DOI mapping functionality
+  (#commitLink("b8d3f6240295d68964362d1365384b7afdceee45")).
+- Remove obsolete endpoints, including `/portal`, `/browse`, the account
+  home page, and the collection private-link delete endpoint
+  (#commitLink("10f2d7912172ebfe46887d011468e3b82b7e9935"),
+  #commitLink("2f479a60045d850903f1b019c5b290079a3ec36d"),
+  #commitLink("4b9bbf29bff9879002e31e25f0e36a7e5760da38")).
+- Finish moving `sparql_is_up` to the configuration module
+  (#commitLink("9829cfed56d9b1973f3ac1b5fa935b0428182e2a"),
+  #commitLink("b21f9dd5eb97d8ead25c2fc103a4c6884f97ca18")).
+- Remove dead code and address linter complaints
+  (#commitLink("b50bd84b84e008ffb0e11c228613d5365c67246f"),
+  #commitLink("e3b8b247423d05056e17d7abf0f20ffa538dfe0a")).
+- Remove the unused "AUTHORS" lock
+  (#commitLink("9655448a3364c332d4b3d17c8ca0b80beaaeeded")).
+- Remove a legacy license from the license list
+  (#commitLink("8f72508d17cfbbcdc53fcdf80f9f29b34902999e")).
+
 #silent-section[Release notes for `v26.4`.] <release-26-04>
 
 After a delay of 10 months, we are delighted to announce the
