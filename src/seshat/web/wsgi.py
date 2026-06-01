@@ -6463,7 +6463,7 @@ class WebServer:
         if not validator.is_valid_uuid (container_uuid):
             return self.error_404 (request)
 
-        if author_uuid is not None and not validator.is_valid_uuid (container_uuid):
+        if author_uuid is not None and not validator.is_valid_uuid (author_uuid):
             return self.error_404 (request)
 
         account_uuid = self.default_authenticated_error_handling (request, "GET",
