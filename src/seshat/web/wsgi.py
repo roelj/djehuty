@@ -9699,18 +9699,58 @@ class WebServer:
     ## OCI REGISTRY
     ## ------------------------------------------------------------------------
 
+    def __oci_registry_valid_name (self, name):
+        """Returns True when NAME is a well-formed OCI repository name."""
+        return (isinstance (name, str) and len (name) <= 255 and
+                re.match (r"^[a-z0-9]+(?:(?:[._]|__|-+)[a-z0-9]+)*"
+                          r"(?:/[a-z0-9]+(?:(?:[._]|__|-+)[a-z0-9]+)*)*\Z",
+                          name) is not None)
+
+    def __oci_registry_valid_reference (self, reference):
+        """Returns True when REFERENCE is a valid tag or digest."""
+        if not isinstance (reference, str):
+            return False
+
+        return (re.match (r"^[a-zA-Z0-9_][a-zA-Z0-9._-]{0,127}\Z", reference) is not None or
+                self.__oci_registry_valid_digest (reference))
+
+    def __oci_registry_valid_digest (self, digest):
+        """Returns True when DIGEST is a well-formed OCI digest."""
+        return (isinstance (digest, str) and len (digest) <= 255 and
+                re.match (r"^[a-z0-9]+(?:[+._-][a-z0-9]+)*:[a-zA-Z0-9=_-]{2,}\Z",
+                          digest) is not None)
+
+    def __oci_registry_contained_path (self, subdirectory, *parts):
+        """
+        Join PARTS under registry SUBDIRECTORY, returning the resolved path or
+        None if it would escape the root.
+        """
+        root = os.path.realpath (os.path.join (config.oci_registry_storage, subdirectory))
+        candidate = os.path.realpath (os.path.join (root, *parts))
+        if candidate != root and os.path.commonpath ([root, candidate]) != root:
+            self.log.error ("Rejected registry path escaping '%s': %s",
+                            subdirectory, os.path.join (*parts))
+            return None
+        return candidate
+
     def __oci_registry_blob_path (self, digest):
         """Filesystem path for the blob identified by DIGEST ('sha256:<hex>')."""
+        if not self.__oci_registry_valid_digest (digest):
+            return None
         algorithm, _, hex_part = digest.partition (":")
-        return os.path.join (config.oci_registry_storage, "blobs", algorithm, hex_part)
+        return self.__oci_registry_contained_path ("blobs", algorithm, hex_part)
 
     def __oci_registry_manifest_dir (self, name):
         """Directory holding all manifest entries for repository NAME."""
-        return os.path.join (config.oci_registry_storage, "manifests", name)
+        if not self.__oci_registry_valid_name (name):
+            return None
+        return self.__oci_registry_contained_path ("manifests", name)
 
     def __oci_registry_upload_path (self, upload_uuid):
         """Filesystem path where chunks for an active upload are appended."""
-        return os.path.join (config.oci_registry_storage, "uploads", upload_uuid)
+        if not validator.is_valid_uuid (upload_uuid):
+            return None
+        return self.__oci_registry_contained_path ("uploads", upload_uuid)
 
     def __oci_registry_compute_sha256 (self, path):
         """Stream PATH through sha256 in 4 KiB chunks and return the digest."""
@@ -9859,6 +9899,9 @@ class WebServer:
             return auth_failure
 
         manifest_dir = self.__oci_registry_manifest_dir (name)
+        if manifest_dir is None:
+            return self.__oci_registry_error ("NAME_INVALID", "Invalid repository name.", 400)
+
         tags = []
         if os.path.isdir (manifest_dir):
             for entry in os.listdir (manifest_dir):
@@ -9874,8 +9917,15 @@ class WebServer:
         if not config.enable_oci_registry:
             return self.error_404 (request)
 
+        if not self.__oci_registry_valid_reference (reference):
+            return self.__oci_registry_error ("MANIFEST_INVALID", "Invalid reference.", 400)
+
         manifest_dir  = self.__oci_registry_manifest_dir (name)
-        manifest_path = os.path.join (manifest_dir, reference)
+        manifest_path = (self.__oci_registry_contained_path ("manifests", name, reference)
+                         if manifest_dir is not None else None)
+        if manifest_dir is None or manifest_path is None:
+            return self.__oci_registry_error ("NAME_INVALID", "Invalid repository name.", 400)
+
         content_type_path = f"{manifest_path}.ct"
 
         if request.method in ("GET", "HEAD"):
@@ -9922,7 +9972,9 @@ class WebServer:
                 # (tag or digest) and under its computed digest, so lookups by
                 # either work.  The .ct sidecar records the Content-Type.
                 for ref in {reference, digest}:  # pylint: disable=use-sequence-for-iteration
-                    target = os.path.join (manifest_dir, ref)
+                    target = self.__oci_registry_contained_path ("manifests", name, ref)
+                    if target is None:
+                        continue
                     with open (target, "wb") as stream:
                         stream.write (data)
                     with open (f"{target}.ct", "w", encoding="utf-8") as stream:
@@ -9976,7 +10028,8 @@ class WebServer:
             return self.error_404 (request)
 
         blob_path = self.__oci_registry_blob_path (digest)
-
+        if blob_path is None:
+            return self.__oci_registry_error ("DIGEST_INVALID", "Invalid blob digest.", 400)
         if request.method in ("GET", "HEAD"):
             auth_failure = self.__registry_require_auth (request)
             if auth_failure is not None:
@@ -10031,6 +10084,8 @@ class WebServer:
             # Monolithic upload -- stream directly to the content-addressed
             # blob path, then verify the digest.
             blob_path = self.__oci_registry_blob_path (supplied_digest)
+            if blob_path is None:
+                return self.__oci_registry_error ("DIGEST_INVALID", "Invalid blob digest.", 400)
             self.__oci_registry_stream_to_file (request, blob_path)
             computed_digest = self.__oci_registry_compute_sha256 (blob_path)
             if computed_digest != supplied_digest:
@@ -10099,6 +10154,9 @@ class WebServer:
                      f"expected {supplied_digest}."), 400)
 
             blob_path = self.__oci_registry_blob_path (supplied_digest)
+            if blob_path is None:
+                return self.__oci_registry_error ("DIGEST_INVALID", "Invalid blob digest.", 400)
+
             os.makedirs (os.path.dirname (blob_path), mode=0o700, exist_ok=True)
             os.replace (upload_path, blob_path)
 
