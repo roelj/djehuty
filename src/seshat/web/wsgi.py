@@ -1633,6 +1633,7 @@ class WebServer:
         account_uuid = self.account_uuid_from_request (request)
         if account_uuid is None:
             error_response = self.error_authorization_failed(request)
+            return None, error_response
 
         token = self.token_from_request (request)
         if not privilege_test (token):
