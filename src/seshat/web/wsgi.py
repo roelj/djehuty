@@ -1125,8 +1125,11 @@ class WebServer:
         if "uuid" not in item:
             return None, self.error_403 (request, f"Missing 'uuid' in item for account:{account_uuid}.")
 
-        record = self.db.item_collaborative_permissions (item_type, item["uuid"], account_uuid)
         if not permissions:
+            return None, self.error_500 ("Checking for permission not knowing what permissions are needed.")
+
+        record = self.db.item_collaborative_permissions (item_type, item["uuid"], account_uuid)
+        if not record:
             return None, self.error_403 (request, ("Could not find permissions for "
                                                    f"account:{account_uuid} on {item['uuid']}."))
 
