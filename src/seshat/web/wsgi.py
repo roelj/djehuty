@@ -4033,6 +4033,8 @@ class WebServer:
                                                    is_published = False,
                                                    account_uuid = account_uuid,
                                                    use_cache    = False)
+            if dataset is None:
+                return None, None
             if file_id is None:
                 self.log.info ("Files for draft %s accessed by owner or reviewer.", dataset_id)
                 metadata = self.__files_by_id_or_uri (dataset_uri  = dataset["uri"],
