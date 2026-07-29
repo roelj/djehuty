@@ -311,7 +311,7 @@ def split_author_name(name):
     parts = ([''] + parts)[-2:]
     return parts
 
-def split_string (input_string, delimiter='\\s' , is_quoted=False, maxsplit=-1):
+def split_string (input_string, delimiter="," , is_quoted=False, maxsplit=-1):
     """Splits a string by a delimiter character and strips whitespace."""
     if not isinstance(input_string, str) or input_string == "":
         return None

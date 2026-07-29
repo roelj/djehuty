@@ -1187,7 +1187,7 @@ class WebServer:
         except validator.InvalidValueType:
             validator.array_value  (record, "search_for" )
 
-        record["categories"] = split_string (record["categories"], delimiter=",")
+        record["categories"] = split_string (record["categories"])
         if "categories" in record and record["categories"] is not None:
             for category_id in record["categories"]:
                 validator.integer_value (record, "category_id", category_id)
@@ -6489,12 +6489,12 @@ class WebServer:
             "return_count": validator.boolean_value (self.get_parameter (request, "return_count"), None, error_list=errors),
         }
 
-        record["categories"] = split_string (record["categories"], delimiter=",")
+        record["categories"] = split_string (record["categories"])
         if record["categories"] is not None:
             for index, _ in enumerate(record["categories"]):
                 record["categories"][index] = validator.integer_value (record["categories"], index, error_list=errors)
 
-        record["groups"]  = split_string (record["groups"], delimiter=",")
+        record["groups"]  = split_string (record["groups"])
         if record["groups"] is not None:
             for index, _ in enumerate(record["groups"]):
                 record["groups"][index] = validator.integer_value (record["groups"], index, error_list=errors)
@@ -6846,12 +6846,12 @@ class WebServer:
                            "'downloads', 'views', 'shares' or 'cites'."),
                 code    = "InvalidURLParameterValue")
 
-        record["categories"] = split_string (record["categories"], delimiter=",")
+        record["categories"] = split_string (record["categories"])
         if record["categories"] is not None:
             for index, _ in enumerate(record["categories"]):
                 record["categories"][index] = validator.integer_value (record["categories"], index)
 
-        record["group_ids"]  = split_string (record["group_ids"], delimiter=",")
+        record["group_ids"]  = split_string (record["group_ids"])
         if record["group_ids"] is not None:
             for index, _ in enumerate(record["group_ids"]):
                 record["group_ids"][index] = validator.integer_value (record["group_ids"], index)
