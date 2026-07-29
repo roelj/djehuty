@@ -7567,7 +7567,7 @@ class WebServer:
                 return send_file (file_path, request.environ, mimetype)
             return self.error_403 (request)
 
-        except (KeyError, FileNotFoundError):
+        except (KeyError, TypeError, FileNotFoundError):
             return self.error_404 (request)
 
     def api_v3_profile_picture (self, request):
