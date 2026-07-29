@@ -2681,7 +2681,7 @@ class WebServer:
                                         session_uuid = session_uuid,
                                         mfa_token    = mfa_token)
 
-            if session is None:
+            if not session:
                 self.__remove_session_due_to_2fa_mismatch (session_uuid)
                 return self.error_403 (request, (f"session:{session_uuid} invalidated "
                                                  "due to wrong MFA."))
