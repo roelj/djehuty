@@ -175,11 +175,10 @@ def sparql_bound_filter (name):
 def sparql_suffix (order, order_direction, limit=None, offset=None):
     """Returns a query suffix including order, limit and offset."""
 
-    if is_unsafe_sparql_name (order, allow_none=False):
-        return ""
-
-    order_direction = (order_direction or "DESC").upper()
-    query = f"ORDER BY {order_direction}(?{order})"
+    query = ""
+    if not is_unsafe_sparql_name (order, allow_none=False):
+        direction = "ASC" if str(order_direction).upper() == "ASC" else "DESC"
+        query = f"ORDER BY {direction}(?{order})"
 
     if limit is not None:
         query += f"\nLIMIT {limit}"

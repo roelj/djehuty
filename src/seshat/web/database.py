@@ -669,7 +669,7 @@ class SparqlInterface:
     def authors (self, first_name=None, full_name=None, group_id=None,
                  author_id=None, institution_id=None, is_active=None,
                  is_public=None, job_title=None, last_name=None,
-                 orcid_id=None, url_name=None, limit=10, order=None,
+                 orcid_id=None, url_name=None, limit=None, order=None,
                  order_direction=None, item_uri=None, search_for=None,
                  account_uuid=None, item_type="dataset", is_published=True,
                  author_uuid=None):
@@ -773,7 +773,7 @@ class SparqlInterface:
         return self.__run_query(query)
 
     def derived_from (self, item_uri, item_type='dataset',
-                      order=None, order_direction=None, limit=10):
+                      order=None, order_direction=None, limit=None):
         """Procedure to retrieve derived_from links"""
 
         query = self.__query_from_template ("derived_from", {
@@ -826,7 +826,7 @@ class SparqlInterface:
             })
         return results
 
-    def previously_used_tags (self, search_for, order=None, order_direction=None, limit=10):
+    def previously_used_tags (self, search_for, order=None, order_direction=None, limit=None):
         """Procedure to get tags unrelated to their datasets."""
         filters = ""
         if search_for is not None:
@@ -837,7 +837,7 @@ class SparqlInterface:
         query += rdf.sparql_suffix (order, order_direction, limit, None)
         return self.__run_query (query)
 
-    def tags (self, order=None, order_direction=None, limit=10,
+    def tags (self, order=None, order_direction=None, limit=None,
               item_uri=None, account_uuid=None):
         """Procedure to get tags for a dataset or a collection."""
 
@@ -871,7 +871,7 @@ class SparqlInterface:
         return self.__run_query(query)
 
     def account_categories (self, account_uuid, title=None, order=None,
-                            order_direction=None, limit=10):
+                            order_direction=None, limit=None):
         """Procedure to retrieve categories of a dataset."""
 
         filters = rdf.sparql_filter ("title", title, escape=True)
@@ -998,7 +998,7 @@ class SparqlInterface:
         except KeyError:
             return 0
 
-    def collections (self, limit=10, offset=None, order=None, collection_uuid=None,
+    def collections (self, limit=None, offset=None, order=None, collection_uuid=None,
                      order_direction=None, institution=None, categories=None,
                      published_since=None, modified_since=None, group=None,
                      resource_doi=None, resource_id=None, doi=None, handle=None,
@@ -1057,7 +1057,7 @@ class SparqlInterface:
 
         return self.__run_query (query)
 
-    def collections_by_account (self, account_uuid=None, limit=100, offset=None,
+    def collections_by_account (self, account_uuid=None, limit=None, offset=None,
                                 order=None, order_direction=None):
         """Procedure to retrieve essential metadata of collections of an account."""
 
@@ -1069,7 +1069,7 @@ class SparqlInterface:
         return self.__run_query(query)
 
     def fundings (self, title=None, order=None, order_direction=None,
-                  limit=10, item_uri=None, account_uuid=None, search_for=None,
+                  limit=None, item_uri=None, account_uuid=None, search_for=None,
                   item_type="dataset", is_published=True):
         """Procedure to retrieve funding information."""
 
@@ -1108,7 +1108,7 @@ class SparqlInterface:
 
         return self.__run_query(query)
 
-    def collection_dataset_containers (self, collection_uri, limit=10):
+    def collection_dataset_containers (self, collection_uri, limit=None):
         """Procedure to retrieve dataset containers in a collection."""
 
         query   = self.__query_from_template ("collection_dataset_containers", {
@@ -3001,7 +3001,7 @@ class SparqlInterface:
     ## ------------------------------------------------------------------------
 
     def reviews (self, assigned_to=None, dataset_uri=None, status=None,
-                 account_uuid=None, limit=10, order=None, order_direction=None,
+                 account_uuid=None, limit=None, order=None, order_direction=None,
                  offset=None, review_uuid=None, domain=None, group_id=None):
         """Returns reviews within the scope of the procedure's parameters."""
 
