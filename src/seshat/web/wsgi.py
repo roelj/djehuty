@@ -5958,21 +5958,15 @@ class WebServer:
             return handler
 
         parameters = request.get_json()
-        records    = self.db.collections(
-            limit           = value_or_none (parameters, "limit"),
-            offset          = value_or_none (parameters, "offset"),
-            order           = value_or_none (parameters, "order"),
-            order_direction = value_or_none (parameters, "order_direction"),
-            institution     = value_or_none (parameters, "institution"),
-            published_since = value_or_none (parameters, "published_since"),
-            modified_since  = value_or_none (parameters, "modified_since"),
-            group           = value_or_none (parameters, "group"),
-            resource_doi    = value_or_none (parameters, "resource_doi"),
-            doi             = value_or_none (parameters, "doi"),
-            handle          = value_or_none (parameters, "handle"),
-            search_for      = value_or_none (parameters, "search_for")
-        )
+        errors, record = self.__default_collection_api_parameters (parameters)
+        record["search_for"] = value_or_none (parameters, "search_for")
+        validator.string_value (record, "search_for", maximum_length=1024,
+                                strip_html=False, error_on_disallowed_html=False,
+                                error_list=errors)
+        if errors:
+            return self.error_400_list (request, errors)
 
+        records = self.db.collections(**record)
         return self.default_list_response (records, formatter.format_collection_record,
                                            base_url = config.base_url)
 
