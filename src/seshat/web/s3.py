@@ -28,6 +28,7 @@ class S3DownloadStreamer:
         self.filename = filename
         self.chunk_size = chunk_size
         self.offset = offset
+        self.initial_offset = offset
         self.log = logging.getLogger (__name__)
         self.original_filename = name
         self.content_length = 0
@@ -89,9 +90,19 @@ class S3DownloadStreamer:
         self.client.close()
         self.file_object = None
         self.file_contents = None
+        self.offset = self.initial_offset
         self.content_length = 0
         self.content_type = "binary/octet-stream"
         self.last_modified = None
+
+    def current_offset (self):
+        """Returns the number of bytes of the object read so far."""
+
+        # Account for 'offset' to remain correct after a reset.
+        if self.file_contents is None:
+            return self.offset
+
+        return self.offset + self.file_contents.tell()
 
     def reset (self, offset=0):
         """Resets the S3 connection and attempts to continue reading at OFFSET."""
@@ -126,7 +137,7 @@ def s3_temporary_file (reader):
                 retries = 0
             except (ResponseStreamingError, ReadTimeoutError, IncompleteRead):
                 logger = logging.getLogger (__name__)
-                current_offset = reader.body().tell()
+                current_offset = reader.current_offset()
                 reader.reset (offset = current_offset)
                 retries -= 1
                 if retries > 0:

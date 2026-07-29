@@ -140,7 +140,7 @@ class ZipFly:
                                     yield stream.get()
                                 retries = 0
                             except (ResponseStreamingError, ReadTimeoutError, IncompleteRead):
-                                current_offset = s3_object.body().tell()
+                                current_offset = s3_object.current_offset()
                                 s3_object.reset (offset = current_offset)
                                 retries -= 1
                                 if retries > 0:
