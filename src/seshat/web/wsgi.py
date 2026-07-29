@@ -7366,18 +7366,21 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        self.locks.lock (locks.LockTypes.SUBMIT_DATASET)
+        with self.locks.locked (locks.LockTypes.SUBMIT_DATASET):
+            return self.__submit_dataset_for_review (request, dataset_id, account_uuid)
+
+    def __submit_dataset_for_review (self, request, dataset_id, account_uuid):
+        """Implements the critical section of 'api_v3_dataset_submit'."""
+
         dataset = self.__dataset_by_id_or_uri (dataset_id,
                                                account_uuid = account_uuid,
                                                is_published = False,
                                                is_under_review = False)
 
         if dataset is None:
-            self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
             return self.error_404 (request)
 
         if value_or (dataset, "is_shared_with_me", False):
-            self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
             return self.error_403 (request, (f"collaborator account:{account_uuid} "
                                              f"attempted to sumbit dataset:{dataset_id} "
                                              "for review."))
@@ -7499,17 +7502,14 @@ class WebServer:
                         "message": "Upload at least one file, or choose metadata-only record."})
 
             if errors:
-                self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
                 return self.error_400_list (request, errors)
 
             account = self.db.account_by_uuid (dataset["account_uuid"])
             if not account:
-                self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
                 return self.error_500()
 
             result = self.db.update_dataset (**parameters)
             if not result:
-                self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
                 return self.error_500()
 
             if self.db.insert_review (dataset["uri"]) is not None:
@@ -7530,16 +7530,13 @@ class WebServer:
                         support_email = config.support_email_address,
                         site_name = config.site_name)
 
-                self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
                 return self.respond_204 ()
 
         except validator.ValidationException as error:
-            self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
             return self.error_400 (request, error.message, error.code)
         except (IndexError, KeyError):
             pass
 
-        self.locks.unlock (locks.LockTypes.SUBMIT_DATASET)
         return self.error_500 ()
 
     def __image_mimetype (self, file_path):
