@@ -431,7 +431,8 @@ class WebServer:
         account = self.db.account_by_session_token (user_token)
         return account
 
-    def __generate_thumbnail (self, input_filename, dataset_uuid, max_width=300, max_height=300):
+    def __generate_thumbnail (self, input_filename, dataset_uuid, max_width=300,
+                              max_height=300, max_frames=100):
         try:
             s3_cached_file = None
             original = None
@@ -460,25 +461,23 @@ class WebServer:
             # Preserve animation in GIFs.
             if extension == "gif":
                 frames = []
-                original_durations = []
-                try:
-                    original_durations = [frame.info['duration'] for frame in ImageSequence.Iterator(original)]
-                except KeyError:
-                    original_durations = 50
-                for frame in ImageSequence.Iterator(original):
-                    resized_frame = frame.resize ((thumb_width, thumb_height),
-                                                  Image.Resampling.LANCZOS)
-                    frames.append (resized_frame)
+                durations = []
+                for frame in ImageSequence.Iterator (original):
+                    frames.append (frame.resize ((thumb_width, thumb_height),
+                                                 Image.Resampling.LANCZOS).convert ("RGBA"))
+                    durations.append (frame.info.get ("duration"))
 
-                first_frame_size = frames[0].size
-                resized_image = Image.new("RGBA", (first_frame_size[0] * len(frames), first_frame_size[1]))
+                    # Every frame is held in memory until the thumbnail has
+                    # been written, so the number of frames must be bounded.
+                    if len(frames) >= max_frames:
+                        self.log.warning ("Truncated the thumbnail for %s to %d frames.",
+                                          dataset_uuid, max_frames)
+                        break
 
-                for index, frame in enumerate(frames):
-                    resized_image.paste(frame, (index * first_frame_size[0], 0))
-                    frames[index] = resized_image.crop ((index * first_frame_size[0],
-                                                         0,
-                                                         (index + 1) * first_frame_size[0],
-                                                         first_frame_size[1]))
+                # When a frame does not carry a duration, the timings of the
+                # remaining frames cannot be relied upon either.
+                original_durations = 50 if None in durations else durations
+
                 frames[0].save (output_filename, save_all=True, append_images=frames[1:], loop=0,
                                 duration=original_durations)
                 return extension
