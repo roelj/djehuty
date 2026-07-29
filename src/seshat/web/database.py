@@ -3322,7 +3322,6 @@ class SparqlInterface:
             if config.privileges[account["email"].lower()]["needs_2fa"] and not override_mfa:
                 mfa_token = secrets.randbelow (1000000)
                 rdf.add (graph, link_uri, self.ontology["mfa_token"], mfa_token, XSD.integer)
-                rdf.add (graph, link_uri, self.ontology["mfa_tries"], 0,         XSD.integer)
         except KeyError:
             pass
 
