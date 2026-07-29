@@ -59,7 +59,7 @@ class CacheLayer:
         """Procedure to store 'value' as a cache."""
         try:
             cache_filename = os.path.join (self.storage, f"{prefix}_{key}")
-            cache_fd = os.open (cache_filename, os.O_WRONLY | os.O_CREAT, 0o600)
+            cache_fd = os.open (cache_filename, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
             with os.fdopen (cache_fd, "w", encoding = "utf-8") as cache_file:
                 if is_raw:
                     cache_file.write (value)
@@ -70,11 +70,13 @@ class CacheLayer:
 
             if query is not None:
                 query_filename = os.path.join (self.storage, f"{prefix}_{key}.sparql")
-                query_fd = os.open (query_filename, os.O_WRONLY | os.O_CREAT, 0o600)
+                query_fd = os.open (query_filename, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
                 with os.fdopen (query_fd, "w", encoding = "utf-8") as query_file:
                     query_file.write(query)
                     if os.name != 'nt':
                         os.fchmod (query_fd, 0o400)  # pylint: disable=no-member
+        except FileExistsError:
+            self.log.warning ("Refusing to overwrite existing cache entry '%s'.", key)
         except OSError:
             self.log.warning ("Failed to save cache for %s.", key)
 
