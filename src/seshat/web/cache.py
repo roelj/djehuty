@@ -41,6 +41,9 @@ class CacheLayer:
 
     def cached_value (self, prefix, key, is_raw=False):
         """Returns the cached value or None."""
+        if self.storage is None:
+            return None
+
         try:
             filename = os.path.join (self.storage, f"{prefix}_{key}")
             with open(filename, "r", encoding = "utf-8") as cache_file:
@@ -57,6 +60,9 @@ class CacheLayer:
 
     def cache_value (self, prefix, key, value, query=None, is_raw=False):
         """Procedure to store 'value' as a cache."""
+        if self.storage is None:
+            return value
+
         try:
             cache_filename = os.path.join (self.storage, f"{prefix}_{key}")
             cache_fd = os.open (cache_filename, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
@@ -84,6 +90,9 @@ class CacheLayer:
 
     def invalidate_by_prefix (self, prefix):
         """Procedure to remove all cache items belonging to 'prefix'."""
+        if self.storage is None:
+            return False
+
         for file_path in glob.glob(os.path.join(self.storage, f"{prefix}_*")):
             try:
                 os.remove(file_path)
