@@ -4,6 +4,7 @@ This module contains procedures to validate user input.
 
 import re
 from seshat.utils import convenience as conv
+from datetime import datetime
 
 def raise_or_return_error (error_list, error):
     """Adds the error to the ERROR_LIST or raises ERROR."""
@@ -375,6 +376,16 @@ def date_value (record, field_name, required=False, error_list=None):
                         field_name = field_name,
                         message = f"Expected '{field_name}' in the form YYYY-MM-DD.",
                         code    = "WrongValueFormat"))
+
+    ## Check validity of the date
+    try:
+        datetime.strptime (value, "%Y-%m-%d")
+    except ValueError:
+        return raise_or_return_error (error_list,
+                    InvalidValueType(
+                        field_name = field_name,
+                        message = f"The value '{value}' is not a valid date.",
+                        code = "InvalidValue"))
 
     return value
 
