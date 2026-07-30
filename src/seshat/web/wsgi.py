@@ -8342,6 +8342,12 @@ class WebServer:
                 number_of_inaccessible_files += 1
                 missing_files.append (filesystem_location)
 
+        percentage_accessible   = 100.0
+        percentage_inaccessible = 0.0
+        if number_of_files > 0:
+            percentage_accessible   = (1.0 - (number_of_inaccessible_files / number_of_files)) * 100
+            percentage_inaccessible = number_of_inaccessible_files / number_of_files * 100
+
         output = {
             "number_of_links":              number_of_links,
             "number_of_files":              number_of_files,
@@ -8349,8 +8355,8 @@ class WebServer:
             "number_of_accessible_files":   number_of_files - number_of_inaccessible_files,
             "number_of_inaccessible_files": number_of_inaccessible_files,
             "number_of_incomplete_metadata": number_of_incomplete_metadata,
-            "percentage_accessible":        (1.0 - (number_of_inaccessible_files / number_of_files)) * 100,
-            "percentage_inaccessible":      number_of_inaccessible_files / number_of_files * 100,
+            "percentage_accessible":        percentage_accessible,
+            "percentage_inaccessible":      percentage_inaccessible,
             "inaccessible_files":           missing_files,
             "incomplete_metadata":          incomplete_metadata,
         }
