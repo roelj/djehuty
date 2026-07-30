@@ -213,8 +213,8 @@ def make_citation (authors, year, title, version, item_type, doi,
         citation += f' ({year}): {title}'
         if not citation.endswith('.'):
             citation += '.'
-        if publisher:
-            publisher = f"{publisher}. "
+
+        publisher = f"{publisher}. " if publisher else ""
         citation += f' Version {version}. {publisher}{item_type}. https://doi.org/{doi}'
         return citation
     except TypeError:
