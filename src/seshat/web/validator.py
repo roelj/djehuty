@@ -174,10 +174,10 @@ def paging_to_offset_and_limit (record, error_list=None):
     """Procedure returns two values: offset and limit."""
 
     # Type and range-check the parameters.
-    page      = integer_value (record, "page",      1)
-    page_size = integer_value (record, "page_size", 1, 1000)
-    offset    = integer_value (record, "offset",    0)
-    limit     = integer_value (record, "limit",     1)
+    page      = integer_value (record, "page",      1,       error_list=error_list)
+    page_size = integer_value (record, "page_size", 1, 1000, error_list=error_list)
+    offset    = integer_value (record, "offset",    0,       error_list=error_list)
+    limit     = integer_value (record, "limit",     1,       error_list=error_list)
 
     # Check whether the parameters are mixed.
     if ((page is not None or page_size is not None) and
