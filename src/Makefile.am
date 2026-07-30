@@ -26,6 +26,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/html_templates/410.html                              \
     seshat/web/resources/html_templates/500.html                              \
     seshat/web/resources/html_templates/502.html                              \
+    seshat/web/resources/html_templates/503.html                              \
     seshat/web/resources/html_templates/activate_2fa_session.html             \
     seshat/web/resources/html_templates/admin/dashboard.html                  \
     seshat/web/resources/html_templates/admin/exploratory.html                \

@@ -605,6 +605,8 @@ class WebServer:
         except HTTPException as error:
             self.log.error ("Unknown error in dispatch_request: %s", error)
             return error
+        except locks.LockAcquisitionTimeout as error:
+            return self.error_503 (request, f"Timed out waiting for a lock: {error}")
         # Broad catch-all to improve logging/debugging of such situations.
         except Exception as error:
             self.log.error ("In request: %s", request.environ)
@@ -945,6 +947,27 @@ class WebServer:
         if audit_log_message is None:
             audit_log_message = "An unexpected error has occurred (HTTP 500)."
         self.log.audit (audit_log_message)
+        return response
+
+    def error_503 (self, request, audit_log_message=None):
+        """Procedure to respond with HTTP 503."""
+        if audit_log_message is None:
+            audit_log_message = "The service is temporarily unavailable (HTTP 503)."
+        self.log.audit (audit_log_message)
+
+        response = None
+        if self.accepts_html (request, strict=True):
+            response = self.__render_template (request, "503.html",
+                                               email = config.support_email_address)
+        else:
+            response = self.response (json.dumps ({
+                "message": "The server is busy with a conflicting request. Please retry.",
+                "code":    "ServiceTemporarilyUnavailable"
+            }))
+
+        response.status_code = 503
+        ## Mirrors the lock acquisition timeout in 'locks.Locks.lock'.
+        response.headers["Retry-After"] = "30"
         return response
 
     def error_authorization_failed (self, request):
