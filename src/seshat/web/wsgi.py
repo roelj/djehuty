@@ -7391,12 +7391,43 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
+        # Delay sending e-mails (notifications) until after the lock.
+        notifications = []
         with self.locks.locked (locks.LockTypes.SUBMIT_DATASET):
-            return self.__submit_dataset_for_review (request, dataset_id, account_uuid)
+            response = self.__submit_dataset_for_review (request, dataset_id, account_uuid, notifications)
 
-    def __submit_dataset_for_review (self, request, dataset_id, account_uuid):
+        for notification in notifications:
+            try:
+                self.__send_submitted_for_review_notifications (**notification)
+            except validator.ValidationException as error:
+                return self.error_400 (request, error.message, error.code)
+            except (IndexError, KeyError):
+                return self.error_500 ()
+
+        return response
+
+    def __send_submitted_for_review_notifications (self, dataset, account):
+        """Procedure to notify the reviewers and the depositor of a submission."""
+
+        subject = f"Request for review: {dataset['container_uuid']}"
+        self.__send_email_to_reviewers (subject, "submitted_for_review_notification",
+                                        account_email=value_or_none(account, "email"),
+                                        dataset=dataset,
+                                        account=account)
+
+        # When in pre-production state, don't send e-mails to depositors.
+        if config.in_production and not config.in_preproduction and "email" in account:
+            self.__send_templated_email (
+                [account["email"]],
+                f"Submission of {dataset['title']}.",
+                "dataset_submitted",
+                dataset = dataset,
+                account = account,
+                support_email = config.support_email_address,
+                site_name = config.site_name)
+
+    def __submit_dataset_for_review (self, request, dataset_id, account_uuid, notifications):
         """Implements the critical section of 'api_v3_dataset_submit'."""
-
         dataset = self.__dataset_by_id_or_uri (dataset_id,
                                                account_uuid = account_uuid,
                                                is_published = False,
@@ -7538,23 +7569,7 @@ class WebServer:
                 return self.error_500()
 
             if self.db.insert_review (dataset["uri"]) is not None:
-                subject = f"Request for review: {dataset['container_uuid']}"
-                self.__send_email_to_reviewers (subject, "submitted_for_review_notification",
-                                                account_email=value_or_none(account, "email"),
-                                                dataset=dataset,
-                                                account=account)
-
-                # When in pre-production state, don't send e-mails to depositors.
-                if config.in_production and not config.in_preproduction and "email" in account:
-                    self.__send_templated_email (
-                        [account["email"]],
-                        f"Submission of {dataset['title']}.",
-                        "dataset_submitted",
-                        dataset = dataset,
-                        account = account,
-                        support_email = config.support_email_address,
-                        site_name = config.site_name)
-
+                notifications.append ({ "dataset": dataset, "account": account })
                 return self.respond_204 ()
 
         except validator.ValidationException as error:
