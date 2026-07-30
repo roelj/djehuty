@@ -1190,9 +1190,10 @@ class WebServer:
             validator.array_value  (record, "search_for" )
 
         record["categories"] = split_string (record["categories"])
-        if "categories" in record and record["categories"] is not None:
-            for category_id in record["categories"]:
-                validator.integer_value (record, "category_id", category_id)
+        if record["categories"] is not None:
+            for index, category_id in enumerate (record["categories"]):
+                record["categories"][index] = validator.integer_value (
+                    { "categories": category_id }, "categories", 0, pow(2, 63))
 
         # Rewrite the group parameter to match the database's plural form.
         if record["groups"] is not None:
