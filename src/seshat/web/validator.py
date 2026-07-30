@@ -115,9 +115,7 @@ def order_direction (record, field_name, required=False, error_list=None):
                         message = "Missing required value for 'order_direction'.",
                         code    = "MissingRequiredField"))
 
-    if (value is not None and
-        (not (value.lower() == "desc" or
-              value.lower() == "asc"))):
+    if not isinstance (value, str) or value.lower() not in ("desc", "asc"):
         return raise_or_return_error (error_list,
                     InvalidOrderDirection(
                         field_name = field_name,
