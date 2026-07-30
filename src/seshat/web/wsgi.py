@@ -3214,7 +3214,10 @@ class WebServer:
                                            ontology_url = config.ontology_url)
 
         if request.method == "POST":
-            query  = request.get_data().decode("utf-8")
+            try:
+                query = request.get_data().decode("utf-8")
+            except UnicodeDecodeError:
+                return self.error_400 (request, "Query not encoded in UTF-8.", "InvalidEncoding")
             output = self.db.run_query (query, token)
             return self.response (json.dumps(output, indent=True))
 
