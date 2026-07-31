@@ -6476,6 +6476,7 @@ class WebServer:
                                    "lowercase characters and hyphens.")
                 })
             else:
+                namespace = parameters["namespace"]
                 namespace_check = self.db.projects (namespace=namespace, use_cache=False)
                 if namespace_check:
                     errors.append({
@@ -6486,7 +6487,7 @@ class WebServer:
             if errors:
                 return self.error_400_list (request, errors)
 
-            project = self.insert_project (**parameters)
+            project = self.db.insert_project (**parameters)
             if project is not None:
                 return self.response (json.dumps (formatter.format_project_record (project, config.ontology_url)))
 
