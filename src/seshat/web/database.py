@@ -3783,12 +3783,12 @@ class SparqlInterface:
 
         return self.add_triples_from_graph (store)
 
-    def projects (self, uuid=None, created_by=None, namespace=None, limit=None,
+    def projects (self, project_uuid=None, created_by=None, namespace=None, limit=None,
                   offset=None, order=None, order_direction=None, use_cache=True):
         """Procedure to retrieve projects for a user."""
 
         query = self.__query_from_template ("projects", {
-            "uuid":       uuid,
+            "uuid":       project_uuid,
             "namespace":  rdf.escape_string_value (namespace),
             "created_by": created_by
         })
