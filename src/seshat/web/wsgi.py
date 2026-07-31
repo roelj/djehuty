@@ -1386,6 +1386,8 @@ class WebServer:
         except requests.exceptions.ConnectionError:
             self.log.warning ("Failed to obtain read-public token from ORCID due to a connection error.")
 
+        return False
+
     def authenticate_using_orcid (self, request, redirect_path="/login"):
         """Returns a record upon success, None upon failure."""
 
