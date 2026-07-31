@@ -6488,7 +6488,7 @@ class WebServer:
 
             project = self.insert_project (**parameters)
             if project is not None:
-                return self.response (json.dumps (formatter.format_project_record (project, ontology_url)))
+                return self.response (json.dumps (formatter.format_project_record (project, config.ontology_url)))
 
         return self.error_500()
 
