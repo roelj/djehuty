@@ -268,6 +268,6 @@ def uuid_short_decode (short_encoded_uuid):
         try:
             number = number * _SUUID_ALPHABET_LEN + _SUUID_ALPHABET_INDEX[char]
         except KeyError:
-            raise ValueError("'{}' is not in alphabet".format(char)) from None
+            raise ValueError(f"'{char}' is not in alphabet") from None
 
     return uuid.UUID(int=number)
