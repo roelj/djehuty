@@ -2,6 +2,93 @@
 #let chapter_text = [
 #silent-chapter[News] <news>
 
+#silent-section[Release notes for `v26.7`.] <release-26-07>
+
+The July release of 2026 consists of 40 commits made by 3 authors.
+It primarily contains bugfixes and clean-ups.
+
+But other than the usual progress, this month's release is the first release
+of Seshat that is also published on
+#link("https://pypi.org/project/seshat/")[PyPI].  This is due to
+the kindness and effort from Kirk Strauser
+(#link("https://github.com/kstrauser")[\@kstrauser]).  Thank you Kirk for
+enabling us to publish Seshat on PyPI!
+
+#silent-subsection[New features]
+
+- Add `custom-css` configuration option
+  (#commitLink("fa25d3d28b8ed2192a799d340a6df47412138e47")).
+- Add API calls for projects
+  (#commitLink("1c73c4a943b6fc5a2a033faa17c71e2070c1fd61"),
+   #commitLink("e7595b90dc72d277850f23931c49e49f04d1fc0f"),
+   #commitLink("8551ec8c317570c17de571b555a47b5277133cf9"),
+   #commitLink("39e285a13be1a9a91f32d8a901e5786891dddd8d")).
+
+#silent-subsection[Bugfixes]
+
+- Don't crash Seshat when ORCID is unreachable on start-up
+  (#commitLink("3feabc4356037fed5aa3604513a7ad0d0ff89278")).
+- Let `sparql_suffix` set `LIMIT` and `OFFSET` independent of values for `ORDER`
+  (#commitLink("cb609cb0ff61ee294ac369d274622d412396dce7")).
+- Avoid race conditions in creating cache files
+  (#commitLink("2fa19766572f8972f6dc3b471bb933666e153420")).
+- Fix session check in `ui_activate_session`
+  (#commitLink("ee3f817ac0c1a021e3bcd5d4c07aad1142deb1d0")).
+- Close connection to e-mail server in all error paths
+  (#commitLink("f252052559874e9e4b7a0b58eee9dc5b0decb900")).
+- Resume interrupted S3 transfers at correct offset
+  (#commitLink("b0ef1fce6e526cba1b4ac8730a30520528752ec4")).
+- Improve date validator
+  (#commitLink("7147534f48a6201e1761b95e459296d54ac2c46b")).
+- Don't crash when cache location is not configured
+  (#commitLink("c146333ddd58b125c82e1e2b8ff149a56576abef")).
+- Avoid returning HTTP 500 errors
+  (#commitLink("300f153e13287fe800ece0afd92d2b78799e2c48"),
+   #commitLink("7b7c43fc85b8ae5103ba0b74241d5215258b6a1c")).
+- Reduce critical section in `api_v3_dataset_submit`
+  (#commitLink("4a7ee933bd8ac88f821f6521b60d7218c3473c59"),
+   #commitLink("a3ef2eeccc9f6bb34a0db8f78d7c2f1a1d874510")).
+- Propagate the `error_list` in `paging_to_offset_and_limit`
+  (#commitLink("8d142b17fa60d5f64706038be80a7d8e6aca7afb")).
+- Avoid stringifying None in `make_citation`
+  (#commitLink("408cd470968c4ae09c0d061cd41d8c6c29461589")).
+- Reject non-string values in `order_direction`
+  (#commitLink("399c411f98848f3703db914d7fdf64cf43ca9f8a")).
+- Implement HTTP 503 error for `LockAcquisitionTimeout`
+  (#commitLink("7604303738a8aef620b59a9a83cf340c2fc7796e")).
+- Handle decoding errors in `ui_admin_sparql`
+  (#commitLink("baccd4d8717c5021878173dbe18407ceb8693df6")).
+- Avoid divide-by-zero in `api_v3_admin_files_integrity_statistics`
+  (#commitLink("a5b96d36585c7fdf55818c9a825c2c86a95525fd")).
+    
+#silent-subsection[Security]
+
+- Check permissions returned by database for `__needs_collaborative_permissions`
+  (#commitLink("aeff8c0b6b1d23b4f076e4e0a764a17e49f7d1c3")).
+- Validate input values in `api_collections_search`
+  (#commitLink("53e2e6aad1909eacfc9fe6e4a6a53c02bcc1e994")).
+- Put an upper bound on frames in animated GIF thumbnails
+  (#commitLink("8fa54481f3a7415fd5bb1217914e70234d2d20f7")).
+- Validate `impersonate` parameter in `impersonated_account_uuid`
+  (#commitLink("1493c2b6cefec287f368547ec65e88dfd5575b63")).
+- Validate category IDs in `__default_dataset_api_parameters`
+  (#commitLink("2a4227e1419e9a0058a8a7975ff8245524d111cc")).
+
+#silent-subsection[Incremental improvements]
+
+- Simplify color rendering
+  (#commitLink("a0a4ead2a3ddf9fea105e8d710de28039fcc071d")).
+- Remove unused CSS styling
+  (#commitLink("cddafc0a923c6242a7206449eb68c64fec541e61")).
+- Simplify `split_string` implementation
+  (#commitLink("9e8f11f2f7da17c83e07d170a756d87612c42d06")).
+- Remove `mfa_tries` property
+  (#commitLink("7559a11af93765f9882ff063b34b1ec7697e869d")).
+- Use f-string formatting in `uuid_short_decode`
+  (#commitLink("db1f34406f94bdcd1a995b5e4d9cf1ad5578f395")).
+- Ensure `obtain_orcid_read_public_token` always returns
+  (#commitLink("ea4edd3d32e2381744744d942dee7f847fab58d0")).
+
 #silent-section[Release notes for `v26.6`.] <release-26-06>
 
 Due to holidays and hand injuries the release slipped by a week.
