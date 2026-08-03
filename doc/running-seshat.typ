@@ -569,6 +569,7 @@ With the following options, the instance can be branded as necessary.
   [`support-email-address`],   [E-mail address used in e-mails sent to users in automated messages.],
   [`custom-logo-path`],        [Path to a PNG image file that will be used as logo on the website.],
   [`custom-favicon-path`],     [Path to an ICO file that will be used as favicon.],
+  [`custom-css`],              [Extra CSS rules that are appended verbatim to the stylesheet.],
   [`small-footer`],            [HTML that will be used as footer for all pages except for the main page.],
   [`large-footer`],            [HTML that will be used as footer on the main page.],
   [`show-portal-summary`],     [When set to 1, it shows the repository summary of number of datasets, authors, collections, files and bytes on the main page.],

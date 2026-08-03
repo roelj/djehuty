@@ -892,8 +892,8 @@ def read_configuration_file (server, config_file, logger, config_files):
             config.portal_html = portal_html
 
         custom_css = xml_root.find ("custom-css")
-        if custom_css:
-            config.custom_css = custom_css
+        if custom_css is not None and custom_css.text is not None:
+            config.custom_css = custom_css.text.strip()
 
         site_name = xml_root.find ("site-name")
         if site_name is not None:
