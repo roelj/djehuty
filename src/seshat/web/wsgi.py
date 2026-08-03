@@ -5965,7 +5965,6 @@ class WebServer:
         offset, limit = self.__paging_offset_and_limit (request, error_list=errors)
         record["limit"] = limit
         record["offset"] = offset
-        validator.order_direction (record, "order_direction", error_list=errors)
         return errors, record
 
     def api_collections (self, request):
