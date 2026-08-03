@@ -601,7 +601,7 @@ class WebServer:
             return self.error_404 (request)
         except BadRequest as error:
             self.log.error ("Received bad request: %s", error)
-            return self.error_400 (request, error.description, 400)
+            return self.error_400 (request, error.description, "BadRequest")
         except HTTPException as error:
             self.log.error ("Unknown error in dispatch_request: %s", error)
             return error
@@ -1317,7 +1317,7 @@ class WebServer:
     def __export_report_in_format (self, request, report_name, report_data, report_format):
         """Exports a report in a given format."""
         if not report_data:
-            return self.error_400 (request, "Report data is empty", 400)
+            return self.error_400 (request, "Report data is empty", "EmptyReportData")
 
         if report_format == "csv":
             if isinstance(report_data, list) and isinstance(report_data[0], dict):
@@ -1328,7 +1328,7 @@ class WebServer:
                     fieldnames.update(row.keys())
                 fieldnames = sorted(fieldnames)
             else:
-                return self.error_400 (request, "Report data's format is unknown", 400)
+                return self.error_400 (request, "Report data's format is unknown", "UnknownReportDataFormat")
 
             inmemory_file = StringIO()
             writer = csv.DictWriter(inmemory_file, fieldnames=fieldnames)
@@ -1345,7 +1345,7 @@ class WebServer:
             return self.response (json.dumps(report_data))
 
         self.log.error ("Unknown report format '%s'.", report_format)
-        return self.error_400 (request, "Unknown report format.", 400)
+        return self.error_400 (request, "Unknown report format.", "UnknownReportFormat")
 
     ## AUTHENTICATION HANDLERS
     ## ------------------------------------------------------------------------
@@ -3770,7 +3770,7 @@ class WebServer:
         except (validator.ValidationException, KeyError):
             pass
         except IndexError:
-            return self.error_400 (request, "Dataset does not exist", 400)
+            return self.error_400 (request, "Dataset does not exist", "DatasetDoesNotExist")
 
         return self.error_500 ()
 
