@@ -257,6 +257,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/js/quill.min.js                               \
     seshat/web/resources/static/js/review-overview.js                         \
     seshat/web/resources/static/js/ranking.js                                 \
+    seshat/web/resources/static/js/search.js                                  \
     seshat/web/resources/static/js/utils.js
 
 EXTRA_DIST      = $(PYTHON_FILES) $(EXTRA_RESOURCES)
