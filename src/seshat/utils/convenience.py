@@ -210,13 +210,21 @@ def make_citation (authors, year, title, version, item_type, doi,
              else value_or (author, 'full_name', "Unknown")) for author in auths[:max_cited_authors]])
         if authors[max_cited_authors:max_cited_authors+1]:
             citation += ' et. al.'
+
+        year  = year if year is not None else "n.d."
+        title = title if title is not None else "Untitled"
         citation += f' ({year}): {title}'
         if not citation.endswith('.'):
             citation += '.'
 
-        publisher = f"{publisher}. " if publisher else ""
-        citation += f' Version {version}. {publisher}{item_type}. https://doi.org/{doi}'
-        return citation
+        for part in (None if version is None else f"Version {version}.",
+                     None if not publisher else f"{publisher}.",
+                     None if item_type is None else f"{item_type}.",
+                     None if doi is None else f"https://doi.org/{doi}"):
+            if part is not None:
+                citation += f' {part}'
+
+        return citation.strip()
     except TypeError:
         logging.error('could not make citation for %s', doi)
         return None
