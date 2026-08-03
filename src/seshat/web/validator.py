@@ -105,15 +105,19 @@ class InvalidPagingOptions(ValidationException):
         super().__init__(field_name, message, code)
 
 def order_direction (record, field_name, required=False, error_list=None):
-    """Validation procedure for the order direction field."""
-
-    value = conv.value_or_none (record, field_name)
-    if (value is None and required):
-        return raise_or_return_error (error_list,
-                    MissingRequiredField(
-                        field_name = field_name,
-                        message = "Missing required value for 'order_direction'.",
-                        code    = "MissingRequiredField"))
+    """
+    Validation procedure for the order direction field.  If FIELD_NAME is None,
+    it expects RECORD to be the value to validate.
+    """
+    value = record if field_name is None else conv.value_or_none (record, field_name)
+    if value is None:
+        if required:
+            return raise_or_return_error (error_list,
+                        MissingRequiredField(
+                            field_name = field_name,
+                            message = "Missing required value for 'order_direction'.",
+                            code    = "MissingRequiredField"))
+        return None
 
     if not isinstance (value, str) or value.lower() not in ("desc", "asc"):
         return raise_or_return_error (error_list,
