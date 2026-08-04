@@ -78,6 +78,10 @@ class DependencyNotAvailable(Exception):
 class MissingConfigurationError(Exception):
     """Raised when a crucial piece of configuration is missing."""
 
+def has_children (node):
+    """Return True when NODE exists and contains at least one child element."""
+    return node is not None and len(node) > 0
+
 def config_value (xml_root, path, command_line=None, fallback=None, return_node=False):
     """Procedure to get the value a config item should have at run-time."""
 
@@ -147,7 +151,7 @@ def read_storage_configuration (xml_root, logger):
     """Procedure to read storage locations."""
 
     storage = xml_root.find ("storage")
-    if not storage:
+    if not has_children (storage):
         return None
 
     for item in storage:
@@ -173,7 +177,7 @@ def read_quotas_configuration (xml_root):
     """Read quota information from XML_ROOT."""
 
     quotas = xml_root.find("quotas")
-    if not quotas:
+    if not has_children (quotas):
         return None
 
     # Set the default quota for non-members.
@@ -206,7 +210,7 @@ def read_sram_configuration (xml_root):
     """Read the SRAM configuration from XML_ROOT."""
 
     sram = xml_root.find("authentication/saml/sram")
-    if not sram:
+    if not has_children (sram):
         return None
 
     config.sram_organization_api_token = config_value (sram, "organization-api-token", fallback = config.sram_organization_api_token)
@@ -217,7 +221,7 @@ def read_saml_configuration (xml_root, logger):
     """Read the SAML configuration from XML_ROOT."""
 
     saml = xml_root.find("authentication/saml")
-    if not saml:
+    if not has_children (saml):
         return None
 
     saml_version = None
@@ -418,7 +422,7 @@ def refresh_group_configuration (server, logger, config_files):
         if xml_root.tag not in ("seshat", "djehuty"):
             continue
         groups = xml_root.find("groups")
-        if not groups:
+        if not has_children (groups):
             continue
 
         logger.info ("Refreshing groups configuration.")
@@ -504,7 +508,7 @@ def setup_handle_registration (server, logger):
 def read_privilege_configuration (xml_root, logger):
     """Read the privileges configuration from XML_ROOT."""
     privileges = xml_root.find("privileges")
-    if not privileges:
+    if not has_children (privileges):
         return None
 
     for account in privileges:
@@ -578,7 +582,7 @@ def configure_file_logging (log_file, inside_reload, logger):
 def read_menu_configuration (xml_root):
     """Procedure to parse the menu configuration from XML_ROOT."""
     menu = xml_root.find("menu")
-    if not menu:
+    if not has_children (menu):
         return None
 
     for primary_menu_item in menu:
@@ -630,7 +634,7 @@ def read_colors_configuration (xml_root):
 def read_datacite_configuration (xml_root):
     """Procedure to parse and set the DataCite API configuration."""
     datacite = xml_root.find("datacite")
-    if datacite:
+    if has_children (datacite):
         config.datacite_url      = config_value (datacite, "api-url")
         config.datacite_id       = config_value (datacite, "repository-id")
         config.datacite_password = config_value (datacite, "password")
@@ -639,7 +643,7 @@ def read_datacite_configuration (xml_root):
 def read_handle_configuration (xml_root):
     """Procedure to parse and set the Handle API configuration."""
     handle = xml_root.find("handle")
-    if handle:
+    if has_children (handle):
         config.handle_url         = config_value (handle, "url")
         config.handle_certificate = config_value (handle, "certificate")
         config.handle_private_key = config_value (handle, "private-key")
@@ -658,7 +662,7 @@ def read_automatic_login_configuration (xml_root):
 def read_orcid_configuration (xml_root):
     """Procedure to parse and set the ORCID API configuration."""
     orcid = xml_root.find("authentication/orcid")
-    if orcid:
+    if has_children (orcid):
         config.orcid_client_id     = config_value (orcid, "client-id")
         config.orcid_client_secret = config_value (orcid, "client-secret")
         config.orcid_endpoint      = config_value (orcid, "endpoint")
@@ -671,7 +675,7 @@ def read_orcid_configuration (xml_root):
 def read_email_configuration (server, xml_root, logger):
     """Procedure to parse and set the email server configuration."""
     email = xml_root.find("email")
-    if email:
+    if has_children (email):
         try:
             server.email.smtp_port = int(config_value (email, "port"))
             server.email.smtp_server = config_value (email, "server")
@@ -958,7 +962,7 @@ def read_configuration_file (server, config_file, logger, config_files):
             server.add_static_root ("/static/images/favicon.ico", custom_favicon_path, prepend=True)
 
         static_pages = xml_root.find("static-pages")
-        if not static_pages:
+        if not has_children (static_pages):
             return config
 
         resources_root = config_value (static_pages, "resources-root", None, None)
