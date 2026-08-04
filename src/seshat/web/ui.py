@@ -90,7 +90,7 @@ def config_value (xml_root, path, command_line=None, fallback=None, return_node=
         return command_line
 
     ## Read from the configuration file.
-    if xml_root:
+    if xml_root is not None:
         item = xml_root.find(path)
         if item is not None:
             if return_node:
