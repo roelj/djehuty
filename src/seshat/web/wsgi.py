@@ -3450,6 +3450,7 @@ class WebServer:
         return self.__render_template (request, "portal.html",
                                        summary_data = summary_data,
                                        latest = latest,
+                                       portal_html = config.portal_html,
                                        notice_message = config.notice_message,
                                        show_portal_summary = config.show_portal_summary,
                                        show_latest_datasets = config.show_latest_datasets)
