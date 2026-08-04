@@ -150,11 +150,6 @@ def read_storage_configuration (xml_root, logger):
     if not storage:
         return None
 
-    for location in storage:
-        if location.tag != "location":
-            continue
-        config.storage_locations.append({ "path": location.text })
-
     for item in storage:
         if item.tag == "location":
             config.storage_locations.append({ "path": item.text })
