@@ -1,6 +1,6 @@
 include configure.ac configure guix.scm.in pyproject.toml.in missing install-sh
 include Makefile.am doc/Makefile.am src/Makefile.am Makefile.in doc/Makefile.in src/Makefile.in
-include docker/Dockerfile docker/docker-compose.yaml
+include docker/development-build docker/release-build.in
 include etc/seshat.service etc/seshat.xml
 include doc/*.typ doc/config.typ.in doc/references.bib doc/figures/*.svg doc/figures/favicon.png doc/seshat.pdf doc/index.html
 include rpmbuild/SPECS/seshat.spec.in

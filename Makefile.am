@@ -61,7 +61,7 @@ dist-docker-dev: dist
            -f docker/development-build .
 
 publish-docker: dist-docker
-	@DOCKER@ push docker.io/4turesearchdata/djehuty:@VERSION@
+	@DOCKER@ push seshat.software/seshat:@VERSION_FOR_PYTHON@
 endif
 
 dist-pypi:
