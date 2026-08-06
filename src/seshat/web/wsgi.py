@@ -1058,8 +1058,10 @@ class WebServer:
                                 is_under_review=None, version=None,
                                 use_cache=True):
         try:
-            if version is not None and not parses_to_int (version):
-                return None
+            if version is not None:
+                if not parses_to_int (version):
+                    return None
+                version = int(version)
 
             parameters = {
                 "is_published": is_published,
@@ -1087,8 +1089,10 @@ class WebServer:
                                    is_published=True, is_latest=False,
                                    version=None, use_cache=True):
         try:
-            if version is not None and not parses_to_int (version):
-                return None
+            if version is not None:
+                if not parses_to_int (version):
+                    return None
+                version = int(version)
 
             parameters = {
                 "is_published": is_published,
@@ -3732,7 +3736,7 @@ class WebServer:
             email      = validator.string_value (parameters, "email", required=True)
             name       = validator.string_value (parameters, "name", required=True)
             dataset_id = validator.string_value (parameters, "dataset_id", required=True)
-            version    = validator.string_value (parameters, "version", required=True)
+            version    = validator.integer_value (parameters, "version", required=True)
             reason     = validator.string_value (parameters, "reason", 0, 10000, required=True, strip_html=False)
 
             dataset = self.db.datasets (container_uuid=dataset_id, version=version)[0]
