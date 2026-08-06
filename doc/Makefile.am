@@ -61,7 +61,9 @@ dist_doc_DATA           += $(doc_PDF) $(doc_HTML)
 endif
 endif
 
+if HAVE_TYPST
 docs-clean:
 	$(RM) -rf $(doc_PDF) $(doc_HTML)
 
 clean-local: docs-clean
+endif
