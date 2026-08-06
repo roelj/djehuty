@@ -6,7 +6,7 @@
 AUTOMAKE_OPTIONS      = subdir-objects
 SUBDIRS               = .
 helmdir               = ${pkgdatadir}
-helm_DATA             =
+dist_helm_DATA        =
 
 EXTRA_DIST            =                \
   seshat/Chart.yaml                    \
@@ -17,9 +17,11 @@ EXTRA_DIST            =                \
   seshat/templates/service.yaml        \
   seshat/templates/volumes.yaml
 
-if HAVE_HELM
-helm_DATA            += index.yaml seshat-1.0.0.tgz
+if HAVE_HELM_CHART
+dist_helm_DATA       += index.yaml seshat-1.0.0.tgz
+endif
 
+if HAVE_HELM
 index.yaml: seshat-1.0.0.tgz
 	$(HELM) repo index . --url @BASE_URL@
 

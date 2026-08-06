@@ -53,10 +53,20 @@ dnl ---------------------------------------------------------------------------
 AC_CHECK_PROG(HELM, helm, helm)
 AM_CONDITIONAL([HAVE_HELM], [test -n "$HELM"])
 
-AS_IF([test -z "$HELM"],
-  [AC_MSG_WARN([Unable to (re)build Helm repository.])])
+have_prebuilt_chart=no
+test -f "$srcdir/helm/seshat-1.0.0.tgz" && test -f "$srcdir/helm/index.yaml" \
+  && have_prebuilt_chart=yes
 
-AS_IF([test -n "$HELM"], [WITH_HELM=1], [WITH_HELM=0])
+AS_IF([test -z "$HELM"],
+  [AS_IF([test "x$have_prebuilt_chart" = "xyes"],
+    [AC_MSG_NOTICE([Using pre-built Helm chart.])],
+    [AC_MSG_WARN([Unable to (re)build Helm repository.])])])
+
+AM_CONDITIONAL([HAVE_HELM_CHART],
+  [test -n "$HELM" || test "x$have_prebuilt_chart" = "xyes"])
+
+AS_IF([test -n "$HELM" || test "x$have_prebuilt_chart" = "xyes"],
+  [WITH_HELM=1], [WITH_HELM=0])
 AC_SUBST([WITH_HELM])
 
 dnl Check for the Python 'build' module.
