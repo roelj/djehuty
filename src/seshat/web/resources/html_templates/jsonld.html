@@ -2,23 +2,23 @@
     {
         "@context": "https://schema.org",
         "@type": "Dataset",
-        "name": "{{item.title}}",
-        "identifier": "https://doi.org/{{doi}}",
-        "citation": "{{ citation }}",
-        "version": {{ item.version }},
-        "description": "{{ item.description }}",
+        "name": {{ item.title | tojson }},
+        "identifier": {{ ("https://doi.org/" ~ doi) | tojson }},
+        "citation": {{ citation | tojson }},
+        "version": {{ item.version | tojson }},
+        "description": {{ item.description | tojson }},
         "publisher": {
             "@type": "Organization",
-            "name": "{{ item.publisher }}"
+            "name": {{ item.publisher | tojson }}
         },
-        "license": "{{ item.license_url }}",
+        "license": {{ item.license_url | tojson }},
         "keywords": {{ tags|sort | tojson }},
         "creator": [
         {%- for a in authors %}
         {
             "@type": "Person",
-            "name": "{{ a.full_name }}",
-            "sameAs": "https://orcid.org/{{ a.orcid_id }}"
+            "name": {{ a.full_name | tojson }},
+            "sameAs": {{ ("https://orcid.org/" ~ a.orcid_id) | tojson }}
           }{%- if not loop.last %},{%- endif %}
         {%- endfor %}
         ]
@@ -28,15 +28,15 @@
                 "@type": "Place",
                 "geo": {
                     "@type": "GeoCoordinates",
-                    "latitude":  {{ coordinates.lat }},
-                    "longitude": {{ coordinates.lon }}
+                    "latitude":  {{ coordinates.lat | tojson }},
+                    "longitude": {{ coordinates.lon | tojson }}
                 }
             }
         {%- elif item.geolocation %}
-            ,"spatialCoverage": "{{ item.geolocation }}"
+            ,"spatialCoverage": {{ item.geolocation | tojson }}
         {%- endif %}
         {%- if item.time_coverage %}
-            ,"temporalCoverage": "{{ item.time_coverage }}"
+            ,"temporalCoverage": {{ item.time_coverage | tojson }}
         {%- endif %}
         {%- set valid_fundings = fundings | selectattr('funder_name') | list %}
         {%- if valid_fundings %}
@@ -44,7 +44,7 @@
             {%- for funding in valid_fundings  %}
                 {
                     "@type": "Organization",
-                    "name": "{{ funding.funder_name }}"
+                    "name": {{ funding.funder_name | tojson }}
                 }{%- if not loop.last %},{%- endif %}
             {%- endfor %}
             ]
@@ -55,8 +55,8 @@
             {%- for c in collections %}
                 {
                     "@type": "DataCatalog",
-                    "name": "{{ c.title }}",
-                    "url": "{{ base_url }}/collections/{{ c.container_uuid }}"
+                    "name": {{ c.title | tojson }},
+                    "url": {{ (base_url ~ "/collections/" ~ c.container_uuid) | tojson }}
                 }{%- if not loop.last %},{%- endif %}
             {%- endfor %}
             ]
@@ -65,7 +65,7 @@
             ,"isAccessibleForFree" : true,
             "distribution": {
                 "@type": "DataDownload",
-                "contentUrl": "{{ base_url }}/ndownloader/items/{{ item.container_uuid }}/versions/{{ item.version | default('draft', False) }}",
+                "contentUrl": {{ (base_url ~ "/ndownloader/items/" ~ item.container_uuid ~ "/versions/" ~ (item.version | default('draft', False))) | tojson }},
                 "encodingFormat": "application/zip"
             }
         {%- endif %}
