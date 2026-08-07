@@ -106,13 +106,13 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
         self.datacite_prefix             = None
         self.menu                        = []
         self.colors                      = {
-            "primary-color":            "#7060BB",
-            "primary-color-hover":      "#8F80CC",
+            "primary-color":            "#7060bb",
+            "primary-color-hover":      "#8f80cc",
             "primary-color-active":     "#574899",
             "primary-foreground-color": "#000000",
-            "privilege-button-color":   "#BDB5E8",
-            "footer-background-color":  "#312B63",
-            "background-color":         "#F9F8FD"
+            "privilege-button-color":   "#bdb5e8",
+            "footer-background-color":  "#312b63",
+            "background-color":         "#f9f8fd"
         }
 
 config = RuntimeConfiguration()
