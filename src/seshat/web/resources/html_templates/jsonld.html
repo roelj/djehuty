@@ -1,28 +1,49 @@
 <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Dataset",
-        "name": {{ item.title | tojson }},
-        "identifier": {{ ("https://doi.org/" ~ doi) | tojson }},
-        "citation": {{ citation | tojson }},
-        "version": {{ item.version | tojson }},
-        "description": {{ item.description | tojson }},
-        "publisher": {
+        "@type": "Dataset"
+        {%- if item.title %}
+        ,"name": {{ item.title | tojson }}
+        {%- endif %}
+        {%- if doi %}
+        ,"identifier": {{ ("https://doi.org/" ~ doi) | tojson }}
+        {%- endif %}
+        {%- if citation %}
+        ,"citation": {{ citation | tojson }}
+        {%- endif %}
+        {%- if item.version is defined and item.version is not none %}
+        ,"version": {{ item.version | tojson }}
+        {%- endif %}
+        {%- if item.description %}
+        ,"description": {{ item.description | tojson }}
+        {%- endif %}
+        {%- if item.publisher %}
+        ,"publisher": {
             "@type": "Organization",
             "name": {{ item.publisher | tojson }}
-        },
-        "license": {{ item.license_url | tojson }},
-        "keywords": {{ tags|sort | tojson }},
-        "creator": [
+        }
+        {%- endif %}
+        {%- if item.license_url %}
+        ,"license": {{ item.license_url | tojson }}
+        {%- endif %}
+        {%- if tags %}
+        ,"keywords": {{ tags | sort | tojson }}
+        {%- endif %}
+        {%- if authors %}
+        ,"creator": [
         {%- for a in authors %}
         {
-            "@type": "Person",
-            "name": {{ a.full_name | tojson }},
-            "sameAs": {{ ("https://orcid.org/" ~ a.orcid_id) | tojson }}
+            "@type": "Person"
+            {%- if a.full_name %}
+            ,"name": {{ a.full_name | tojson }}
+            {%- endif %}
+            {%- if a.orcid_id %}
+            ,"sameAs": {{ ("https://orcid.org/" ~ a.orcid_id) | tojson }}
+            {%- endif %}
           }{%- if not loop.last %},{%- endif %}
         {%- endfor %}
         ]
-
+        {%- endif %}
         {%- if coordinates.lat and coordinates.lon %}
             ,"spatialCoverage": {
                 "@type": "Place",
@@ -38,7 +59,7 @@
         {%- if item.time_coverage %}
             ,"temporalCoverage": {{ item.time_coverage | tojson }}
         {%- endif %}
-        {%- set valid_fundings = fundings | selectattr('funder_name') | list %}
+        {%- set valid_fundings = fundings | default([], True) | selectattr('funder_name') | list %}
         {%- if valid_fundings %}
             ,"funder": [
             {%- for funding in valid_fundings  %}
@@ -54,9 +75,11 @@
             ,"includedInDataCatalog": [
             {%- for c in collections %}
                 {
-                    "@type": "DataCatalog",
-                    "name": {{ c.title | tojson }},
-                    "url": {{ (base_url ~ "/collections/" ~ c.container_uuid) | tojson }}
+                    "@type": "DataCatalog"
+                    {%- if c.title %}
+                    ,"name": {{ c.title | tojson }}
+                    {%- endif %}
+                    ,"url": {{ (base_url ~ "/collections/" ~ c.container_uuid) | tojson }}
                 }{%- if not loop.last %},{%- endif %}
             {%- endfor %}
             ]
@@ -65,7 +88,7 @@
             ,"isAccessibleForFree" : true,
             "distribution": {
                 "@type": "DataDownload",
-                "contentUrl": {{ (base_url ~ "/ndownloader/items/" ~ item.container_uuid ~ "/versions/" ~ (item.version | default('draft', False))) | tojson }},
+                "contentUrl": {{ (base_url ~ "/ndownloader/items/" ~ item.container_uuid ~ "/versions/" ~ (item.version | default('draft', True))) | tojson }},
                 "encodingFormat": "application/zip"
             }
         {%- endif %}
