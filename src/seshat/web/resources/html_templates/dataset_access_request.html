@@ -10,8 +10,8 @@
    />
   <input type="hidden" id="access-request-dataset-id" name="dataset_id" value="{{item.container_uuid}}" />
   <input type="hidden" id="access-request-version" name="version" value="{{item.version}}"  />
-  <label for="access-request-reason">Reason</label>
-  <div id="access-request-reason" class="texteditor"></div>
+  <label id="access-request-reason-label">Reason</label>
+  <div id="access-request-reason" role="group" aria-labelledby="access-request-reason-label" class="texteditor"></div>
   <p>Your request will be sent to the owner of the dataset.</p>
   <div class="center">
     <div id="submit-access-request" class="button corporate-identity-standard-button">Send request for access to data</div>

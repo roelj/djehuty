@@ -27,8 +27,8 @@
 <h1>Create new private link</h1>
 <p>Fields marked with <span class="required-field">&#8727;</span> are required.</p>
 <form action="/my/{{item_type}}s/{{item_uuid}}/private_link/new" method="post">
-  <label for="expires_date">Longevity</label><span class="required-field">&#8727;</span>
-  <div id="expires_date" class="options-wrapper">
+  <label id="expires-date-label">Longevity</label><span class="required-field">&#8727;</span>
+  <div id="expires_date" role="group" aria-labelledby="expires-date-label" class="options-wrapper">
     <input type="radio" name="expires_date" id="days1" value="1 day" checked="checked" /><!--
 --><label for="days1" class="no-head">1 day</label><!--
 --><input type="radio" name="expires_date" id="days7" value="7 days" /><!--

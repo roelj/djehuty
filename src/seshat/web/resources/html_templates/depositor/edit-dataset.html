@@ -257,8 +257,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 </table>
 
 {%- if not disable_collaboration %}
-<label for="collaborator-wrapper">Collaborators <span class="beta-badge">Beta</span></label><div class="fas fa-question-circle help-icon"><span class="help-text">Add people who can collaborate on this dataset.  Collaborators are not visible on the publication, but instead are given access to this form to either change metadata, or upload files.</span></div>
-<div id="collaborator-wrapper" class="options-wrapper">
+<label id="collaborator-label">Collaborators <span class="beta-badge">Beta</span></label><div class="fas fa-question-circle help-icon"><span class="help-text">Add people who can collaborate on this dataset.  Collaborators are not visible on the publication, but instead are given access to this form to either change metadata, or upload files.</span></div>
+<div id="collaborator-wrapper" role="group" aria-labelledby="collaborator-label" class="options-wrapper">
 <a id="expand-collaborators-button" href="#">{% if article.is_shared_with_me %}Show{% else %}Manage{% endif %} collaborators</a>
 <div class="expand-collaborators">
 </div>
@@ -289,12 +289,12 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 </div>
 {%- endif %}
 
-<label for="description">Description</label><div class="fas fa-question-circle help-icon"><span class="help-text">Add as much context as possible so that others can interpret your research and reproduce it. Make sure you include methodology, techniques used, and if relevant information about approval for data collection to confirm adherence to legal or ethical requirements. The description should have at least four characters.</span></div><span class="required-field">&#8727;</span>
-<div id="description" class="texteditor">
+<label id="description-label">Description</label><div class="fas fa-question-circle help-icon"><span class="help-text">Add as much context as possible so that others can interpret your research and reproduce it. Make sure you include methodology, techniques used, and if relevant information about approval for data collection to confirm adherence to legal or ethical requirements. The description should have at least four characters.</span></div><span class="required-field">&#8727;</span>
+<div id="description" role="group" aria-labelledby="description-label" class="texteditor">
   {{article["description"] | default("", True) | replace("\\n", "<br>") | safe }}
 </div>
-<label for="access-wrapper">License &#38; Access</label>
-<div id="access-wrapper">
+<label id="access-label">License &#38; Access</label>
+<div id="access-wrapper" role="group" aria-labelledby="access-label">
   <div id="access-type-wrapper" class="options-wrapper">
 <input type="radio" name="access_type" id="open_access" value="open" checked="checked" /><!--
 --><label for="open_access" class="no-head">Open access</label><!--
@@ -323,14 +323,14 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
     </select>
     <label for="embargo_until_date" class="inner-head">Until date</label><span class="required-field"> &#8727;</span>
     <input id="embargo_until_date" type="date" name="embargo_until_date" value="{{article["embargo_until_date"]}}" />
-    <label for="embargo-type-wrapper" class="inner-head">Embargo type</label><span class="required-field"> &#8727;</span>
-    <div id="embargo-type-wrapper" class="options-wrapper">
+    <label id="embargo-type-label" class="inner-head">Embargo type</label><span class="required-field"> &#8727;</span>
+    <div id="embargo-type-wrapper" role="group" aria-labelledby="embargo-type-label" class="options-wrapper">
       <input type="radio" name="embargo_type" id="files_only_embargo" value="file" /><!--
 --><label for="files_only_embargo" class="no-head">Files-only embargo</label>
       <input type="radio" name="embargo_type" id="content_embargo" value="article" /><!--
 --><label for="content_embargo" class="no-head">Full content embargo</label></div>
-    <label for="embargo_reason" class="inner-head">Reason</label><span class="required-field"> &#8727;</span>
-    <div id="embargo_reason" class="texteditor">
+    <label id="embargo-reason-label" class="inner-head">Reason</label><span class="required-field"> &#8727;</span>
+    <div id="embargo_reason" role="group" aria-labelledby="embargo-reason-label" class="texteditor">
       {{article["embargo_reason"] | default("", True) | replace("\\n", "<br>") | safe }}
     </div>
   </div>
@@ -342,12 +342,12 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
       conditions under which you grant users access to your data files,
       and add the reason why your dataset is restricted.
     </p>
-    <label for="restricted_access_reason" class="inner-head">Reason</label><span class="required-field"> &#8727;</span>
-    <div id="restricted_access_reason" class="texteditor">
+    <label id="restricted-reason-label" class="inner-head">Reason</label><span class="required-field"> &#8727;</span>
+    <div id="restricted_access_reason" role="group" aria-labelledby="restricted-reason-label" class="texteditor">
       {{article["embargo_reason"] | default("", True) | replace("\\n", "<br>") | safe }}
     </div>
-    <label for="restricted_access_eula" class="inner-head">EULA</label><span class="required-field"> &#8727;</span>
-    <div id="restricted_access_eula" class="texteditor">
+    <label id="restricted-eula-label" class="inner-head">EULA</label><span class="required-field"> &#8727;</span>
+    <div id="restricted_access_eula" role="group" aria-labelledby="restricted-eula-label" class="texteditor">
       {{article["eula"] | default("", True) | replace("\\n", "<br>") | safe }}
     </div>
     <!--
@@ -356,8 +356,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
       -->
   </div>
 </div>
-<label for="categories-wrapper">Categories</label><div class="fas fa-question-circle help-icon"><span class="help-text">Select one or multiple categories that this research best correlates with.</span></div><span class="required-field">&#8727;</span>
-<div id="categories-wrapper" class="options-wrapper">
+<label id="categories-label">Categories</label><div class="fas fa-question-circle help-icon"><span class="help-text">Select one or multiple categories that this research best correlates with.</span></div><span class="required-field">&#8727;</span>
+<div id="categories-wrapper" role="group" aria-labelledby="categories-label" class="options-wrapper">
   <a id="expand-categories-button" href="#">Select categories</a>
   <div class="expand-categories"></div>
   <div id="expanded-categories">
@@ -373,8 +373,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 {%- endfor %}
   </div>
 </div>
-<label for="groups-wrapper">Group</label><span class="required-field"> &#8727;</span>
-<div id="groups-wrapper">
+<label id="groups-label">Group</label><span class="required-field"> &#8727;</span>
+<div id="groups-wrapper" role="group" aria-labelledby="groups-label">
 {%- if article.group_name is not none and article.group_name is defined %}
 <h4>{{article.group_name}}</h4>
 <input class="subitem-checkbox" type="radio" name="groups" value="{{article.group_id}}" id="group_{{article.group_id}}" checked="checked"><!--
@@ -423,8 +423,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
   </thead>
   <tbody></tbody>
 </table>
-<label for="doi-wrapper">DOI reservation</label><div class="fas fa-question-circle help-icon"><span class="help-text">Upon publication, a DOI will be assigned to your dataset. If you need to have the DOI before publication, you can use this value.</span></div>
-<div id="doi-wrapper" class="options-wrapper">
+<label id="doi-label">DOI reservation</label><div class="fas fa-question-circle help-icon"><span class="help-text">Upon publication, a DOI will be assigned to your dataset. If you need to have the DOI before publication, you can use this value.</span></div>
+<div id="doi-wrapper" role="group" aria-labelledby="doi-label" class="options-wrapper">
   <p>The DOI of your dataset will be: <strong>{{article["doi"]}}</strong></p>
 </div>
 <h3 class="corporate-identity-h3">Findability</h3>
@@ -433,8 +433,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 {% include 'depositor/language-selector.html' %}
 <label for="time_coverage">Time coverage</label><div class="fas fa-question-circle help-icon"><span class="help-text">Indicate the dates to which the data refer. Enter the year, or the beginning and ending date.</span></div>
 <input type="text" id="time_coverage" name="time_coverage" value="{{article["time_coverage"] | default("", True)}}" />
-<label for="geolocation-wrapper">Geolocation</label><div class="fas fa-question-circle help-icon"><span class="help-text">When your dataset covers geographical data, fill in the following section </span></div>
-<div id="geolocation-wrapper">
+<label id="geolocation-label">Geolocation</label><div class="fas fa-question-circle help-icon"><span class="help-text">When your dataset covers geographical data, fill in the following section </span></div>
+<div id="geolocation-wrapper" role="group" aria-labelledby="geolocation-label">
   <label for="geolocation" class="inner-head" for="geolocation">Name</label><div class="fas fa-question-circle help-icon"><span class="help-text">The geographic area to which the data refer (e.g. municipality, town/city, region, country)</span></div>
   <input type="text" id="geolocation" name="geolocation" placeholder="Example: Dam Square, Amsterdam" value="{{article["geolocation"] | default("", True)}}" />
   <label for="longitude" class="inner-head" for="longitude">Longitude</label><div class="fas fa-question-circle help-icon"><span class="help-text">Geographic longitude in decimal degrees, East is positive, West is negative. Values: -180 to 180.</span></div>
@@ -459,8 +459,8 @@ table#files tbody tr td:nth-child(3) { width: 15px; text-align: right; }
 <label for="organizations">Organizations</label><div class="fas fa-question-circle help-icon"><span class="help-text">Name of the organizations that contributed to the creation of the resource. Separate different names with a semicolon (;)</span></div>
 <textarea id="organizations" name="organizations" placeholder="Example: University of Seshat">{{article["organizations"] | default("", True) }}</textarea>
 <h3 class="corporate-identity-h3">Files</h3>
-<label for="record-type-wrapper">Type</label>
-<div id="record-type-wrapper" class="options-wrapper">
+<label id="record-type-label">Type</label>
+<div id="record-type-wrapper" role="group" aria-labelledby="record-type-label" class="options-wrapper">
 <input type="radio" name="record_type" id="metadata_record_only" value="meta" /><!--
 --><label for="metadata_record_only" class="no-head">Metadata-only record</label><!--
 --><input type="radio" name="record_type" id="external_link" value="link" /><!--
@@ -502,10 +502,10 @@ git push {{site_shorttag}} --tags</pre>
   </select>
   <label for="git-repository-name">Git repository name</label><div class="fas fa-question-circle help-icon"><span class="help-text">This will be used as the folder name when cloning the repository.</span></div>
   <input type="text" id="git-repository-name" name="git-repository-name" value="{{article["git_repository_name"]}}" />
-  <label for="git-code-hosting-page">Code hosting project URL</label><div class="fas fa-question-circle help-icon"><span class="help-text">A link to the project page on Gitlab, Github or another code hosting platform.</span></div>
+  <label for="git-code-hosting-url">Code hosting project URL</label><div class="fas fa-question-circle help-icon"><span class="help-text">A link to the project page on Gitlab, Github or another code hosting platform.</span></div>
   <input type="text" id="git-code-hosting-url" name="git-code-hosting-url" value="{{article["git_code_hosting_url"]}}" />
-  <label for="git-files-wrapper" id="git-files-label">Git file list</label>
-  <div id="git-files-wrapper" class="options-wrapper">
+  <label id="git-files-label">Git file list</label>
+  <div id="git-files-wrapper" role="group" aria-labelledby="git-files-label" class="options-wrapper">
     <ul id="git-files"></ul>
   </div>
   <h4 class="corporate-identity-h4">Distribution artefacts</h4>
@@ -544,8 +544,8 @@ git push {{site_shorttag}} --tags</pre>
   </table>
 
 <div id="thumbnail-files-wrapper">
-<label for="thumbnails-wrapper">Thumbnail</label><div class="fas fa-question-circle help-icon"><span class="help-text">Select a file from your file deposit as a thumbnail of your dataset.</span></div>
-<div id="thumbnails-wrapper"></div>
+<label id="thumbnails-label">Thumbnail</label><div class="fas fa-question-circle help-icon"><span class="help-text">Select a file from your file deposit as a thumbnail of your dataset.</span></div>
+<div id="thumbnails-wrapper" role="group" aria-labelledby="thumbnails-label"></div>
 </div>
 </div>
 </div>

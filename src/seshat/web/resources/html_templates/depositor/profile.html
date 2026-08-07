@@ -114,8 +114,8 @@ jQuery(document).ready(function (){
 <label for="biography">Biography</label>
 <textarea id="biography" name="biography">{{account.biography | default("", True) }}</textarea>
 
-<label for="categories-wrapper">Fields of interest</label>
-<div id="categories-wrapper" class="options-wrapper">
+<label id="categories-label">Fields of interest</label>
+<div id="categories-wrapper" role="group" aria-labelledby="categories-label" class="options-wrapper">
   <a id="expand-categories-button" href="#">Select categories</a>
   <div class="expand-categories"></div>
   <div id="expanded-categories">
