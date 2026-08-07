@@ -1759,6 +1759,13 @@ class WebServer:
             footer_background_color  = config.colors['footer-background-color'],
             privilege_button_color   = config.colors['privilege-button-color'],
             background_color         = config.colors["background-color"],
+            dark_primary_color            = config.dark_colors['primary-color'],
+            dark_primary_color_hover      = config.dark_colors['primary-color-hover'],
+            dark_primary_color_active     = config.dark_colors['primary-color-active'],
+            dark_primary_foreground_color = config.dark_colors['primary-foreground-color'],
+            dark_footer_background_color  = config.dark_colors['footer-background-color'],
+            dark_privilege_button_color   = config.dark_colors['privilege-button-color'],
+            dark_background_color         = config.dark_colors["background-color"],
             sandbox_message_css      = config.sandbox_message_css,
             custom_css               = config.custom_css)
 

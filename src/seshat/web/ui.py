@@ -623,13 +623,15 @@ def read_static_pages (static_pages, server, config_dir):
 
 def read_colors_configuration (xml_root):
     """Procedure to parse and set the color scheme configuration."""
-    colors = xml_root.find("colors")
-    if colors:
-        for color in ["primary-color", "primary-color-hover",
-                      "primary-color-active", "primary-foreground-color",
-                      "privilege-button-color", "footer-background-color",
-                      "background-color"]:
-            config.colors[color] = config_value (colors, color, fallback=config.colors[color])
+    for palette, variable in [("colors", config.colors),
+                              ("dark-colors", config.dark_colors)]:
+        colors = xml_root.find(palette)
+        if has_children (colors):
+            for color in ["primary-color", "primary-color-hover",
+                          "primary-color-active", "primary-foreground-color",
+                          "privilege-button-color", "footer-background-color",
+                          "background-color"]:
+                variable[color] = config_value (colors, color, fallback=config.colors[color])
 
 def read_datacite_configuration (xml_root):
     """Procedure to parse and set the DataCite API configuration."""

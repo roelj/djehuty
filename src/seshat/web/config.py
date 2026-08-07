@@ -114,5 +114,14 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
             "footer-background-color":  "#312b63",
             "background-color":         "#f9f8fd"
         }
+        self.dark_colors                 = {
+            "primary-color":            "#7060bb",
+            "primary-color-hover":      "#8f80cc",
+            "primary-color-active":     "#574899",
+            "primary-foreground-color": "#e6e4f0",
+            "privilege-button-color":   "#bdb5e8",
+            "footer-background-color":  "#1f1a3d",
+            "background-color":         "#14121c"
+        }
 
 config = RuntimeConfiguration()
