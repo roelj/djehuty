@@ -119,6 +119,15 @@ label { cursor: pointer; }
 #tile-view-mode { color: #f49120; cursor: pointer; }
 #list-view-mode { color: darkgray; cursor: pointer; }
 #search-results-tile-view { text-align: left; }
+@media (max-width: 1200px) {
+    .search-container { min-width: 0; }
+    .search-column, .search-column.col-left, .search-column.col-right {
+        float: none;
+        width: auto;
+        padding-right: 0;
+    }
+    .search-sidebar, .search-sidebar-container { float: none; width: auto; }
+}
 </style>
 {% endblock %}
 {% block body %}

@@ -639,3 +639,10 @@ select { background: var(--select-background); border: solid 1pt var(--select-bo
 }
 .author-orcid { height: 15px; }
 .justify { text-align: justify; }
+
+@media (max-width: 940px) {
+    #primary-menu-wrapper, #submenu-wrapper { width: auto; max-width: 880pt; }
+    #search-box-wrapper { min-width: 0; height: auto; }
+    .corporate-identity-table tbody tr td:nth-child(1) { max-width: none; }
+    .corporate-identity-table tbody tr td:last-child { width: auto; }
+}

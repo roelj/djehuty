@@ -197,3 +197,15 @@ button.ql-link { display: none !important }
 #expanded-categories.open { display: block; transition: all 250ms ease-in-out; }
 #expanded-collaborators { display: none; transition: all 250ms ease-in-out; }
 #expanded-collaborators.open { display: block; transition: all 250ms ease-in-out; }
+
+@media (max-width: 940px) {
+    #content-wrapper input[type="text"],
+    #content-wrapper input[type="date"],
+    #content-wrapper textarea,
+    #content-wrapper select,
+    #content-wrapper .options-wrapper,
+    #groups-wrapper, #access-wrapper, #geolocation-wrapper, #thumbnails-wrapper {
+        width: auto;
+        max-width: 100%;
+    }
+}
