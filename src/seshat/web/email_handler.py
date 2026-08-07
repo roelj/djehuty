@@ -38,8 +38,8 @@ class EmailInterface:
         else:
             message["Subject"] = subject
 
-        message.attach (MIMEText (plaintext, "plain"))
-        message.attach (MIMEText (html, "html"))
+        message.attach (MIMEText (plaintext, "plain", "utf-8"))
+        message.attach (MIMEText (html, "html", "utf-8"))
 
         try:
             connection = smtplib.SMTP (self.smtp_server, self.smtp_port, timeout=10)
