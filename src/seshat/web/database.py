@@ -3833,3 +3833,15 @@ class SparqlInterface:
             "namespace": namespace,
             "created_date": current_time
         }
+
+    def update_project (self, project_uuid, account_uuid=None, name=None, namespace=None):
+        """Procedure to edit a project."""
+
+        query = self.__query_from_template ("update_project", {
+            "uuid":         project_uuid,
+            "account_uuid": account_uuid,
+            "name":         rdf.escape_string_value (name),
+            "namespace":    rdf.escape_string_value (namespace)
+        })
+
+        return self.__run_logged_query (query)

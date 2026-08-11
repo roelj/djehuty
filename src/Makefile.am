@@ -199,6 +199,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/sparql_templates/update_git_uuid.sparql              \
     seshat/web/resources/sparql_templates/update_orcid_for_account.sparql     \
     seshat/web/resources/sparql_templates/update_private_link.sparql          \
+    seshat/web/resources/sparql_templates/update_project.sparql               \
     seshat/web/resources/sparql_templates/update_quota_request.sparql         \
     seshat/web/resources/sparql_templates/update_review.sparql                \
     seshat/web/resources/sparql_templates/update_seen_by_reviewer.sparql      \

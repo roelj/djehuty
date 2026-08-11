@@ -1,0 +1,34 @@
+{% extends "prefixes.sparql" %}
+{% block query %}
+DELETE {
+  GRAPH <{{state_graph}}> {
+    {%- if name is not none %}
+    ?project          shst:name                  ?name .
+    {%- endif %}{% if namespace is not none %}
+    ?project          shst:namespace             ?namespace .
+    {%- endif %}{% if account_uuid is not none %}
+    ?project          shst:account               ?account .
+    {%- endif %}
+  }
+}
+INSERT {
+  GRAPH <{{state_graph}}> {
+    {%- if name is not none %}
+    ?project          shst:name                  {{name | safe}} .
+    {%- endif %}{% if namespace is not none %}
+    ?project          shst:namespace             {{namespace | safe}} .
+    {%- endif %}{% if account_uuid is not none %}
+    ?project          shst:account               <account:{{account_uuid}}> .
+    {%- endif %}
+  }
+}
+WHERE {
+  GRAPH <{{state_graph}}> {
+    ?project              rdf:type                  shst:Project .
+    ?project              shst:account              ?account .
+    OPTIONAL { ?project   shst:name                 ?name . }
+    OPTIONAL { ?project   shst:namespace            ?namespace . }
+  }
+  FILTER (?project = <project:{{uuid}}>)
+}
+{% endblock %}
