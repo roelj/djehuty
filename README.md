@@ -33,6 +33,13 @@ RPM packages for Enterprise Linux and Fedora can be obtained from
 Debian packages can be obtained from the
 [Codeberg releases](https://codeberg.org/seshat/seshat/releases) page.
 
+### [PyPI](https://pypi.org/project/seshat)
+
+Installing via PyPI can be done using:
+```
+pip install seshat
+```
+
 ## Creating a development environment
 
 This project uses the GNU autotools build system.
