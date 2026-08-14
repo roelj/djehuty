@@ -109,23 +109,25 @@ def value_or_none (record, key):
 def pretty_print_size (num_bytes):
     """Return pretty-printed file size."""
 
-    output = ""
     if not isinstance(num_bytes, int):
-        output = "0B"
-    elif num_bytes < 1000:
-        output = f"{num_bytes}B"
-    elif num_bytes < 1000000:
-        output = f"{num_bytes/1000:.2f}KB"
-    elif num_bytes < 1000000000:
-        output = f"{num_bytes/1000000:.2f}MB"
-    elif num_bytes < 1000000000000:
-        output = f"{num_bytes/1000000000:.2f}GB"
-    elif num_bytes < 1000000000000000:
-        output = f"{num_bytes/1000000000000:.2f}TB"
-    else:
-        output = f"{num_bytes/1000000000000000:.2f}PB"
+        return "0B"
 
-    return output
+    units = [
+        (1_000_000_000_000_000, "PB"),
+        (1_000_000_000_000, "TB"),
+        (1_000_000_000, "GB"),
+        (1_000_000, "MB"),
+        (1_000, "KB"),
+        (1, "B"),
+    ]
+
+    for num, suffix in units:
+        if num_bytes >= num:
+            value = num_bytes / num
+            if suffix == 'B':
+                return f"{value}B"
+            return f"{value:.2f}{suffix}"
+
 
 def decimal_coord(raw_input, axis, digits=5):
     '''
