@@ -239,11 +239,8 @@ def custom_field_name (name):
     ## Exceptions to the custom field names.
     if name == "licence_remarks":
         name = "license_remarks"
-    if name == "geolocation_latitude":
-        name = "latitude"
-    if name == "geolocation_longitude":
-        name = "longitude"
-
+    if name in ("geolocation_latitude", "geolocation_longitude"):
+        name = name.split("_")[1]
     return name
 
 def is_opendap_url (url):
