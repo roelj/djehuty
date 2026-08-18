@@ -128,6 +128,7 @@ def pretty_print_size (num_bytes):
                 return f"{value}B"
             return f"{value:.2f}{suffix}"
 
+    return f"{num_bytes}B"
 
 def decimal_coord(raw_input, axis, digits=5):
     '''
