@@ -78,8 +78,8 @@ class WebServer:
         config.base_url         = f"http://{address}:{port}"
         self.db               = database.SparqlInterface()  # pylint: disable=invalid-name
         self.email            = email_handler.EmailInterface()
-        self.cookie_key       = "seshat_session"
-        self.impersonator_cookie_key = f"impersonator_{self.cookie_key}"
+        self.session_cookie_key      = "seshat_session"
+        self.impersonator_cookie_key = f"impersonator_{self.session_cookie_key}"
         self.log_access          = self.log_access_directly
         self.log                 = logging.getLogger(__name__)
         self.locks               = locks.Locks()
@@ -420,14 +420,14 @@ class WebServer:
         return self.db.may_review (token)
 
     def __impersonator_token (self, request):
-        return self.token_from_cookie (request, self.impersonator_cookie_key)
+        return self.value_from_cookie (request, self.impersonator_cookie_key)
 
     def __impersonating_account (self, request):
-        admin_token = self.token_from_cookie (request, self.impersonator_cookie_key)
+        admin_token = self.value_from_cookie (request, self.impersonator_cookie_key)
         if admin_token is None:
             return None
 
-        user_token = self.token_from_cookie (request)
+        user_token = self.value_from_cookie (request, self.session_cookie_key)
         account = self.db.account_by_session_token (user_token)
         return account
 
@@ -509,7 +509,7 @@ class WebServer:
 
     def __render_template (self, request, template_name, **context):
         template      = self.jinja.get_template (template_name)
-        token         = self.token_from_cookie (request)
+        token         = self.value_from_cookie (request, self.session_cookie_key)
         account       = self.db.account_by_session_token (token)
         parameters    = {
             "base_url":            config.base_url,
@@ -658,10 +658,10 @@ class WebServer:
         addresses = self.db.quota_reviewer_email_addresses()
         return self.__send_templated_email (addresses, subject, template_name, **context)
 
-    def token_from_cookie (self, request, cookie_key=None):
+    def value_from_cookie (self, request, cookie_key=None):
         """Procedure to gather an access token from a HTTP cookie."""
         if cookie_key is None:
-            cookie_key = self.cookie_key
+            cookie_key = self.session_cookie_key
         return value_or_none (request.cookies, cookie_key)
 
     def __log_event (self, request, item_uuid, item_type, event_type):
@@ -1595,7 +1595,7 @@ class WebServer:
     def token_from_request (self, request):
         """Procedure to get the access token from a HTTP request."""
         try:
-            token_string = self.token_from_cookie (request)
+            token_string = self.value_from_cookie (request, self.session_cookie_key)
             if token_string is None:
                 token_string = request.environ["HTTP_AUTHORIZATION"]
             if isinstance(token_string, str):
@@ -2053,7 +2053,7 @@ class WebServer:
 
             if mfa_token is None:
                 response = redirect ("/my/dashboard", code=302)
-                response.set_cookie (key=self.cookie_key, value=token, samesite="Lax", secure=config.in_production)
+                response.set_cookie (key=self.session_cookie_key, value=token, samesite="Lax", secure=config.in_production)
                 return response
 
             ## Send e-mail
@@ -2065,7 +2065,7 @@ class WebServer:
                 "2fa_token", token = mfa_token)
 
             response = redirect (f"/my/sessions/{session_uuid}/activate", code=302)
-            response.set_cookie (key=self.cookie_key, value=token, samesite="Lax", secure=config.in_production)
+            response.set_cookie (key=self.session_cookie_key, value=token, samesite="Lax", secure=config.in_production)
             return response
 
         return self.error_500 ("Failed to complete the log in procedure for an unknown reason.")
@@ -2077,8 +2077,8 @@ class WebServer:
 
         # When impersonating, find the admin's token,
         # and set it as the new session token.
-        other_session_token = self.token_from_cookie (request, self.impersonator_cookie_key)
-        redirect_to         = self.token_from_cookie (request, "redirect_to")
+        other_session_token = self.value_from_cookie (request, self.impersonator_cookie_key)
+        redirect_to         = self.value_from_cookie (request, "redirect_to")
         if other_session_token:
             response = None
             if redirect_to:
@@ -2086,8 +2086,8 @@ class WebServer:
             else:
                 response = redirect ("/admin/users", code=302)
 
-            self.db.delete_session (self.token_from_cookie (request))
-            response.set_cookie (key    = self.cookie_key,
+            self.db.delete_session (self.value_from_cookie (request, self.session_cookie_key))
+            response.set_cookie (key    = self.session_cookie_key,
                                  value  = other_session_token,
                                  secure = config.in_production)
             response.delete_cookie (key = self.impersonator_cookie_key)
@@ -2095,8 +2095,8 @@ class WebServer:
             return response
 
         response = redirect ("/", code=302)
-        self.db.delete_session (self.token_from_cookie (request))
-        response.delete_cookie (key=self.cookie_key)
+        self.db.delete_session (self.value_from_cookie (request, self.session_cookie_key))
+        response.delete_cookie (key=self.session_cookie_key)
         return response
 
     def ui_review_impersonate_to_dataset (self, request, dataset_id):
@@ -2145,7 +2145,7 @@ class WebServer:
         new_token, _, _ = self.db.insert_session (dataset["account_uuid"],
                                                   name="Reviewer",
                                                   override_mfa=True)
-        response.set_cookie (key    = self.cookie_key,
+        response.set_cookie (key    = self.session_cookie_key,
                              value  = new_token,
                              samesite = "Strict",
                              secure = config.in_production)
@@ -2159,7 +2159,7 @@ class WebServer:
         if not validator.is_valid_uuid (account_uuid):
             return self.error_404 (request)
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_impersonate (token):
             return self.error_403 (request)
 
@@ -2178,7 +2178,7 @@ class WebServer:
         new_token, _, _ = self.db.insert_session (account_uuid,
                                                   name="Impersonation",
                                                   override_mfa=True)
-        response.set_cookie (key    = self.cookie_key,
+        response.set_cookie (key    = self.session_cookie_key,
                              value  = new_token,
                              samesite = "Strict",
                              secure = config.in_production)
@@ -2223,8 +2223,8 @@ class WebServer:
             sessions     = sessions)
 
         # 'Upgrade' SameSite from "Lax" to "Strict".
-        token = self.token_from_cookie (request)
-        response.set_cookie (key=self.cookie_key, value=token, samesite="Strict", secure=config.in_production)
+        token = self.value_from_cookie (request, self.session_cookie_key)
+        response.set_cookie (key=self.session_cookie_key, value=token, samesite="Strict", secure=config.in_production)
         return response
 
     def __datasets_with_storage_usage (self, datasets):
@@ -2699,7 +2699,7 @@ class WebServer:
                                            session_uuid=session_uuid)
 
         if request.method == "POST":
-            token     = self.token_from_cookie (request)
+            token = self.value_from_cookie (request, self.session_cookie_key)
             if not validator.is_valid_uuid (session_uuid):
                 return self.error_403 (request)
 
@@ -3046,7 +3046,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         may_review_all = self.db.may_review (token)
         may_review_institution = self.db.may_review_institution (token)
         if (not may_review_all and not may_review_institution):
@@ -3125,7 +3125,7 @@ class WebServer:
                                        container_uuid=dataset["container_uuid"])
 
     def __process_quota_request (self, request, quota_request_uuid, status):
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_review_quotas (token):
             return self.error_403 (request)
 
@@ -3169,7 +3169,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_review_quotas (token):
             return self.error_403 (request)
 
@@ -3182,7 +3182,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3195,7 +3195,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3208,7 +3208,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3218,7 +3218,7 @@ class WebServer:
     def ui_admin_sparql (self, request):
         """Implements /admin/sparql."""
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_query (token):
             return self.error_403 (request)
 
@@ -3241,7 +3241,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3252,7 +3252,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3271,7 +3271,7 @@ class WebServer:
         if not self.accepts_html (request):
             return self.error_406 ("text/html")
 
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3287,7 +3287,7 @@ class WebServer:
 
     def ui_admin_clear_cache (self, request):
         """Implements /admin/maintenance/clear-cache."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if self.db.may_administer (token):
             self.log.info ("Invalidating caches.")
             self.db.cache.invalidate_all ()
@@ -3297,7 +3297,7 @@ class WebServer:
 
     def ui_admin_repair_doi_registrations (self, request):
         """Implements /admin/maintenance/repair-doi-registrations."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
@@ -3335,7 +3335,7 @@ class WebServer:
 
     def ui_admin_remove_website_sessions (self, request):
         """Implements /admin/maintenance/remove-website-sessions."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if self.db.may_administer (token):
             expiry_date = datetime.now() - timedelta(days=2)
             expiry_date = expiry_date.strftime('%Y-%m-%d')
@@ -3349,7 +3349,7 @@ class WebServer:
 
     def ui_admin_recalculate_statistics (self, request):
         """Implements /admin/maintenance/recalculate-statistics."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if self.db.may_administer (token) and self.db.may_recalculate_statistics (token):
             if self.db.update_view_and_download_counts ():
                 self.log.info ("Recalculated statistics.")
@@ -3361,7 +3361,7 @@ class WebServer:
 
     def ui_admin_clear_sessions (self, request):
         """Implements /admin/maintenance/clear-sessions."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if self.db.may_administer (token):
             self.log.info ("Invalidating sessions.")
             self.db.delete_all_sessions ()
@@ -7179,7 +7179,7 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        reviewer_token = self.token_from_cookie (request, self.impersonator_cookie_key)
+        reviewer_token = self.value_from_cookie (request, self.impersonator_cookie_key)
         may_review_all = self.db.may_review (reviewer_token)
         may_review_institution = self.db.may_review_institution (reviewer_token)
         if not may_review_all and not may_review_institution:
@@ -7230,7 +7230,7 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        reviewer_token = self.token_from_cookie (request, self.impersonator_cookie_key)
+        reviewer_token = self.value_from_cookie (request, self.impersonator_cookie_key)
         submitter_token = self.token_from_request (request)
         may_review_all = self.db.may_review (reviewer_token)
         may_review_institution = self.db.may_review_institution (reviewer_token)
@@ -7629,7 +7629,7 @@ class WebServer:
     def api_v3_profile_picture (self, request):
         """Implements /v3/profile/picture."""
 
-        token   = self.token_from_cookie (request)
+        token   = self.value_from_cookie (request, self.session_cookie_key)
         account = self.db.account_by_session_token (token)
         if account is None:
             return self.error_authorization_failed (request)
@@ -9015,7 +9015,7 @@ class WebServer:
         if not validator.is_valid_uuid (reviewer_uuid):
             return self.error_403 (request)
 
-        account_token = self.token_from_cookie (request, self.cookie_key)
+        account_token = self.value_from_cookie (request, self.session_cookie_key)
         may_review_all = self.db.may_review (account_token)
         may_review_institution = self.db.may_review_institution (account_token)
         if not may_review_all and not may_review_institution:
@@ -9084,7 +9084,7 @@ class WebServer:
 
     def api_v3_repair_md5s (self, request, container_uuid):
         """Attempts to repair the MD5 checksums for DATASET_ID."""
-        token = self.token_from_cookie (request)
+        token = self.value_from_cookie (request, self.session_cookie_key)
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
