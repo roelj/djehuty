@@ -311,6 +311,8 @@ class WebServer:
             ## Projects
             ## ----------------------------------------------------------------
             R("/v3/projects",                                                    self.api_v3_projects),
+            R("/v3/projects/<project_uuid>",                                     self.api_v3_project_details),
+
             ## RO-Crates
             ## ----------------------------------------------------------------
             R("/v3/ro-crates",                                                   self.api_v3_ro_crates),
@@ -6460,6 +6462,31 @@ class WebServer:
     ## V3 API
     ## ------------------------------------------------------------------------
 
+    def __validated_project_parameters (self, request, account_uuid):
+        record = request.get_json()
+        errors = []
+        parameters = {
+            "account_uuid": account_uuid,
+            "name":         validator.string_value (record, "name",             required=True, error_list=errors),
+            "namespace":    validator.string_value (record, "namespace", 6, 64, required=True, error_list=errors)
+        }
+        if not validator.string_fits_pattern (parameters["namespace"], 64, "^[a-z][a-z-]*\\Z"):
+            errors.append({
+                "field_name": "namespace",
+                "message":    ("The namespace field may only contain "
+                               "lowercase characters and hyphens.")
+            })
+        else:
+            namespace = parameters["namespace"]
+            namespace_check = self.db.projects (namespace=namespace, use_cache=False)
+            if namespace_check:
+                errors.append({
+                    "field_name": "namespace",
+                    "message": f"The namespace '{namespace}' is already taken."
+                })
+
+        return parameters, errors
+
     def api_v3_projects (self, request):
         """Implements /v3/projects."""
 
@@ -6469,32 +6496,11 @@ class WebServer:
 
         if request.method in ("HEAD", "GET"):
             projects = self.db.projects (created_by = account_uuid, limit = 10000)
-            return self.default_list_response (projects, formatter.format_project_record,
-                                               ontology_url = config.ontology_url)
+            output = list(map (lambda project: formatter.format_project_record (project, config.ontology_url), projects))
+            return self.response (json.dumps(output))
 
         if request.method == "POST":
-            record = request.get_json()
-            errors = []
-            parameters = {
-                "account_uuid": account_uuid,
-                "name":         validator.string_value (record, "name",             required=True, error_list=errors),
-                "namespace":    validator.string_value (record, "namespace", 6, 64, required=True, error_list=errors)
-            }
-            if not validator.string_fits_pattern (parameters["namespace"], 64, "^[a-z][a-z-]*\\Z"):
-                errors.append({
-                    "field_name": "namespace",
-                    "message":    ("The namespace field may only contain "
-                                   "lowercase characters and hyphens.")
-                })
-            else:
-                namespace = parameters["namespace"]
-                namespace_check = self.db.projects (namespace=namespace, use_cache=False)
-                if namespace_check:
-                    errors.append({
-                        "field_name": "namespace",
-                        "message": f"The namespace '{namespace}' is already taken."
-                    })
-
+            parameters, errors = self.__validated_project_parameters (request, account_uuid)
             if errors:
                 return self.error_400_list (request, errors)
 
@@ -6502,7 +6508,39 @@ class WebServer:
             if project is not None:
                 return self.response (json.dumps (formatter.format_project_record (project, config.ontology_url)))
 
-        return self.error_500()
+        return self.error_405 (["GET", "POST"])
+
+    def api_v3_project_details (self, request, project_uuid):
+        """Implements /v3/projects/<project_uuid>."""
+
+        account_uuid = self.default_authenticated_error_handling (request, ["GET", "PUT"], "application/json")
+        if isinstance (account_uuid, Response):
+            return account_uuid
+
+        if not validator.is_valid_uuid (project_uuid):
+            return self.error_404 (request)
+
+        project = None
+        try:
+            project = self.db.projects (project_uuid = project_uuid)[0]
+        except TypeError, IndexError:
+            return self.error_404 (request)
+
+        if request.method in ("HEAD", "GET"):
+            return self.response (json.dumps (formatter.format_project_record (project, config.ontology_url)))
+
+        if request.method == "PUT":
+            parameters, errors = self.__validated_project_parameters (request, account_uuid)
+            if errors:
+                return self.error_400_list (request, errors)
+
+            parameters["project_uuid"] = project_uuid
+            if self.db.update_project (**parameters):
+                updated_project = { **project, **parameters }
+                return self.response (json.dumps (
+                    formatter.format_project_record (updated_project, config.ontology_url)))
+
+        return self.error_405 (["GET", "PUT"])
 
     def api_v3_datasets (self, request):
         """Implements /v3/datasets."""
