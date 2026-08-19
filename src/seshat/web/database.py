@@ -3827,6 +3827,9 @@ class SparqlInterface:
         if not self.add_triples_from_graph (graph):
             return None
 
+        self.cache.invalidate_by_prefix (f"projects_{account_uuid}")
+        self.cache.invalidate_by_prefix ("projects")
+
         return {
             "uuid": rdf.uri_to_uuid (uri),
             "name": name,
@@ -3843,5 +3846,8 @@ class SparqlInterface:
             "name":         rdf.escape_string_value (name),
             "namespace":    rdf.escape_string_value (namespace)
         })
+
+        self.cache.invalidate_by_prefix (f"projects_{account_uuid}")
+        self.cache.invalidate_by_prefix ("projects")
 
         return self.__run_logged_query (query)

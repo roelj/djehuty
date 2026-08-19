@@ -25,7 +25,7 @@ INSERT {
 WHERE {
   GRAPH <{{state_graph}}> {
     ?project              rdf:type                  shst:Project .
-    ?project              shst:account              ?account .
+    OPTIONAL { ?project   shst:account              ?account . }
     OPTIONAL { ?project   shst:name                 ?name . }
     OPTIONAL { ?project   shst:namespace            ?namespace . }
   }
