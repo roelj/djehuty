@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     tables.forEach(function (table) {
 	const element = document.getElementById(table);
 	if (element) {
-            jQuery(`#${table}`).DataTable({
+	    new DataTable(element, {
 		columnDefs: [
                     { type: "file-size", targets: 2 },
                     { orderable: false, targets: -1 }
