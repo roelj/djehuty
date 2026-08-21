@@ -1,20 +1,20 @@
 function save_profile (notify=true, on_success=jQuery.noop) {
 
-    let categories   = jQuery("input[name='categories']:checked");
+    let categories   = document.querySelectorAll("input[name='categories']:checked");
     let category_ids = [];
     for (let category of categories) {
-        category_ids.push(jQuery(category).val());
+        category_ids.push(category.value);
     }
 
     let form_data = {
-        "first_name":     or_null(jQuery("#first_name").val()),
-        "last_name":      or_null(jQuery("#last_name").val()),
-        "job_title":      or_null(jQuery("#job_title").val()),
-        "location":       or_null(jQuery("#location").val()),
-        "biography":      or_null(jQuery("#biography").val()),
-        "twitter":        or_null(jQuery("#twitter").val()),
-        "linkedin":       or_null(jQuery("#linkedin").val()),
-        "website":        or_null(jQuery("#website").val()),
+        "first_name":     or_null(document.getElementById("first_name").value),
+        "last_name":      or_null(document.getElementById("last_name").value),
+        "job_title":      or_null(document.getElementById("job_title").value),
+        "location":       or_null(document.getElementById("location").value),
+        "biography":      or_null(document.getElementById("biography").value),
+        "twitter":        or_null(document.getElementById("twitter").value),
+        "linkedin":       or_null(document.getElementById("linkedin").value),
+        "website":        or_null(document.getElementById("website").value),
         "categories":     category_ids
     };
 
@@ -68,9 +68,9 @@ function activate () {
     render_categories_for_profile ();
     install_sticky_header();
     install_touchable_help_icons();
-    jQuery("#save").on("click", function () { save_profile (); });
-    jQuery("#remove-image").on("click", function () { remove_profile_image (); });
-    jQuery("#expand-categories-button").on("click", toggle_categories);
+    document.getElementById("save")?.addEventListener("click", function () { save_profile(); });
+    document.getElementById("remove-image")?.addEventListener("click", function () { remove_profile_image(); });
+    document.getElementById("expand-categories-button")?.addEventListener("click", toggle_categories);
     var fileUploader = new Dropzone("#upload-profile-image", {
         url:               "/v3/profile/picture",
         dictDefaultMessage: "Upload your profile picture",
