@@ -3,7 +3,7 @@
 <script nonce="{{nonce}}">
 var group_ids = "{% for item in sub_groups %}{{item.group_id}}{{ ',' if not loop.last else '' }}{% endfor %}";
 </script>
-<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/utils.js"></script>
 <script src="/static/js/ranking.js?cache=1742461855"></script>
 {% endblock %}
 {% block body %}

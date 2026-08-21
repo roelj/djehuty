@@ -2,6 +2,27 @@ const quill_modules = { toolbar: [ ['bold', 'italic', 'underline', 'strike', 'li
 
 function render_in_form (text) { return [text].join(""); }
 
+function escape_html (text) {
+    let element = document.createElement("div");
+    element.textContent = text;
+    return element.innerHTML;
+}
+
+function is_empty_object (item) {
+    if (item === null || item === undefined) { return true; }
+    for (let key in item) { return false; }
+    return true;
+}
+
+function build_query_parameters (values) {
+    let parameters = new URLSearchParams();
+    for (let [key, value] of Object.entries(values)) {
+        if (Array.isArray(value)) { for (let entry of value) { parameters.append(`${key}[]`, entry); } }
+	else { parameters.append(key, value); }
+    }
+    return parameters;
+}
+
 function or_null (value) { return (value == "" || value == "<p><br></p>") ? null : value; }
 function or_empty (value) { return (value === undefined || value == null || value == "") ? "" : value;}
 function show_message (type, message) {

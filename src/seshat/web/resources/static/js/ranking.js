@@ -11,74 +11,94 @@ function parameters_for_api_calls (order) {
     // and category pages which filter by 'categories'.  So one of these variables
     // won't be defined, but that's expected.
     try {
-        if (categories !== "") { jQuery.extend(parameters, { "categories": categories }); }
+        if (categories !== "") { parameters["categories"] = categories; }
     } catch (error) {}
 
     try {
-        if (group_ids !== "") { jQuery.extend(parameters, { "group_ids": group_ids }); }
+        if (group_ids !== "") { parameters["group_ids"] = group_ids; }
     } catch (error) {}
 
     return parameters;
 }
 
 function latest_datasets () {
-    const parameters = parameters_for_api_calls ("published_date");
-    jQuery.get("/v3/datasets", parameters, function() {
-    }).done(function(data) {
-        let output = '<ul class="latest-datasets">';
-        let num_items = 0;
-        jQuery.each (data, function(index) {
-            if (jQuery.isEmptyObject(data[index])) { return; }
-            output += '<li><div class="latest-item"><div class="latest-title"><a class="corporate-identity" href="/datasets/'+ data[index].uuid +'">';
-            output += data[index].title + '</a></div></div></li>';
+    const parameters = build_query_parameters (parameters_for_api_calls ("published_date"));
+    let loader    = document.getElementById("latest-datasets-loader");
+    let container = document.getElementById("latest-datasets");
 
-            num_items += 1;
-        });
+    fetch(`/v3/datasets?${parameters}`, {
+        method:  "GET",
+        headers: { "Accept": "application/json" }
+    }).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    }).then(function (data) {
+        let output = '<ul class="latest-datasets">';
+        for (let item of Object.values(data)) {
+            if (is_empty_object (item)) { continue; }
+            output += '<li><div class="latest-item"><div class="latest-title"><a class="corporate-identity" href="/datasets/'+ escape_html(item.uuid) +'">';
+            output += escape_html(item.title) + '</a></div></div></li>';
+        }
 
         output += "</ul>";
-        jQuery("#latest-datasets-loader").hide();
-        jQuery("#latest-datasets").append(output);
-    }).fail(function() {
-        jQuery("#latest-datasets-loader").hide();
-        jQuery("#latest-datasets").append("<p>Could not load the latest datasets.</p>");
+        if (loader !== null) { loader.style.display = "none"; }
+        container.insertAdjacentHTML("beforeend", output);
+    }).catch(function () {
+        if (loader !== null) { loader.style.display = "none"; }
+        container.insertAdjacentHTML("beforeend", "<p>Could not load the latest datasets.</p>");
     });
 }
 
 function top_datasets (item_type) {
-    jQuery("#top-datasets-wrapper").addClass("loader");
-    jQuery("#top-datasets tbody tr").css('opacity', '0.15');
-    jQuery("#top-buttons .active").removeClass("active");
-    jQuery(".top-" + item_type).addClass("active");
+    let wrapper = document.getElementById("top-datasets-wrapper");
+    wrapper.classList.add("loader");
 
-    const parameters = parameters_for_api_calls (item_type);
-    jQuery.get("/v3/datasets/top/" + item_type, parameters, function() {
-    }).done(function(data) {
+    document.querySelectorAll("#top-datasets tbody tr").forEach(function (row) { row.style.opacity = "0.15"; });
+    document.querySelectorAll("#top-buttons .active").forEach(function (element) { element.classList.remove("active"); });
+    document.querySelectorAll(`.top-${item_type}`).forEach(function (element) { element.classList.add("active"); });
+
+    const parameters = build_query_parameters (parameters_for_api_calls (item_type));
+    fetch(`/v3/datasets/top/${item_type}?${parameters}`, {
+        method:  "GET",
+        headers: { "Accept": "application/json" }
+    }).then(function (response) {
+        if (!response.ok) { throw new Error(`Error: ${response.status} ${response.statusText}`); }
+        return response.json();
+    }).then(function (data) {
         let output = '<table id="top-datasets"><thead>';
-        output += '<tr class="corporate-identity-background"><th>Dataset</th><th># '+ capitalize(item_type) +'</th></tr>';
+        output += `<tr class="corporate-identity-background"><th>Dataset</th><th># ${capitalize(item_type)}</th></tr>`;
         output += '</thead><tbody>';
-        jQuery.each (data, function(index) {
-            if (jQuery.isEmptyObject(data[index])) { return; }
+        for (let item of Object.values(data)) {
+            if (is_empty_object (item)) { continue; }
             output += '<tr><td>';
-            output += '<a href="/datasets/'+ data[index].container_uuid +'">';
-            output += data[index].title + '</a>';
+            output += '<a href="/datasets/'+ escape_html(item.container_uuid) +'">';
+            output += escape_html(item.title) + '</a>';
             output += '</td>';
-            output += '<td>' + data[index][item_type] + '</td></tr>';
-        });
+            output += '<td>' + escape_html(item[item_type]) + '</td></tr>';
+        }
 
         output += "</tbody></table>";
-        jQuery("#top-datasets").remove();
-        jQuery("#top-datasets-wrapper").removeClass("loader");
-        jQuery("#top-datasets-wrapper").append(output);
-    }).fail(function() {
-        jQuery("#top-datasets-wrapper").append("<p>Could not load the top datasets.</p>");
+        document.getElementById("top-datasets")?.remove();
+        wrapper.classList.remove("loader");
+        wrapper.insertAdjacentHTML("beforeend", output);
+    }).catch(function () {
+        wrapper.classList.remove("loader");
+        wrapper.insertAdjacentHTML("beforeend", "<p>Could not load the top datasets.</p>");
     });
 }
 
-jQuery(document).ready(function() {
-    jQuery("li.top-downloads a").on("click", function(event) { top_datasets("downloads"); return false; });
-    jQuery("li.top-views a").on("click", function(event) { top_datasets("views"); return false; });
-    jQuery("li.top-shares a").on("click", function(event) { top_datasets("shares"); return false; });
-    jQuery("li.top-cites a").on("click", function(event) { top_datasets("cites"); return false; });
+document.addEventListener("DOMContentLoaded", function () {
+    for (let item_type of ["downloads", "views", "shares", "cites"]) {
+        document.querySelectorAll(`li.top-${item_type} a`).forEach(function (element) {
+            element.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                top_datasets (item_type);
+            });
+        });
+    }
     top_datasets("downloads");
     latest_datasets();
 });
