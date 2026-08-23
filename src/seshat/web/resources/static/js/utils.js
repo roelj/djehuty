@@ -46,7 +46,7 @@ function show_message (type, message) {
 }
 
 function value_from_quill (identifier) {
-    let value = or_null(jQuery(`${identifier} .ql-editor`).html());
+    let value = or_null(document.querySelector(`${identifier} .ql-editor`)?.innerHTML);
     if (value === undefined) { return null; }
     if (value !== null) {
 	value = value.replaceAll('<p class="ql-align-justify">', '<p>');
@@ -278,29 +278,32 @@ function autocomplete_collaborator (event, item_id) {
 }
 
 function new_author (item_uuid) {
-    let banner = `<br><span><i>Enter the details of the author you want to add.</i></span>`;
-    jQuery("#new-author-description").after(banner).remove();
-    let html = jQuery("<div/>", { "id": "new-author-form" });
-    html.append(jQuery ("<label/>", { "for": "author_first_name" }).text("First name"));
-    html.append(jQuery ("<span/>", { "class": "required-field" }).text("*"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_first_name", "name": "author_first_name" }));
-    html.append(jQuery ("<label/>", { "for": "author_last_name" }).text("Last name"));
-    html.append(jQuery ("<span/>", { "class": "required-field" }).text("*"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_last_name", "name": "author_last_name" }));
-    html.append(jQuery ("<label/>", { "for": "author_email" }).text("E-mail address"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_email", "name": "author_email" }));
-    html.append(jQuery ("<label/>", { "for": "author_orcid" }).text("ORCID"));
-    html.append(jQuery ("<input/>", { "type": "text", "id": "author_orcid", "name": "author_orcid" }));
+    let description = document.querySelector("#new-author-description");
+    if (description) {
+        description.outerHTML = `<br><span><i>Enter the details of the author you want to add.</i></span>`;
+    }
 
-    let button_wrapper = jQuery("<div/>", { "id": "new-author", "class": "a-button" });
-    let anchor = jQuery("<a/>", { "href": "#" }).text("Add author");
-    anchor.on ("click", { "item_uuid": item_uuid}, submit_new_author_event);
-    button_wrapper.append(anchor);
+    let field = (label, id, required) =>
+        `<label for="${id}">${label}</label>` +
+        (required ? `<span class="required-field">*</span>` : "") +
+        `<input type="text" id="${id}" name="${id}">`;
 
-    html.append(button_wrapper);
-    jQuery("#authors-ac ul").remove();
-    jQuery("#new-author").remove();
-    jQuery("#authors-ac").append(html);
+    let container = document.querySelector("#authors-ac");
+    container.querySelector("ul")?.remove();
+    document.querySelector("#new-author")?.remove();
+    container.insertAdjacentHTML("beforeend", `
+        <div id="new-author-form">
+          ${field("First name", "author_first_name", true)}
+          ${field("Last name", "author_last_name", true)}
+          ${field("E-mail address", "author_email")}
+          ${field("ORCID", "author_orcid")}
+          <div id="new-author" class="a-button"><a href="#">Add author</a></div>
+        </div>`);
+
+    container.querySelector("#new-author a").addEventListener("click", (event) => {
+        event.data = { "item_uuid": item_uuid };
+        submit_new_author_event(event);
+    });
 }
 
 function submit_new_author_event (event) {
@@ -394,25 +397,26 @@ function submit_new_funding_event (event) {
 
 
 function new_funding (item_id) {
-    let html = jQuery("<div/>", { "id": "new-funding-form" });
-    html.append (jQuery ("<label/>", { "for": "funding_title" }).text("Title"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_title", "name": "funding_title" }));
-    html.append (jQuery ("<label/>", { "for": "funding_grant_code" }).text("Grant code"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_grant_code", "name": "funding_grant_code" }));
-    html.append (jQuery ("<label/>", { "for": "funding_funder_name" }).text("Funder name"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_funder_name", "name": "funding_funder_name" }));
-    html.append (jQuery ("<label/>", { "for": "funding_url" }).text("URL"));
-    html.append (jQuery ("<input/>", { "type": "text", "id": "funding_url", "name": "funding_url" }));
+    let field = (label, id) =>
+        `<label for="${id}">${label}</label>` +
+        `<input type="text" id="${id}" name="${id}">`;
 
-    let new_funding_button = jQuery ("<div/>", { "id": "new-funding", "class": "a-button" });
-    let anchor = jQuery("<a/>", { "href": "#" }).text("Add funding");
-    anchor.on ("click", { "item_id": item_id }, submit_new_funding_event);
-    new_funding_button.append (anchor);
-    html.append (new_funding_button);
+    let container = document.querySelector("#funding-ac");
+    container.querySelector("ul")?.remove();
+    document.querySelector("#new-funding")?.remove();
+    container.insertAdjacentHTML("beforeend", `
+        <div id="new-funding-form">
+          ${field("Title", "funding_title")}
+          ${field("Grant code", "funding_grant_code")}
+          ${field("Funder name", "funding_funder_name")}
+          ${field("URL", "funding_url")}
+          <div id="new-funding" class="a-button"><a href="#">Add funding</a></div>
+        </div>`);
 
-    jQuery("#funding-ac ul").remove();
-    jQuery("#new-funding").remove();
-    jQuery("#funding-ac").append(html);
+    container.querySelector("#new-funding a").addEventListener("click", (event) => {
+        event.data = { "item_id": item_id };
+        submit_new_funding_event(event);
+    });
 }
 
 function add_funding_event (event) {
