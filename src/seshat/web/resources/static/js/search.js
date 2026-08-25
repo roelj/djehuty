@@ -269,8 +269,8 @@ function register_event_handlers() {
         let event_id = "search-filter-content-" + filter_name;
         let is_multiple = filter_info[filter_name]["is_multiple"];
 
-        jQuery(`#${event_id} input[type='checkbox']`).change(function() {
-            let target_element = this;
+        jQuery(`#${event_id} input[type='checkbox']`).change(function(event) {
+            let target_element = event.currentTarget;
             if (target_element.checked) {
                 if (!is_multiple) {
                     jQuery(`#${event_id} input[type='checkbox']`).each(function() {
