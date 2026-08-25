@@ -3628,7 +3628,7 @@ class SparqlInterface:
 
         if full_export:
             root_types += ["LogEntry", "LogEntryType", "PrivateLink",
-                           "QuotaRequest", "Session"]
+                           "QuotaRequest", "Session", "Project"]
 
         for record_type in root_types:
             query = self.__query_from_template ("export_root_type", {
