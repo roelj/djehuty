@@ -1,0 +1,41 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: seshat-full-backup
+  labels:
+    app: seshat-full-backup
+spec:
+  schedule: "7 1 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: seshat-full-backup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: seshat-rdf-export
+              image: {{ .Values.containerImages.seshat }}
+              command: ["/bin/seshat"]
+              args: ["web", "--full-rdf-export", "--config-file", "/data/config.xml"]
+              volumeMounts:
+                - mountPath: /data
+                  name: seshat-volume
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "1000m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "1000m"
+          volumes:
+            - name: seshat-volume
+              persistentVolumeClaim:
+                claimName: seshat-data-volume

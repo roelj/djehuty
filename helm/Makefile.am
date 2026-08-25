@@ -12,6 +12,7 @@ EXTRA_DIST            =                \
   seshat/Chart.yaml                    \
   seshat/values.yaml                   \
   seshat/templates/cert-manager.yaml   \
+  seshat/templates/cronjob.yaml        \
   seshat/templates/deployment.yaml     \
   seshat/templates/secrets.yaml        \
   seshat/templates/service.yaml        \
