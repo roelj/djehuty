@@ -89,6 +89,7 @@
         </div>
       </div>
       {%- if not maintenance_mode %}
+      {%- if menu %}
       <nav id="site-navigation">
         <div id="primary-menu-wrapper">
         <ul id="primary-menu" class="primary-menu">
@@ -104,6 +105,7 @@
         </ul>
         </div>
       </nav>
+      {%- endif %}
       {% if self.submenu() %}<div id="submenu"><div id="submenu-wrapper">{% block submenu %}{% endblock %}</div></div>{% endif %}
       {%- endif %}
       <div id="content">

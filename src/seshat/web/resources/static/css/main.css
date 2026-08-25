@@ -413,8 +413,9 @@ table { border:none; border-spacing: 0pt; border-collapse: collapse; }
 #submenu {
     margin: 0em;
     text-align: left;
-    padding: 0pt;
+    padding: 1pt 0 0 0;
     border-bottom: solid 1px var(--submenu-border);
+    border-top: solid 1px var(--submenu-border);
     background: var(--submenu-background);
 }
 #submenu ul { display: block; padding: 0 0 0 5mm; margin: 0em; }
