@@ -10,8 +10,7 @@ function escape_html (text) {
 
 function is_empty_object (item) {
     if (item === null || item === undefined) { return true; }
-    for (let key in item) { return false; }
-    return true;
+    return Object.keys(item).length === 0;
 }
 
 function build_query_parameters (values) {
