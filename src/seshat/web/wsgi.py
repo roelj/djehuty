@@ -2675,7 +2675,7 @@ class WebServer:
 
             return self.__render_template (request, "depositor/edit-project.html",
                                            project = project)
-        except TypeError, IndexError:
+        except (TypeError, IndexError):
             return self.error_403 (request, (f"account:{account_uuid} attempted "
                                              f"to edit project:{project_uuid}."))
 
@@ -6588,7 +6588,7 @@ class WebServer:
         project = None
         try:
             project = self.db.projects (project_uuid = project_uuid)[0]
-        except TypeError, IndexError:
+        except (TypeError, IndexError):
             return self.error_404 (request)
 
         if request.method in ("HEAD", "GET"):
