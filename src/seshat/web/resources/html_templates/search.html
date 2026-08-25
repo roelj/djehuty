@@ -173,7 +173,7 @@ label { cursor: pointer; }
                     {%- endfor -%}
 
                     <li><input type="checkbox" id="checkbox_institutions_other" name="checkbox_institutions_other" value="other"><label for="checkbox_institutions_other">Other institution</label> </li>
-                    <li><input type="text" id="textinput_institutions_other" name="textinput_institutions_other" placeholder="ex) Amsterdam" value="" maxlength="255"> </li>
+                    <li><input type="text" id="textinput_institutions_other" name="textinput_institutions_other" aria-label="Other institution name" placeholder="ex) Amsterdam" value="" maxlength="255"> </li>
                 </ul>
             </div>
             {% if ns.featured_institutions > 0 %}
@@ -214,7 +214,7 @@ label { cursor: pointer; }
                     <li> <label for="checkbox_filetypes_netCDF"><input type="checkbox" id="checkbox_filetypes_netCDF" name="netCDF" value="netCDF">netCDF</label> </li>
                     <li> <label for="checkbox_filetypes_zip"><input type="checkbox" id="checkbox_filetypes_zip" name="zip" value="zip">Zip</label> </li>
                     <li> <label for="checkbox_filetypes_other"><input type="checkbox" id="checkbox_filetypes_other" name="other" value="other">Other</label> </li>
-                    <li> <div><input type="text" id="textinput_filetypes_other" name="textinput_filtertypes_other" placeholder="ex) application" value="" maxlength="255"></div> </li>
+                    <li> <div><input type="text" id="textinput_filetypes_other" name="textinput_filtertypes_other" aria-label="Other file type" placeholder="ex) application" value="" maxlength="255"></div> </li>
                 </ul>
             </div>
         </div>
@@ -228,7 +228,7 @@ label { cursor: pointer; }
                     <li> <label for="checkbox_publisheddate_2"><input type="checkbox" id="checkbox_publisheddate_2" name="checkbox_publisheddate_2" value="2">Past 2 years</label></li>
                     <li> <label for="checkbox_publisheddate_3"><input type="checkbox" id="checkbox_publisheddate_3" name="checkbox_publisheddate_3" value="3">Past 3 years</label></li>
                     <li> <label for="checkbox_publisheddate_other"><input type="checkbox" id="checkbox_publisheddate_other" name="checkbox_publisheddate_other" value="other">Other</label></li>
-                    <li> <input type="date" id="textinput_publisheddate_other" name="textinput_publisheddate_other" placeholder="YYYY-MM-DD" value="" maxlength="10"></li>
+                    <li> <input type="date" id="textinput_publisheddate_other" name="textinput_publisheddate_other" aria-label="Custom published date" placeholder="YYYY-MM-DD" value="" maxlength="10"></li>
                 </ul>
             </div>
         </div>
@@ -284,7 +284,7 @@ label { cursor: pointer; }
         <!-- Sort by select box -->
         <div id="sort-by-wrapper">
             <div>
-                <b>Sort By</b>
+                <label for="sort-by">Sort By</label>
                 <div id="sort-by-dropdown-wrapper">
                     <select id="sort-by" name="sort-by">
                         <option value="date_asc">Date (Old First)</option>

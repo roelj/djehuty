@@ -65,7 +65,7 @@ jQuery(document).ready(function (){
 <ul>
   <li class="active corporate-identity-submenu-active">My Dashboard
   {%- if enable_projects %}
-  <li><form action="#"><select id="project-selector"><option value="all">All projects</option></select></form>
+  <li><form action="#"><select id="project-selector" aria-label="Select project"><option value="all">All projects</option></select></form>
   <li class="create-button"><a href="/my/projects/new">Create project</a>
   {%- endif %}
   <li><a href="/my/datasets">My Datasets</a>
