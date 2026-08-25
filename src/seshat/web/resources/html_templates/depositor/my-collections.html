@@ -3,6 +3,7 @@
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="/static/js/jquery.dataTables.min.js"></script>
 <script src="/static/js/utils.js"></script>
+{% if enable_projects %}<script src="/static/js/project-settings.js"></script>{% endif %}
 <link href="/static/css/jquery.dataTables.min.css" rel="stylesheet">
 <style nonce="{{nonce}}">
 .number-of-articles { color: #707070; }
@@ -19,12 +20,16 @@ jQuery(document).ready(function () {
             delete_collection (element.id.replace("collection-", ""), event);
         });
     });
+    if (typeof render_projects_selector === 'function') {
+	render_projects_selector (null);
+    }
 });
 </script>
 {% endblock %}
 {% block submenu %}
 <ul>
   <li><a href="/my/dashboard">My Dashboard</a>
+  {% if enable_projects %}<li><form action="#"><select id="project-selector"><option value="all">All projects</option></select></form>{% endif %}
   <li><a href="/my/datasets">My Datasets</a>
   <li class="active corporate-identity-submenu-active">My Collections
   {%- if may_deposit %}<li class="create-button"><a href="/my/collections/new">Create new collection</a>{%- endif %}

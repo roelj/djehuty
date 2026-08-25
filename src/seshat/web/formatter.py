@@ -775,7 +775,7 @@ def format_iiif_manifest_record (dataset, files, authors, version, base_url):
 def format_project_record (record, ontology_url):
     """Record formatter for projects."""
     return {
-        "@context":     f"{ontology_url}/Project",
+        "@context":     f"{ontology_url}Project",
         "uuid":         record["uuid"],
         "name":         record.get("name"),
         "namespace":    record.get("namespace"),

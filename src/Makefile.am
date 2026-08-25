@@ -47,6 +47,7 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/html_templates/depositor/dashboard.html              \
     seshat/web/resources/html_templates/depositor/edit-collection.html        \
     seshat/web/resources/html_templates/depositor/edit-dataset.html           \
+    seshat/web/resources/html_templates/depositor/edit-project.html           \
     seshat/web/resources/html_templates/depositor/edit-session.html           \
     seshat/web/resources/html_templates/depositor/language-selector.html      \
     seshat/web/resources/html_templates/depositor/my-collections.html         \
@@ -249,11 +250,13 @@ EXTRA_RESOURCES =                                                             \
     seshat/web/resources/static/js/edit-collection.js                         \
     seshat/web/resources/static/js/edit-dataset.js                            \
     seshat/web/resources/static/js/edit-profile.js                            \
+    seshat/web/resources/static/js/edit-project.js                            \
     seshat/web/resources/static/js/exploratory.js                             \
     seshat/web/resources/static/js/jquery.dataTables.min.js                   \
     seshat/web/resources/static/js/jquery-3.6.0.min.js                        \
     seshat/web/resources/static/js/landing_page.js                            \
     seshat/web/resources/static/js/my-data.js                                 \
+    seshat/web/resources/static/js/project-settings.js                        \
     seshat/web/resources/static/js/query-editor.js                            \
     seshat/web/resources/static/js/quill.min.js                               \
     seshat/web/resources/static/js/review-overview.js                         \

@@ -80,6 +80,7 @@ class WebServer:
         self.email            = email_handler.EmailInterface()
         self.session_cookie_key      = "seshat_session"
         self.impersonator_cookie_key = f"impersonator_{self.session_cookie_key}"
+        self.project_cookie_key      = "seshat_project"
         self.log_access          = self.log_access_directly
         self.log                 = logging.getLogger(__name__)
         self.locks               = locks.Locks()
@@ -116,6 +117,8 @@ class WebServer:
             R("/my/collections/<collection_uuid>/private_link/new",              self.ui_collection_new_private_link),
             R("/my/collections/new",                                             self.ui_new_collection),
             R("/my/collections/<collection_id>/new-version-draft",               self.ui_new_version_draft_collection),
+            R("/my/projects/new",                                                self.ui_new_project),
+            R("/my/projects/<project_uuid>/edit",                                self.ui_edit_project),
             R("/my/sessions/<session_uuid>/edit",                                self.ui_edit_session),
             R("/my/sessions/<session_uuid>/activate",                            self.ui_activate_session),
             R("/my/sessions/new",                                                self.ui_new_session),
@@ -2200,6 +2203,12 @@ class WebServer:
         pending_quota_requests = self.db.quota_requests (status       = "unresolved",
                                                          account_uuid = account_uuid)
 
+        project_uuid = self.value_from_cookie (request, self.project_cookie_key)
+        project      = None
+        if config.enable_projects and project_uuid is not None and validator.is_valid_uuid (project_uuid):
+            project = self.db.projects (project_uuid = project_uuid, limit = 1)
+            project = value_or (project, 0, None)
+
         account_quota   = 0
         percentage_used = 0
         requested_quota = None
@@ -2217,6 +2226,8 @@ class WebServer:
         sessions = self.db.sessions (account_uuid)
         response = self.__render_template (
             request, "depositor/dashboard.html",
+            enable_projects = config.enable_projects,
+            project      = project,
             storage_used = pretty_print_size (storage_used),
             quota        = pretty_print_size (account_quota),
             requested_quota = requested_quota,
@@ -2264,6 +2275,7 @@ class WebServer:
         published_datasets = self.__datasets_with_storage_usage (published_datasets)
 
         return self.__render_template (request, "depositor/my-data.html",
+                                       enable_projects    = config.enable_projects,
                                        draft_datasets     = draft_datasets,
                                        review_datasets    = review_datasets,
                                        published_datasets = published_datasets)
@@ -2521,6 +2533,7 @@ class WebServer:
             collection["number_of_datasets"] = count
 
         return self.__render_template (request, "depositor/my-collections.html",
+                                       enable_projects       = config.enable_projects,
                                        draft_collections     = drafts,
                                        published_collections = published)
 
@@ -2619,6 +2632,52 @@ class WebServer:
             return self.error_500()
 
         return redirect (f"/my/collections/{container_uuid}/edit", code=302)
+
+    def ui_new_project (self, request):
+        """Implements /my/projects/new."""
+
+        if not config.enable_projects:
+            return self.error_404 (request)
+
+        if not self.accepts_html (request):
+            return self.error_406 ("text/html")
+
+        account_uuid, error_response = self.__depositor_account_uuid (request)
+        if error_response is not None:
+            return error_response
+
+        project = self.db.insert_project (account_uuid, name = "Untitled project")
+        if project is not None:
+            return redirect (f"/my/projects/{project['uuid']}/edit", code=302)
+
+        return self.error_500()
+
+    def ui_edit_project (self, request, project_uuid):
+        """Implements /my/projects/<uuid>/edit."""
+
+        if not config.enable_projects:
+            return self.error_404 (request)
+
+        if not self.accepts_html (request):
+            return self.error_406 ("text/html")
+
+        if not validator.is_valid_uuid (project_uuid):
+            return self.error_404 (request)
+
+        account_uuid = self.account_uuid_from_request (request)
+        if account_uuid is None:
+            return self.error_authorization_failed (request)
+
+        try:
+            project = self.db.projects (project_uuid=project_uuid, created_by = account_uuid)[0]
+            if project is None:
+                raise IndexError
+
+            return self.__render_template (request, "depositor/edit-project.html",
+                                           project = project)
+        except TypeError, IndexError:
+            return self.error_403 (request, (f"account:{account_uuid} attempted "
+                                             f"to edit project:{project_uuid}."))
 
     def ui_edit_session (self, request, session_uuid):
         """Implements /my/sessions/<id>/edit."""
@@ -6490,6 +6549,9 @@ class WebServer:
     def api_v3_projects (self, request):
         """Implements /v3/projects."""
 
+        if not config.enable_projects:
+            return self.error_404 (request)
+
         account_uuid = self.default_authenticated_error_handling (request, ["GET", "POST"], "application/json")
         if isinstance (account_uuid, Response):
             return account_uuid
@@ -6512,6 +6574,9 @@ class WebServer:
 
     def api_v3_project_details (self, request, project_uuid):
         """Implements /v3/projects/<project_uuid>."""
+
+        if not config.enable_projects:
+            return self.error_404 (request)
 
         account_uuid = self.default_authenticated_error_handling (request, ["GET", "PUT"], "application/json")
         if isinstance (account_uuid, Response):

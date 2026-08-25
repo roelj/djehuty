@@ -58,4 +58,7 @@ jQuery(document).ready(function (){
     jQuery("#request-more-storage").on("click", toggle_storage_request);
     jQuery("#submit-storage-request").on("click", submit_storage_request);
     jQuery(".delete-session").on("click", delete_session);
+    if (typeof render_projects_selector === 'function') {
+	render_projects_selector (null);
+    }
 });

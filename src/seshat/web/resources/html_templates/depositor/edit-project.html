@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block headers %}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/utils.js?cache=1774719208"></script>
+<script src="/static/js/edit-project.js"></script>
+<link href="/static/css/quill.snow.css" rel="stylesheet">
+<link href="/static/css/dropzone.min.css" rel="stylesheet">
+<link href="/static/css/form.css?cache=1738927707" rel="stylesheet">
+<script nonce="{{nonce}}">
+jQuery(document).ready(function (){ activate("{{project.uuid}}"); });
+</script>
+{% endblock %}
+{% block submenu %}
+<ul>
+  <li><a href="/my/dashboard">&#8592; Go back</a>
+  <li class="active corporate-identity-submenu-active">Manage project
+  <li class="hide-for-javascript save-button"><a id="save" href="#">Save changes</a>
+  <li class="hide-for-javascript delete-button"><a id="delete" href="#">Delete</a>
+</ul>
+{% endblock %}
+{% block body %}
+<div class="project-content-loader"></div>
+<div class="project-content">
+{%- if project.name == "Untitled project" %}
+<h1>Add new project</h1>
+{%- elif project.is_shared_with_me and not permissions.metadata_edit %}
+<h1>Read-only project</h1>
+{%- else %}
+<h1>Edit project</h1>
+{%- endif %}
+<noscript>
+  <p class="no-script">Sorry, this page requires JavaScript to work correctly.</p>
+</noscript>
+<div class="hide-for-javascript">
+<h2>Project details</h2>
+<p>Fields marked with <span class="required-field">&#8727;</span> are required.</p>
+<label for="name">Name</label>
+<input type="text" id="name" name="name" {%- if project.name != "Untitled item" %}value="{{project.name}}"{% else %}placeholder="Untitled item"{% endif %} />
+<label for="namespace">Namespace</label>
+<input type="text" id="namespace" name="namespace" {%- if project.namespace %}value="{{project.namespace}}"{% else %}placeholder="untitled-project"{% endif %} />
+</div>
+</div>
+{% endblock %}

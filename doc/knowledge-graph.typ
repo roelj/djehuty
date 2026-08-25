@@ -224,6 +224,23 @@ each `shst:Dataset` can have a list of `shst:Collaborator` objects.
 As shown in @fig-collaborators, a `shst:Collaborator` can be
 given read, edit, and/or remove rights independently for both metadata (the
 form fields) and data (the files).
+
+== Projects (beta)
+
+To make multi-user collaboration on publishable items structurally available
+throughout `seshat`, the `shst:Project` provides a top-level structure.  The
+structure of `shst:Project` is subject to change because it's being actively
+developed.
+
+#figure(
+  image("figures/project.svg"),
+  caption: [The RDF pattern for a `shst:Project`.],
+) <fig-projects>
+
+In its current state, `shst:Project` enables claiming a namespace to publish
+OCI container images under; The pull URL will be
+`<instance-url>/<namespace>/<image-name>`.
+
 ]
 
 #render_chapter(chapter_text, "Knowledge graph")

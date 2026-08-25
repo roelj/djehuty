@@ -23,5 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	    delete_dataset (element.id.replace("dataset-", ""), event);
 	});
     });
-
+    if (typeof render_projects_selector === 'function') {
+	render_projects_selector (null);
+    }
 });

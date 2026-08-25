@@ -183,6 +183,7 @@ configuration file, for which an example is available at `etc/seshat.xml`.
   [`use-x-forwarded-for`],    [When running `seshat` behind a reverse-proxy server, use the HTTP header `X-Forwarded-For` to log IP address information. Set to 1 when `seshat` should use the `X-Forwarded-For` HTTP header.],
   [`static-resources-cache`], [When running `seshat` behind a reverse-proxy server, it can write images, fonts, stylesheets and JavaScript resources to a folder so it can be served by the reverse-proxy server. Specify a filesystem directory to store the resources at.],
   [`disable-collaboration`],  [When set to 1, it disables the "collaborators" feature.],
+  [`enable-project-spaces`],  [When set to 1, it enables the "projects" feature.],
   [`allowed-depositing-domains`], [When unset, any authenticated user may deposit data. Otherwise, this option limits the ability to deposit to users with an e-mail address of the listed domain names.],
   [`cache-root`],             [`seshat` can cache query responses to lower the load on the database server. Specify the directory where to store cache files. This element takes an attribute `clear-on-start`, and when set to 1, it will remove all cache files on start-up of `seshat`.],
   [`profile-images-root`],    [Users can upload a profile image in `seshat`. This option should point to a filesystem directory where these profile images can be stored.],

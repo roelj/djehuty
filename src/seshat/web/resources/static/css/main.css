@@ -640,6 +640,12 @@ select { background: var(--select-background); border: solid 1pt var(--select-bo
 .author-orcid { height: 15px; }
 .justify { text-align: justify; }
 
+.dashboard-group { background: var(--surface-sunken); border: solid 1pt var(--border); border-radius: 1em; padding: 1em; }
+.dashboard-group > p { margin: 0; }
+.dashboard-group > table { width: 100%; }
+.dashboard-group > table > tbody > tr > td { padding: .25em 0 .25em 0; }
+.dashboard-group > table > tbody > tr > td:nth-child(1) { width: 100pt; font-weight: bold; }
+
 @media (max-width: 940px) {
     #primary-menu-wrapper, #submenu-wrapper { width: auto; max-width: 880pt; }
     #search-box-wrapper { min-width: 0; height: auto; }
