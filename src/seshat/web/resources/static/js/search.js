@@ -752,13 +752,13 @@ function update_search_results_count(data, current_page=1) {
             if (data.length === 1) {
                 html = "<b>1</b> result found.";
             } else {
-                html = `<b>${data.length}</b> results found.`;
+                html = `<b>${escape_html(String(data.length))}</b> results found.`;
             }
         } else {
-            html = `Over <b>${page_size}</b> results found.`;
+            html = `Over <b>${escape_html(String(page_size))}</b> results found.`;
         }
     } else {
-        html = `Over <b>${page_size}</b> results found.`;
+        html = `Over <b>${escape_html(String(page_size))}</b> results found.`;
     }
 
     jQuery("#search-results-count").html(html);
@@ -787,16 +787,16 @@ function get_pager_html(data, current_page=1) {
     html += "";
     if (prev_page) {
         new_url_link.searchParams.append('page', prev_page);
-        html += `<div><a href="${new_url_link.href}" class="pager-prev">Previous</a></div>`;
+        html += `<div><a href="${escape_html(new_url_link.href)}" class="pager-prev">Previous</a></div>`;
     } else {
         html += `<div class="lightgrey">Prev</div>`;
     }
 
-    html += `<div class="pager-cur">Page ${current_page}</div>`;
+    html += `<div class="pager-cur">Page ${escape_html(String(current_page))}</div>`;
 
     if (next_page) {
         new_url_link.searchParams.append('page', next_page);
-        html += `<div><a href="${new_url_link.href}" class="pager-next">Next</a></div>`;
+        html += `<div><a href="${escape_html(new_url_link.href)}" class="pager-next">Next</a></div>`;
     } else {
         html += `<div class="lightgrey">Next</div>`;
     }
