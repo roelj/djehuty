@@ -21,7 +21,7 @@
     padding: .7em;
     border: solid 1pt #aaa;
     border-radius: 0em .5em .5em .5em;
-    width: 832pt;
+    width: calc(100% - 1.4em);
     margin-top: 0em;
     margin-bottom: 1em;
     font-size: 13pt;
@@ -31,7 +31,7 @@
     border-radius: 0em 0em .5em .5em !important;
     resize: vertical;
     font-size: 1.0em;
-    width: 852pt;
+    width: 100%;
     background: #fff;
 }
 #content-wrapper label {
@@ -94,6 +94,7 @@ jQuery(document).ready(function (){
 </div>
 {%- endif %}
 <h2>Storage usage</h2>
+<div class="dashboard-group">
 <p><span class="storage-usage">Using {{storage_used}} of {{quota}} ({{percentage_used}}%).</span>{% if requested_quota %}<span class="quota-requested">Request pending for {{requested_quota}}</span>{% endif %}<a class="inline-button open" id="request-more-storage" href="#">Request more storage</a></p>
 <div id="storage-request-wrapper">
   <label for="new-quota">New quota</label><div class="fas fa-question-circle help-icon"><span class="help-text">For example, if your current quota is 50GB and you'd like 20GB more, request 70GB.</span></div>
@@ -104,6 +105,7 @@ jQuery(document).ready(function (){
   <div class="center">
     <div id="submit-storage-request" class="button corporate-identity-standard-button">Send request for more storage</div>
   </div>
+</div>
 </div>
 <h2>Sessions and API tokens <a id="create-new-session" href="/my/sessions/new" class="inline-button inline-heading-button create">Create API token</a></h2>
 <table id="session-table" class="corporate-identity-table">
