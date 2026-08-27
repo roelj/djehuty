@@ -4,8 +4,8 @@
 
 # seshat
 
-This software provides a general data and software repository system that
-attempts to promote active re-use of data and software by providing a
+This software provides a general-purpose data and software repository system
+that attempts to promote active re-use of data and software by providing a
 rock-solid foundation of implementations of protocols and standards related
 to its aims.
 
