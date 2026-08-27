@@ -66,13 +66,14 @@ jQuery(document).ready(function () {
     margin: .5em 0em 0em 0em;
     font-weight: bold;
     font-size: 1em;
-    background: #eee;
+    background: var(--selected-background);
+    color: var(--selected-foreground);
     border-radius: .5em;
     user-select: none;
 }
 #groups-wrapper h4:nth-child(1) { margin: 0em; }
 #metadata_reason_field, #external_link_field, #file_upload_field { display: none; }
-#geolocation-wrapper label { background: #eee; }
+#geolocation-wrapper label { background: var(--surface-sunken); color: var(--text); border: 0pt; }
 #geolocation-wrapper input[type="text"] { width: 812pt; }
 #tags-list { display: none; border: none; padding: 0em; }
 #tags-list li {
