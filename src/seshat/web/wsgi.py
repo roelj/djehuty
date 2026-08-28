@@ -9498,7 +9498,7 @@ class WebServer:
 
             if re.search(re_field, search_term) is not None:
                 field_name = re.split(':', search_term)[1::2][0]
-                value = list(filter(None, [s.strip() for s in re.split(':', search_term)[0::2]]))[0]
+                value = next(filter(None, [s.strip() for s in re.split(':', search_term)[0::2]]))
 
                 if field_name in fields:
                     search_tokens[idx] = {field_name: value}
