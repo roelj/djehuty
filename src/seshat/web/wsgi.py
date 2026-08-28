@@ -3466,7 +3466,7 @@ class WebServer:
             try:
                 validator.string_value (record, "email", 5, 255, False)
                 validator.options_value (record, "type", ["bug", "missing", "other"], True)
-                validator.string_value (record, "description", 10, 4096, True, strip_html=False)
+                record["description"] = validator.string_value (record, "description", 10, 4096, True, strip_html=False)
             except validator.ValidationException as error:
                 email = self.__email_from_request (request)
                 return self.__render_template (request, "feedback.html",
