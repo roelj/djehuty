@@ -9192,6 +9192,9 @@ class WebServer:
         if not self.db.may_administer (token):
             return self.error_403 (request)
 
+        if not validator.is_valid_uuid (container_uuid):
+            return self.error_404 (request)
+
         account_uuid = None
         try:
             dataset = self.db.datasets (container_uuid = container_uuid, is_published=False)[0]
