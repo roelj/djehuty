@@ -9115,7 +9115,8 @@ class WebServer:
         if isinstance (account_uuid, Response):
             return account_uuid
 
-        if not validator.is_valid_uuid (reviewer_uuid):
+        if (not validator.is_valid_uuid (reviewer_uuid) or
+            not validator.is_valid_uuid (dataset_uuid)):
             return self.error_403 (request)
 
         account_token = self.value_from_cookie (request, self.session_cookie_key)
