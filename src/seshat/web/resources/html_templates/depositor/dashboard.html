@@ -86,9 +86,9 @@ jQuery(document).ready(function (){
 <h2>Project overview <a id="edit-project-button" href="/my/projects/{{project['uuid']}}/edit" class="inline-button inline-heading-button create">Edit project</a></h2>
 <div id="project-overview" class="dashboard-group">
   <table>
-    <tr><td>UUID</td><td id="project-table-uuid">{{project["uuid"]}}</td></tr>
-    <tr><td>Name</td><td id="project-table-name">{{project["name"]}}</td></tr>
-    <tr><td>Namespace</td><td id="project-table-namespace">{{project["namespace"]}}</td></tr>
+    <tr><th scope="row">UUID</th><td id="project-table-uuid">{{project["uuid"]}}</td></tr>
+    <tr><th scope="row">Name</th><td id="project-table-name">{{project["name"]}}</td></tr>
+    <tr><th scope="row">Namespace</th><td id="project-table-namespace">{{project["namespace"]}}</td></tr>
   </table>
 </div>
 </div>
