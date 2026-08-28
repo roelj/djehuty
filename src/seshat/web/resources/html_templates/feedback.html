@@ -36,7 +36,7 @@ jQuery(document).ready(function () {
 <form action="/feedback" method="post">
 <label for="email">E-mail</label><span class="info">By entering your e-mail address we will be able to get in touch.</span>
 <input type="text" id="email" name="email" value="{%if email is not none %}{{email}}{% endif %}" placeholder="Your e-mail address" />
-<label id="feedback-type-label">Type</label>
+<span id="feedback-type-label" class="group-label">Type</span>
 <div id="feedback-type-wrapper" role="group" aria-labelledby="feedback-type-label" class="options-wrapper">
 <input type="radio" name="feedback_type" id="bug" value="bug" checked="checked" /><!--
 --><label for="bug" class="no-head">Bug / broken functionality</label><!--
@@ -46,7 +46,7 @@ jQuery(document).ready(function () {
 --><label for="other" class="no-head">Other</label>
 </div>
 <input type="hidden" id="description_html" name="description" />
-<label id="feedback-description-label">Description</label><span class="info">Please try to be as detailed as possible.</span>
+<span id="feedback-description-label" class="group-label">Description</span><span class="info">Please try to be as detailed as possible.</span>
 <div id="description" role="group" aria-labelledby="feedback-description-label" class="texteditor"></div>
 <div class="center"><input type="submit" id="submit-feedback" class="button corporate-identity-standard-button" value="Send feedback" /></div>
 </form>

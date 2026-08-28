@@ -127,11 +127,11 @@ jQuery(document).ready(function () {
   </thead>
   <tbody></tbody>
 </table>
-<label id="description-label">Description</label><div class="fas fa-question-circle help-icon"><span class="help-text">Add as much context as possible so that others can interpret your research and reproduce it. Make sure you include methodology, techniques used, and if relevant information about approval for data collection to confirm adherence to legal or ethical requirements. The description should have at least four characters.</span></div><span class="required-field">&#8727;</span>
+<span id="description-label" class="group-label">Description</span><div class="fas fa-question-circle help-icon"><span class="help-text">Add as much context as possible so that others can interpret your research and reproduce it. Make sure you include methodology, techniques used, and if relevant information about approval for data collection to confirm adherence to legal or ethical requirements. The description should have at least four characters.</span></div><span class="required-field">&#8727;</span>
 <div id="description" role="group" aria-labelledby="description-label" class="texteditor">
   {{collection["description"] | default("", True) | replace("\\n", "<br>") | safe }}
 </div>
-<label id="categories-label">Categories</label><div class="fas fa-question-circle help-icon"><span class="help-text">Select one or multiple categories that this research best correlates with.</span></div><span class="required-field">&#8727;</span>
+<span id="categories-label" class="group-label">Categories</span><div class="fas fa-question-circle help-icon"><span class="help-text">Select one or multiple categories that this research best correlates with.</span></div><span class="required-field">&#8727;</span>
 <div id="categories-wrapper" role="group" aria-labelledby="categories-label" class="options-wrapper">
   <a id="expand-categories-button" href="#">Select categories</a>
   <div class="expand-categories"></div>
@@ -148,7 +148,7 @@ jQuery(document).ready(function () {
 {%- endfor %}
   </div>
 </div>
-<label id="groups-label">Group</label><span class="required-field"> &#8727;</span>
+<span id="groups-label" class="group-label">Group</span><span class="required-field"> &#8727;</span>
 <div id="groups-wrapper" role="group" aria-labelledby="groups-label">
 {%- for group in groups %}
 <h4>{{group.name}}</h4>
@@ -190,7 +190,7 @@ jQuery(document).ready(function () {
   </thead>
   <tbody></tbody>
 </table>
-<label id="doi-label">DOI reservation</label><div class="fas fa-question-circle help-icon"><span class="help-text">Upon publication, a DOI will be assigned to your collection. If you need to have the DOI before publication, you can use this value.</span></div>
+<span id="doi-label" class="group-label">DOI reservation</span><div class="fas fa-question-circle help-icon"><span class="help-text">Upon publication, a DOI will be assigned to your collection. If you need to have the DOI before publication, you can use this value.</span></div>
 <div id="doi-wrapper" role="group" aria-labelledby="doi-label" class="options-wrapper">
   <p>The DOI of your collection will be: <strong>{{collection["doi"]}}</strong></p>
 </div>
@@ -200,7 +200,7 @@ jQuery(document).ready(function () {
 {% include 'depositor/language-selector.html' %}
 <label for="time_coverage">Time coverage</label><div class="fas fa-question-circle help-icon"><span class="help-text">Indicate the dates to which the data in the collection refer. Enter the year, or the beginning and ending date.</span></div>
 <input type="text" id="time_coverage" name="time_coverage" value="{{collection["time_coverage"] | default("", True)}}" />
-<label id="geolocation-label">Geolocation</label>
+<span id="geolocation-label" class="group-label">Geolocation</span>
 <div id="geolocation-wrapper" role="group" aria-labelledby="geolocation-label">
   <label for="geolocation">Name</label><div class="fas fa-question-circle help-icon"><span class="help-text">The geographic area to which the data in the collection refer (e.g. municipality, town/city, region, country)</span></div>
   <input type="text" id="geolocation" name="geolocation" placeholder="Example: Dam Square, Amsterdam" value="{{collection["geolocation"] | default("", True)}}" />

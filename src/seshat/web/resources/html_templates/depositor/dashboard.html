@@ -34,7 +34,8 @@
     width: 100%;
     background: #fff;
 }
-#content-wrapper label {
+#content-wrapper label,
+#content-wrapper span.group-label {
     display: inline-block;
     background: #ffeeaa;
     color: #000;
@@ -99,7 +100,7 @@ jQuery(document).ready(function (){
 <div id="storage-request-wrapper">
   <label for="new-quota">New quota</label><div class="fas fa-question-circle help-icon"><span class="help-text">For example, if your current quota is 50GB and you'd like 20GB more, request 70GB.</span></div>
   <input type="text" id="new-quota" name="new-quota" placeholder="New quota in gigabytes (for example: 50)." />
-  <label id="quota-reason-label">Reason</label>
+  <span id="quota-reason-label" class="group-label">Reason</span>
   <div id="quota-reason" role="group" aria-labelledby="quota-reason-label" class="texteditor"></div>
   <p>Your request will be reviewed by our team (usually within one working day) and you will be contacted by e-mail about its status.</p>
   <div class="center">

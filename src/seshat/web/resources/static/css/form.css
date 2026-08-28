@@ -55,7 +55,8 @@
     margin-bottom: 1em;
     font-size: 13pt;
 }
-#content-wrapper label {
+#content-wrapper label,
+#content-wrapper span.group-label {
     display: inline-block;
     background: var(--label-background);
     color: var(--label-foreground);
@@ -75,7 +76,8 @@
     border: 0pt;
     border-radius: 0pt;
 }
-#content-wrapper label.inner-head {
+#content-wrapper label.inner-head,
+#content-wrapper span.group-label.inner-head {
     display: inline-block;
     background: var(--surface-sunken);
     color: var(--text);
