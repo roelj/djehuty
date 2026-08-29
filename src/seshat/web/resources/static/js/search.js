@@ -895,7 +895,7 @@ function sort_search_results(sort_by) {
 }
 
 function trim_single_word(word) {
-    return word.replace(/\s+.*$/g, '');
+    return word.replace(/\s.*$/g, '');
 }
 
 function _corporate_background_color() {
