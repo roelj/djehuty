@@ -70,8 +70,6 @@ function prompt_download_all_request (event) {
                 .show();
         });
     }, 120000);
-
-    show_message ("success", );
 }
 
 function toggle_versions (event) {
