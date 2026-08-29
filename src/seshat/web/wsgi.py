@@ -5989,6 +5989,10 @@ class WebServer:
             parameters = request.get_json()
             offset, limit = validator.paging_to_offset_and_limit (parameters)
             group = validator.integer_value (parameters, "group")
+            exclude_ids = validator.string_value (parameters, "exclude", 0, 255)
+            if isinstance (exclude_ids, str):
+                exclude_ids = [validator.integer_value (item, None) for item in exclude_ids.split(",")]
+
             records = self.db.datasets(
                 resource_doi    = validator.string_value (parameters, "resource_doi", 0, 512),
                 # "resource_id" here is not a typo for "dataset_id".
@@ -6005,7 +6009,7 @@ class WebServer:
                 published_since = validator.string_value (parameters, "published_since", 0, 255),
                 modified_since  = validator.string_value (parameters, "modified_since", 0, 255),
                 groups          = [group] if group is not None else None,
-                exclude_ids     = validator.string_value (parameters, "exclude", 0, 255),
+                exclude_ids     = exclude_ids,
                 account_uuid    = account_uuid,
                 is_published    = False
             )
