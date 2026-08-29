@@ -4055,18 +4055,18 @@ class WebServer:
                 if os.path.isfile (file_path):
                     return file_path
 
-            file_path = None
-            for _, bucket in config.s3_buckets.items():
-                filename = f"{file_info['container_uuid']}_{file_info['uuid']}"
-                if s3.s3_file_exists (bucket["endpoint"], bucket["name"],
-                                      bucket["key-id"], bucket["secret-key"],
-                                      filename):
-                    return s3.S3DownloadStreamer (bucket["endpoint"],
-                                                  bucket["name"],
-                                                  bucket["key-id"],
-                                                  bucket["secret-key"],
-                                                  filename,
-                                                  file_info["name"])
+        file_path = None
+        for _, bucket in config.s3_buckets.items():
+            filename = f"{file_info['container_uuid']}_{file_info['uuid']}"
+            if s3.s3_file_exists (bucket["endpoint"], bucket["name"],
+                                  bucket["key-id"], bucket["secret-key"],
+                                  filename):
+                return s3.S3DownloadStreamer (bucket["endpoint"],
+                                              bucket["name"],
+                                              bucket["key-id"],
+                                              bucket["secret-key"],
+                                              filename,
+                                              file_info["name"])
 
         # Use primary-storage-root and secondary-storage-root -- the historical
         # way of configuring storage.
