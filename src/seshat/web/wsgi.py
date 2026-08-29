@@ -438,9 +438,9 @@ class WebServer:
 
     def __generate_thumbnail (self, input_filename, dataset_uuid, max_width=300,
                               max_height=300, max_frames=100):
+        s3_cached_file = None
+        original = None
         try:
-            s3_cached_file = None
-            original = None
             if isinstance (input_filename, s3.S3DownloadStreamer):
                 s3_cached_file = s3.s3_temporary_file (input_filename)
                 original = Image.open (s3_cached_file)
@@ -490,13 +490,16 @@ class WebServer:
             thumbnail = original.resize ((thumb_width, thumb_height))
             thumbnail.save (output_filename)
 
-            if s3_cached_file is not None:
-                os.remove (s3_cached_file)
-
             return extension
 
         except (FileNotFoundError, UnidentifiedImageError) as error:
             self.log.error ("Failed to create thumbnail due to %s", error)
+
+        finally:
+            if original is not None:
+                original.close ()
+            if s3_cached_file is not None:
+                os.remove (s3_cached_file)
 
         return None
 
