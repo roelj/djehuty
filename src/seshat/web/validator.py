@@ -26,83 +26,30 @@ class ValidationException(Exception):
 class InvalidIntegerValue(ValidationException):
     """Exception thrown when the 'limit' parameter holds no valid value."""
 
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
-
 class InvalidOrderDirection(ValidationException):
     """Exception thrown when the 'order_direction' parameter holds no valid value."""
-
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
 
 class MissingRequiredField(ValidationException):
     """Exception thrown when a required parameter holds no value."""
 
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
-
 class ValueTooLong(ValidationException):
     """Exception thrown when a string parameter is too long."""
-
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
 
 class ValueTooShort(ValidationException):
     """Exception thrown when a string parameter is too short."""
 
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
-
 class InvalidValueType(ValidationException):
     """Exception thrown when the wrong type of a value was given."""
-
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
 
 class InvalidValue(ValidationException):
     """Exception thrown when the wrong value was given."""
 
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
-
 class InvalidOptionsValue(ValidationException):
     """Exception thrown when the wrong type of a value was given."""
-
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
 
 class InvalidPagingOptions(ValidationException):
     """Exception thrown when paging is mixed with limit/offset."""
 
-    def __init__(self, field_name, message, code):
-        self.field_name = field_name
-        self.message = message
-        self.code    = code
-        super().__init__(field_name, message, code)
 
 def order_direction (record, field_name, required=False, error_list=None):
     """
@@ -498,10 +445,7 @@ def string_fits_pattern (value, max_length, pattern):
         pass
 
     ## Check its form.
-    if re.match(pattern, value) is None:
-        return False
-
-    return True
+    return re.match(pattern, value) is not None
 
 def is_valid_uuid (value):
     """Returns True when VALUE looks like a UUID, False otherwise."""
