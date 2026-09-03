@@ -1209,7 +1209,7 @@ function activate (dataset_uuid, permissions=null, callback=jQuery.noop) {
         jQuery(`#article_${dataset_uuid}`).show();
         new Quill('#description', { modules: quill_modules, theme: 'snow' });
 
-        var fileUploader = new Dropzone("#dropzone-field", {
+        const fileUploader = new Dropzone("#dropzone-field", {
             url:               `/v3/datasets/${dataset_uuid}/upload`,
             paramName:         "file",
             maxFilesize:       1000000,

@@ -71,7 +71,7 @@ function activate () {
     document.getElementById("save")?.addEventListener("click", function () { save_profile(); });
     document.getElementById("remove-image")?.addEventListener("click", function () { remove_profile_image(); });
     document.getElementById("expand-categories-button")?.addEventListener("click", toggle_categories);
-    var fileUploader = new Dropzone("#upload-profile-image", {
+    const fileUploader = new Dropzone("#upload-profile-image", {
         url:               "/v3/profile/picture",
         dictDefaultMessage: "Upload your profile picture",
         paramName:         "file",
