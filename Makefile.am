@@ -105,7 +105,13 @@ install-exec-local:
         $(abs_builddir)/build/seshat-@VERSION_FOR_PYTHON@-py3-none-any.whl
 
 uninstall-local:
+	rm -f  $(DESTDIR)$(bindir)/seshat
 	rm -rf $(DESTDIR)$(pkgpythondir)
+	rm -rf $(DESTDIR)$(pythondir)/@PACKAGE_NAME@-@VERSION_FOR_PYTHON@.dist-info
+
+clean-local:
+	rm -rf $(builddir)/build
+	rm -rf $(builddir)/src/*.egg-info
 
 lint:
 	@pylint src/seshat/* > pylint.log || true
