@@ -895,7 +895,13 @@ function sort_search_results(sort_by) {
 }
 
 function trim_single_word(word) {
-    return word.replace(/\s.*$/g, '');
+  const nl = Math.max(
+    word.lastIndexOf('\n'), word.lastIndexOf('\r'),
+    word.lastIndexOf('\u2028'), word.lastIndexOf('\u2029'),
+  );
+  if (nl !== -1) return word.slice(0, nl).trimEnd();
+  const i = word.search(/\s/);
+  return i === -1 ? word : word.slice(0, i);
 }
 
 function _corporate_background_color() {
