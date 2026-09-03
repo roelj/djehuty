@@ -2,6 +2,120 @@
 #let chapter_text = [
 #silent-chapter[News] <news>
 
+#silent-section[Release notes for `v26.8`.] <release-26-08>
+
+The August release of 2026 consists of 74 commits made by 4 authors.
+We recommend upgrading to `v26.8` due to various security fixes and
+a lot of bug fixes.
+
+Thank you to our new contributor
+#link("https://codeberg.org/piotrekgelert")[\@piotrekgelert].
+More eyes and perspectives are always appreciated.
+
+#silent-subsection[New features]
+
+- Implement dark-mode theme
+  (#commitLink("fc60b0e008a4e7691ecdae6d6f021b13565de3d8"),
+   #commitLink("ca8dfb0ce8d991ed8481eb1382af1520e7a75523"),
+   #commitLink("4075430183956a54392f1eb7912680e98bdc979c"),
+   #commitLink("118c15853b3167d13271ab7338dcf0ad66b8d40b"),
+   #commitLink("b1f39bb0c2d705b699d7ba940e61cc818082745c"),
+   #commitLink("a55549858918c785138738916501256d0d95d624")).
+- Implement beginning of Projects spaces
+  (#commitLink("e7995d7533eff9987142c9ef9b61ddbe12735f2e"),
+   #commitLink("231675295c38e9b5cfffe755643a10128a5530bd"),
+   #commitLink("2504ae51fe6697cd2d7e9e8ea9e67656f3aa848b"),
+   #commitLink("83929c6783d7c097568acf2f9bdea8eacaa67f6e"),
+   #commitLink("b9df35c34d3aa254f3bef3aa7cbffb3531b71559"),
+   #commitLink("854a42c1f26a2a2769f1723f9453532b8d9b5d72")).
+
+#silent-subsection[Bugfixes]
+
+- Add missing files from the release distribution tarball
+  (#commitLink("38aeb2046e1515a5e5786d9db5f2a74441b2241d"),
+   #commitLink("ac507e2fe94f9c00cf462862c7b6158a3c470283"),
+   #commitLink("f9354fa74d70ab7e5ac20f3f882242b13cc34033"),
+   #commitLink("032c5c20c75bbf195116d110229b0e1310668b18")).
+- Avoid showing `None` in citations
+  (#commitLink("039b22fd5683f1cd2a2503b1fd7c537107f9ff49")).
+- Fix `custom-css` configurable option
+  (#commitLink("62a161eefcff6ae94aa96ae5f8d695eefbca59d7")).
+- Fix file lookups in S3-only instances
+  (#commitLink("e927744c63d8e0c0dcd36b65c0931fe1109c225f")).
+- Fix rendering `custom-html` on the portal page
+  (#commitLink("8ead48b3c8b9c72f960ce2c1e02af39b4adbbeb5")).
+- Fix label associations and add `aria-label` attributes throughout the
+  templates
+  (#commitLink("fe1844ee5d875df43999457f49d08fa2bde19b82"),
+   #commitLink("b4d3518659e1e98401723b66cbf0dce3dff6b1aa"),
+   #commitLink("bb7f921242e02de56b2d242e3c189a19317477f2"),
+   #commitLink("d2e23493ef89c061cae5cbdaa4b20bd4ed58dadf"),
+   #commitLink("829c185deb7d4f8bb778cedf43f81817318f8b21")).
+- Fix invalid HTML in the templates
+  (#commitLink("f26521ed915a66b3510441a029ccb70bd586b067"),
+   #commitLink("78482f98808a1f3e3eb2a5d71495c89da440c16e"),
+   #commitLink("f8f8e6aac37806641532db0945294481ef10f9a9"),
+   #commitLink("263c4779fc75c975f541ab21d89657cf1ea13e57")).
+- Fix the `exclude` parameter of `api_private_datasets_search`
+  (#commitLink("68d9853ea57ab5632ccd93226df5b09f48f45912")).
+
+#silent-subsection[Security]
+
+- Validate `dataset_uuid` in `api_v3_datasets_assign_reviewer`
+  (#commitLink("12fe5c95570e5ff7609715004736131801f7e3c2")).
+- Validate `container_uuid` in `api_v3_repair_md5s`
+  (#commitLink("25a1efb5baaf3adabb61883c359c40349f2b21de")).
+- Validate versions to integers
+  (#commitLink("071d38da5857dcd484fe13a5f2879eeecd98b0fd")).
+- Avoid HTML-injection in the feedback form
+  (#commitLink("ad38420562f1f57bce6e9ca585edbb9315167b9a")).
+- Escape dynamic values before injecting them into `jQuery.html`
+  (#commitLink("e667ddf14ecf588518b33f7e21d831faef2aab47")).
+
+#silent-subsection[Incremental improvements]
+
+- Ensure temporary files for thumbnails are always cleaned up
+  (#commitLink("97f9bc6ff7d2529095b115fa5c96cba79b02d1ff")).
+- Avoid duplicated validation of `order_direction` for collection API calls
+  (#commitLink("7d19092628763f131b1f79e037df53ff5c12a2f5")).
+- Report error kind instead of HTTP code in `error_400`
+  (#commitLink("8be34afbd8066abe5b10fccb13413eedd301418b")).
+- Test `xml_root` for presence rather than truthiness
+  (#commitLink("3ebd784e6a988643aaad0754360014ec6e7dde69")).
+- Add a Helm cron job to make daily online full backups
+  (#commitLink("225bad8c8e0d46caf7fb9ec5ebb12ed26cf67130")).
+- Improve displaying the website on mobile devices
+  (#commitLink("341be655b259ed53ffdc1a18761fb66c6cba0ae0")).
+- Avoid super-linear backtracking in `trim_single_word` and remove the
+  regular expression from `parse_organizations`
+  (#commitLink("c45af54bfe889d9a3e6c1c494bf5766a10dcb6d7"),
+   #commitLink("1792f939d39ff2159bd7ce6524581587c4636b09")).
+- Add PyPI installation instructions to the README
+  (#commitLink("3ac55223d59f4f2609d0ba230d28c47162042332"),
+   #commitLink("f6c97e571cb49bcf19ad6ad29fe1a41017f04b4f")).
+- Avoid constructing a full list in `parse_search_terms`
+  (#commitLink("48d7c52c5cf11665f812fe64348475fabe856e61")).
+- Refactor `pretty_print_size` and consolidate the geolocation field
+  handling in `convenience`
+  (#commitLink("d94f96f293bdb6d4479fd3d76cee4a15d4bcb201"),
+   #commitLink("ab3535b93ce121b6d9dcf4ecf543d61f45f9e537"),
+   #commitLink("0dd4b6c6d5ab67ac55d6769b70424c500218cef7")).
+- Refactor the validation exceptions in `validator`
+  (#commitLink("9c9635926170fe82955c5ba28ad643f9418cb0c6")).
+- Generalize `token_from_cookie` to `value_from_cookie`
+  (#commitLink("cd40e3fb3e965d49037015dd299bd24c2b6c040c")).
+- Remove more jQuery in favor of plain Javascript
+  (#commitLink("af2dcc6e52e33ec40975976ee0422e89b4043d2d"),
+   #commitLink("499b31c2438c507cc1c5471de5b185845819b3bd"),
+   #commitLink("9e92295e8e36f17169a0a20e469847fd37fcf8d3"),
+   #commitLink("a2532deb16177ce8514e6efe7329f4e7b089aa77"),
+   #commitLink("e91c83c490ea5ae1ba1d217ef0a8f0c7650e8c83")).
+- Avoid HTML-escaping values in the JSON-LD metadata
+  (#commitLink("8399879e8a400a47f278e3fb687c62b1bff67294"),
+   #commitLink("3d5b9ee3a579074a8d3391ff1bcccf763ce5b7b5")).
+- Send e-mail as UTF-8 instead of ISO-8859-1
+  (#commitLink("0aeb0d6df0e143f3c524bd57b8cb1c9769882091")).
+
 #silent-section[Release notes for `v26.7`.] <release-26-07>
 
 The July release of 2026 consists of 40 commits made by 3 authors.

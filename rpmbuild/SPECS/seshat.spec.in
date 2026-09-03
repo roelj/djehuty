@@ -116,6 +116,8 @@ install -Dpm 0644 etc/%{name}.xml %{buildroot}%{_sysconfdir}/%{name}.xml
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Thu Sep 3 2026 Malaika Newman <symmetricbutterfly@proton.me> - 26.8-1
+- Release version 26.8.
 * Sun Aug 2 2026 Malaika Newman <symmetricbutterfly@proton.me> - 26.7-1
 - Release version 26.7.
 * Sun Jul 5 2026 Roel Janssen <rrejanssen@gmail.com> - 26.6-1
