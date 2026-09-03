@@ -9436,7 +9436,7 @@ class WebServer:
 
     def parse_organizations (self, text):
         """Obscure procedure to split organizations by semicolon."""
-        return [x for x in re.split(r'\s*[;\n]\s*', text) if x != '']
+        return [s for s in (f.strip() for f in text.replace('\n', ';').split(';')) if s]
 
     def parse_contributors (self, text):
         """Procedure to split contributors by semicolon."""
