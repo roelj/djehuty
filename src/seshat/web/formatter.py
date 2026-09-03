@@ -53,51 +53,36 @@ def format_account_details_record (record):
         "orcid_id":       conv.value_or (record, "orcid_id", ""),
     }
 
-def collection_urls (record):
-    """Returns generated variants of public-facing collection URLs when possible."""
-    if "base_url" in record:
-        version = ""
-        if "version" in record:
-            version = f"/{record['version']}"
-
+def _object_urls (record, api_type, html_type):
+    """Returns generated variants of public-facing URLs."""
+    if "base_url" not in record:
         return {
-            "url":              f"{record['base_url']}/v2/collections/{record['container_uuid']}",
-            "url_private_api":  f"{record['base_url']}/v2/account/collections/{record['container_uuid']}",
-            "url_public_api":   f"{record['base_url']}/v2/collections/{record['container_uuid']}",
-            "url_private_html": f"{record['base_url']}/my/collections/{record['container_uuid']}/edit",
-            "url_public_html":  f"{record['base_url']}/collections/{record['container_uuid']}{version}"
+            "url":              conv.value_or_none(record, "url"),
+            "url_private_api":  conv.value_or_none(record, "url_private_api"),
+            "url_public_api":   conv.value_or_none(record, "url_public_api"),
+            "url_private_html": conv.value_or_none(record, "url_private_html"),
+            "url_public_html":  conv.value_or_none(record, "url_public_html")
         }
 
+    url_base =     record["base_url"]
+    container_id = record["container_uuid"]
+    version =      f"/{record['version']}" if "version" in record else ""
+
     return {
-        "url":              conv.value_or_none(record, "url"),
-        "url_private_api":  conv.value_or_none(record, "url_private_api"),
-        "url_public_api":   conv.value_or_none(record, "url_public_api"),
-        "url_private_html": conv.value_or_none(record, "url_private_html"),
-        "url_public_html":  conv.value_or_none(record, "url_public_html")
+        "url":              f"{url_base}/v2/{api_type}/{container_id}",
+        "url_private_api":  f"{url_base}/v2/account/{api_type}/{container_id}",
+        "url_public_api":   f"{url_base}/v2/{api_type}/{container_id}",
+        "url_private_html": f"{url_base}/my/{html_type}/{container_id}/edit",
+        "url_public_html":  f"{url_base}/{html_type}/{container_id}{version}"
     }
+
+def collection_urls (record):
+    """Returns generated variants of public-facing collection URLs when possible."""
+    return _object_urls(record, "collections", "collections")
 
 def dataset_urls (record):
     """Returns generated variants of public-facing dataset URLs when possible."""
-
-    if "base_url" in record:
-        version = ""
-        if "version" in record:
-            version = f"/{record['version']}"
-        return {
-            "url":              f"{record['base_url']}/v2/articles/{record['container_uuid']}",
-            "url_private_api":  f"{record['base_url']}/v2/account/articles/{record['container_uuid']}",
-            "url_public_api":   f"{record['base_url']}/v2/articles/{record['container_uuid']}",
-            "url_private_html": f"{record['base_url']}/my/datasets/{record['container_uuid']}/edit",
-            "url_public_html":  f"{record['base_url']}/datasets/{record['container_uuid']}{version}"
-        }
-
-    return {
-        "url":              conv.value_or_none(record, "url"),
-        "url_private_api":  conv.value_or_none(record, "url_private_api"),
-        "url_public_api":   conv.value_or_none(record, "url_public_api"),
-        "url_private_html": conv.value_or_none(record, "url_private_html"),
-        "url_public_html":  conv.value_or_none(record, "url_public_html")
-    }
+    return _object_urls(record, "articles", "datasets")
 
 def format_codemeta_author_record (record, base_url):
     """Record formatter for an author as used in CodeMeta."""
