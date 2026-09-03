@@ -527,6 +527,7 @@ img { user-select: none; }
   position: absolute;
   max-width: 700pt;
   display: block;
+  color: var(--text);
   background: var(--icon-help-background);
   border: solid 2pt var(--icon-help-border);
   font-family: 'SourceSans', sans-serif;
