@@ -1636,17 +1636,28 @@ class WebServer:
                         except BadRequest:
                             impersonate = None
 
-                account_id = validator.integer_value (impersonate, None, 0, pow(2, 63))
-                if account_id is not None:
-                    impersonated_account = self.db.accounts (
-                        id_lte=account_id,
-                        id_gte=account_id)[0]
-                    impersonate = impersonated_account["uuid"]
-                    self.log.access ("Account %s impersonating account %s.", #  pylint: disable=no-member
-                                    account["uuid"], impersonate)
-                    return impersonate
+                if impersonate is None or impersonate == "":
+                    return account["uuid"]
 
-        except (KeyError, IndexError, TypeError, validator.ValidationException):
+                try:
+                    if validator.is_valid_uuid (impersonate):
+                        impersonated_account = self.db.account_by_uuid (impersonate)
+                    else:
+                        account_id = validator.integer_value (impersonate, None, 0, pow(2, 63))
+                        impersonated_account = self.db.accounts (
+                            id_lte=account_id,
+                            id_gte=account_id)[0]
+                    impersonate = impersonated_account["uuid"]
+                except (KeyError, IndexError, TypeError, validator.ValidationException):
+                    self.log.access ("Account %s attempted to impersonate " #  pylint: disable=no-member
+                                     "unknown account '%s'.", account["uuid"], impersonate)
+                    return None
+
+                self.log.access ("Account %s impersonating account %s.", #  pylint: disable=no-member
+                                account["uuid"], impersonate)
+                return impersonate
+
+        except (KeyError, TypeError):
             pass
 
         return account["uuid"]
