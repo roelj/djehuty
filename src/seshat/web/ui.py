@@ -715,6 +715,25 @@ def read_configuration_file (server, config_file, logger, config_files):
             config.log_file = log_file
             configure_file_logging (log_file, inside_reload, logger)
 
+        unix_socket = xml_root.find ("unix-socket")
+        if unix_socket is not None:
+            if not unix_socket.text:
+                logger.warning ("The 'unix-socket' option requires a file path. "
+                                "Ignoring the 'unix-socket' configuration.")
+            else:
+                config.unix_socket = unix_socket.text
+                unix_permissions = unix_socket.attrib.get("permissions")
+                if unix_permissions is not None:
+                    if (convenience.parses_to_int (unix_permissions) and
+                        int(unix_permissions) < 778 and
+                        int(unix_permissions) > 599):
+                        # Keep using the string value to pass it to Waitress.
+                        config.unix_socket_permissions = unix_permissions
+                    else:
+                        logger.warning ("The 'permissions' property of 'unix-socket' "
+                                        "must be an integer value between 600 "
+                                        "and 777.  Falling back to '600'.")
+
         config.address      = config_value (xml_root, "bind-address", config.address, "127.0.0.1")
         config.port         = int(config_value (xml_root, "port", config.port, 8080))
         config.alternative_port = config_value (xml_root, "alternative-port",
@@ -1371,16 +1390,31 @@ def main (config_file=None, run_internal_server=True, initialize=True,
             # The 'run_simple' procedure below doesn't allow to catch an
             # address-already-in-use error, so we have to test beforehand to
             # figure out if we need to use the fallback port instead.
-            try:
-                bind_test = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
-                bind_test.bind ((config.address, config.port))
-                bind_test.close()
-            except OSError as error:
-                if config.alternative_port is not None:
-                    logger.info ("Falling back to port %s.", config.alternative_port)
-                    config.port = config.alternative_port
-                else:
-                    logger.info ("Unable to bind to port %s: %s.", config.port, error)
+            if config.unix_socket is not None:
+                try:
+                    bind_test = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                    bind_test.connect(config.unix_socket)
+                    if config.unix_socket is not None:
+                        logger.error ("Unix socket '%s' already in use.", config.unix_socket)
+                    bind_test.close()
+                except ConnectionRefusedError:
+                    logger.info ("Re-using stale Unix socket '%s'.", config.unix_socket)
+                    os.unlink (config.unix_socket)
+                except PermissionError:
+                    logger.error ("No permission to access Unix socket '%s'.", config.unix_socket)
+                except OSError:
+                    pass # FileNotFound and others are fine for creating a new socket.
+            else:
+                try:
+                    bind_test = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
+                    bind_test.bind ((config.address, config.port))
+                    bind_test.close()
+                except OSError as error:
+                    if config.alternative_port is not None:
+                        logger.info ("Falling back to port %s.", config.alternative_port)
+                        config.port = config.alternative_port
+                    else:
+                        logger.error ("Unable to bind to port %s: %s.", config.port, error)
 
             if config.static_cache_root is not None:
                 server.create_static_error_pages()
@@ -1395,21 +1429,37 @@ def main (config_file=None, run_internal_server=True, initialize=True,
             if not (config.use_debugger or config.use_reloader):
                 logger.warning ("Falling back to werkzeug's development "
                                 "server because 'waitress' is not installed.")
-            run_simple (config.address, config.port, server,
-                        threaded=(config.maximum_workers <= 1),
-                        processes=config.maximum_workers,
-                        extra_files=list(config_files),
-                        use_debugger=config.use_debugger,
-                        use_reloader=config.use_reloader)
-        else:
-            logging.info ("Using Waitress to serve HTTP requests.")
-            waitress_serve (server,
-                            host    = config.address,
-                            port    = config.port,
-                            threads = max(config.maximum_workers, 8))
 
-    except (FileNotFoundError, DependencyNotAvailable, MissingConfigurationError):
-        pass
+            run_settings = {
+                "application":  server,
+                "threaded":     (config.maximum_workers <= 1),
+                "processes":    config.maximum_workers,
+                "extra_files":  list(config_files),
+                "use_debugger": config.use_debugger,
+                "use_reloader": config.use_reloader
+            }
+
+            if config.unix_socket is not None:
+                logger.warning ("Unix socket permissions are not configurable "
+                                "in the development server. Install 'waitress' "
+                                "to enable setting socket permissions.")
+                run_simple (**{"hostname": f"unix://{config.unix_socket}", "port": 0, **run_settings})
+            else:
+                run_simple (**{"hostname": config.address, "port": config.port, **run_settings})
+        else:
+            if config.unix_socket is not None:
+                waitress_serve (server,
+                                unix_socket = config.unix_socket,
+                                unix_socket_perms = config.unix_socket_permissions,
+                                threads = max(config.maximum_workers, 8))
+            else:
+                waitress_serve (server,
+                                host    = config.address,
+                                port    = config.port,
+                                threads = max(config.maximum_workers, 8))
+
+    except (FileNotFoundError, DependencyNotAvailable, MissingConfigurationError) as error:
+        logging.error ("Error thrown: %s", error)
 
     return None
 

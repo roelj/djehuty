@@ -11,6 +11,8 @@ class RuntimeConfiguration:  # pylint: disable=too-few-public-methods
 
     def __init__ (self):
 
+        self.unix_socket                 = None
+        self.unix_socket_permissions     = "600"
         self.address                     = None
         self.port                        = None
         self.alternative_port            = None

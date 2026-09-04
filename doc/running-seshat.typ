@@ -173,6 +173,7 @@ configuration file, for which an example is available at `etc/seshat.xml`.
   [`bind-address`],           [The address to bind a TCP socket on.],
   [`port`],                   [The port to bind a TCP socket on.],
   [`alternative-port`],       [A fall-back port to bind on when `port` is already in use.],
+  [`unix-socket`],            [The Unix socket to bind to. When this is set, the `bind-address` and `port` are ignored. This element takes an attribute `permissions` which should be a number between 600 and 777.],
   [`base-url`],               [The URL on which the instance will be available to the outside world.],
   [`documentation-url`],      [The URL on which the documentation will be available to the outside world.],
   [`ontology-url`],           [The URL for the internal ontology.],
