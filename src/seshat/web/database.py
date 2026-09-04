@@ -1134,7 +1134,7 @@ class SparqlInterface:
             identifier = rdf.escape_string_value (identifier)
 
         try:
-            query    = self.__query_from_template ("record_uri.sparql", {
+            query    = self.__query_from_template ("record_uri", {
                 "record_type": record_type,
                 "identifier_name": identifier_name,
                 "identifier": identifier
