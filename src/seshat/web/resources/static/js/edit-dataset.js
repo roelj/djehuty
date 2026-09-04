@@ -701,15 +701,15 @@ function render_git_branches_for_dataset (dataset_uuid, event) {
         accepts:     { json: "application/json" },
     }).done(function (data) {
         let branches = data["branches"];
+        let default_branch = data["default-branch"];
         jQuery("#git-branches").empty();
         if (branches !== null && branches.length > 0) {
-            for (let index in branches) {
-                let default_branch = data["default-branch"];
-                let selected = "";
-                if (branches[index] == default_branch) {
-                    selected = ' selected="selected"';
+            for (let branch of branches) {
+                let option = jQuery("<option/>", { "value": branch }).text(branch);
+                if (branch == default_branch) {
+                    option.prop("selected", true);
                 }
-                jQuery("#git-branches").append(`<option value="${branches[index]}"${selected}>${branches[index]}</option>`);
+                jQuery("#git-branches").append(option);
             }
         } else {
             jQuery("#git-branches").append('<option value="" disabled="disabled" selected="selected">No branches found</option>');
@@ -733,7 +733,7 @@ function set_default_git_branch (dataset_uuid, event) {
         contentType: "application/json",
         accepts:     { json: "application/json" },
     }).done(function () {
-        show_message ("success", `<p>Default Git branch set to <strong>${branch_name}</strong>.</p>`);
+        show_message ("success", `<p>Default Git branch set to <strong>${escape_html(branch_name)}</strong>.</p>`);
         render_git_files_for_dataset (dataset_uuid, event);
     }).fail(function () {
         show_message ("failure", "<p>Failed to retrieve Git file details.</p>");
@@ -749,8 +749,8 @@ function render_git_files_for_dataset (dataset_uuid, event) {
         accepts:     { json: "application/json" },
     }).done(function (files) {
         jQuery("#git-files").empty();
-        for (let index in files) {
-            jQuery("#git-files").append(`<li>${files[index]}</li>`);
+        for (let file of files) {
+            jQuery("#git-files").append(jQuery("<li/>").text(file));
         }
         jQuery("#git-files-label").show();
         jQuery("#git-files-wrapper").show();
