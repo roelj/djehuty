@@ -1,4 +1,4 @@
-function save_profile (notify=true, on_success=jQuery.noop) {
+function save_profile (notify=true, on_success=function () {}) {
 
     let categories   = document.querySelectorAll("input[name='categories']:checked");
     let category_ids = [];
@@ -42,9 +42,12 @@ function render_categories_for_profile () {
         accepts:     { json: "application/json" },
     }).done(function (categories) {
         for (let category of categories) {
-            jQuery(`#category_${category["uuid"]}`).prop("checked", true);
-            jQuery(`#category_${category["parent_uuid"]}`).prop("checked", true);
-            jQuery(`#subcategories_${category["parent_uuid"]}`).show();
+            let checkbox = document.getElementById(`category_${category["uuid"]}`);
+            let parent   = document.getElementById(`category_${category["parent_uuid"]}`);
+            let children = document.getElementById(`subcategories_${category["parent_uuid"]}`);
+            if (checkbox !== null) { checkbox.checked = true; }
+            if (parent !== null)   { parent.checked = true; }
+            if (children !== null) { children.style.display = "block"; }
         }
     }).fail(function () {
         show_message ("failure", "Failed to retrieve categories.");
@@ -57,8 +60,10 @@ function remove_profile_image () {
         type:        "DELETE",
         accepts:     { json: "application/json" }
     }).done (function () {
-        jQuery("#upload-profile-image").removeClass("profile-image");
-        jQuery(".dz-button").show();
+        document.getElementById("upload-profile-image")?.classList.remove("profile-image");
+        for (let button of document.querySelectorAll(".dz-button")) {
+            button.style.display = "inline-block";
+        }
     }).fail (function () {
         show_message ("failure", "<p>Failed to remove profile image.</p>");
     });
