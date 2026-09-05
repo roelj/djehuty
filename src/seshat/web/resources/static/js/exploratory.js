@@ -162,8 +162,8 @@ function clear_exploratory_cache (event) {
     });
 }
 
-jQuery(document).ready(function () {
-    jQuery("#remove-cache").on("click", function (event) {
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("remove-cache")?.addEventListener("click", function (event) {
         clear_exploratory_cache (event);
     });
     jQuery.ajax({
