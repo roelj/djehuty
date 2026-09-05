@@ -1,26 +1,20 @@
 function toggle_storage_request (event) {
-    let storage_request_div = jQuery("#storage-request-wrapper");
-    if (storage_request_div.is(":visible")) {
-        jQuery("#storage-request-wrapper").slideUp(150, function (){
-            jQuery("#request-more-storage")
-                .removeClass("close")
-                .addClass("open")
-                .text("Request more storage");
-        });
-    } else {
-        jQuery("#storage-request-wrapper").slideDown(150, function (){
-            jQuery("#request-more-storage")
-                .removeClass("open")
-                .addClass("close")
-                .text("Cancel storage request");
-        });
-    }
+    let wrapper = document.getElementById("storage-request-wrapper");
+    let button  = document.getElementById("request-more-storage");
+    if (wrapper === null) { return; }
 
+    let is_visible = (wrapper.style.display !== "" && wrapper.style.display !== "none");
+    wrapper.style.display = is_visible ? "none" : "block";
+    if (button === null) { return; }
+
+    button.classList.remove(is_visible ? "close" : "open");
+    button.classList.add(is_visible ? "open" : "close");
+    button.textContent = is_visible ? "Request more storage" : "Cancel storage request";
 }
 
 function submit_storage_request (event) {
     let data = {
-        "new-quota": or_null(jQuery("#new-quota").val()),
+        "new-quota": or_null(document.getElementById("new-quota").value),
         "reason":    value_from_quill("#quota-reason")
     };
     jQuery.ajax({
@@ -32,8 +26,13 @@ function submit_storage_request (event) {
         dataType:    "json"
     }).done(function () {
         show_message ("success", "<p>Quota request has been sent.</p>");
-        jQuery(".quota-requested").remove();
-        jQuery(".storage-usage").after(`<span class="quota-requested">Request pending for ${data["new-quota"]}.00GB</span>`);
+        for (let element of document.querySelectorAll(".quota-requested")) { element.remove(); }
+        for (let element of document.querySelectorAll(".storage-usage")) {
+            let pending = document.createElement("span");
+            pending.className   = "quota-requested";
+            pending.textContent = `Request pending for ${data["new-quota"]}.00GB`;
+            element.after(pending);
+        }
         toggle_storage_request(null);
     }).fail(function () {
         show_message ("failure", "<p>Quota request could not be sent.</p>");
@@ -53,11 +52,13 @@ function delete_session (event) {
       });
 }
 
-jQuery(document).ready(function (){
+document.addEventListener("DOMContentLoaded", function () {
     new Quill("#quota-reason", { modules: quill_modules, theme: 'snow' });
-    jQuery("#request-more-storage").on("click", toggle_storage_request);
-    jQuery("#submit-storage-request").on("click", submit_storage_request);
-    jQuery(".delete-session").on("click", delete_session);
+    document.getElementById("request-more-storage")?.addEventListener("click", toggle_storage_request);
+    document.getElementById("submit-storage-request")?.addEventListener("click", submit_storage_request);
+    for (let element of document.querySelectorAll(".delete-session")) {
+        element.addEventListener("click", delete_session);
+    }
     if (typeof render_projects_selector === 'function') {
 	render_projects_selector (null);
     }
