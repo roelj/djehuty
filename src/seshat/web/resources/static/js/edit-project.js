@@ -1,13 +1,12 @@
 function gather_form_data () {
     return {
-	"name":      or_null(jQuery("#name").val()),
-	"namespace": or_null(jQuery("#namespace").val())
+	"name":      or_null(document.getElementById("name").value),
+	"namespace": or_null(document.getElementById("namespace").value)
     }
 }
 
-function save_project (event) {
+function save_project (project_uuid, event) {
     stop_event_propagation (event);
-    let project_uuid = event.data["project_uuid"];
     let form_data = gather_form_data ();
     jQuery.ajax({
 	url: `/v3/projects/${project_uuid}`,
@@ -27,6 +26,10 @@ function save_project (event) {
 
 
 function activate (project_uuid) {
-    jQuery(".hide-for-javascript").removeClass("hide-for-javascript");
-    jQuery("#save").on("click", { "project_uuid": project_uuid }, save_project);
+    for (let element of document.querySelectorAll(".hide-for-javascript")) {
+	element.classList.remove("hide-for-javascript");
+    }
+    document.getElementById("save")?.addEventListener("click", function (event) {
+	save_project (project_uuid, event);
+    });
 }
