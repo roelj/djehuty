@@ -33,15 +33,15 @@ tar zxvf seshat-<seshatversion>.tar.gz
 
 The `seshat` program needs Python (version 3.9 or higher) and
 Git to be installed. Additionally, a couple of Python packages need
-to be installed. The following sections describe installing the
-prerequisites on various GNU/Linux distributions. To put the software in
-the context of its environment, @fig-references-graph displays
-the complete run-time dependencies from `seshat` to `glibc`.
+to be installed. To put the software in the context of its environment,
+@fig-sbom displays the software bill-of-materials (SBOM) for the OCI
+container image.
 
 #figure(
-  image("figures/references-graph.svg"),
-  caption: [Run-time references when constructed with the packages from GNU Guix.],
-) <fig-references-graph>
+  image("figures/sbom.svg", width: 100%, height: auto),
+    caption: [Visual representation of the software bill-of-materials (SBOM)
+        for the Seshat OCI container.],
+) <fig-sbom>
 
 The web service of `seshat` stores its information in a SPARQL 1.1
 @sparql-11 endpoint. We recommend either

@@ -38,7 +38,7 @@ EXTRA_DIST              = $(doc_TYPST)                             \
                           figures/privatelink.svg                  \
                           figures/project.svg                      \
                           figures/rdf-list-abbrev.svg              \
-                          figures/references-graph.svg             \
+                          figures/sbom.svg                         \
                           figures/typed-literals-notation.svg      \
                           figures/typed-notation.svg               \
                           figures/favicon.png
