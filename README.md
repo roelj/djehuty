@@ -59,15 +59,6 @@ pip install --upgrade pip
 pip install --editable .
 ```
 
-#### Keeping your development environment up-to-date
-
-Because the virtual environment isn't updated by your system's package
-manager, you can use the following snippet to update packages inside your
-virtual environment:
-```bash
-pip freeze | grep -v "seshat.git" | cut -d= -f1 | xargs -n1 pip install -U
-```
-
 ### macOS X
 
 For development on Apple's macOS X, we recommend installing `python3`, `git`,
@@ -82,14 +73,6 @@ python3 -m venv ../seshat-env
 . ../seshat-env/bin/activate
 pip install --upgrade pip
 pip install --editable .
-```
-
-#### Keeping your development environment up-to-date
-
-Because the virtual environment isn't updated by homebrew, you can use the
-following snippet to update packages inside your virtual environment:
-```bash
-pip freeze | grep -v "seshat.git" | cut -d= -f1 | xargs -n1 pip install -U
 ```
 
 ### Microsoft Windows
@@ -116,7 +99,18 @@ IPv6 (`::1`) first, and when the SPARQL endpoint only listens on IPv4, every
 request waits for the failed IPv6 connection attempt before falling back,
 adding a second or more to each query.
 
-#### Keeping your development environment up-to-date
+### Keeping your development environment up-to-date
+
+#### GNU/Linux and macOS X
+
+Because the virtual environment isn't updated by your system's package
+manager, you can use the following snippet to update packages inside your
+virtual environment:
+```bash
+pip install -U $(pip freeze | grep -v "seshat.git" | cut -d= -f1)
+```
+
+#### Microsoft Windows
 
 The dependencies for `seshat` are installed via `pacman`, so to update those
 packages use the following snippet:
